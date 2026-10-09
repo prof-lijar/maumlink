@@ -16,22 +16,13 @@ export const art = {
   character: (id: Avatar, width: 400 | 800 = 400) => `${BASE}/char-${id}-${width}.webp`,
   /** The puppy guide who asks the questions and gives feedback. */
   guide: (pose: GuidePose, width: 400 | 800 = 400) => `${BASE}/guide-${pose}-${width}.webp`,
-  /** Village landmark for a learning area. */
+  /** Village landmark for a learning area: a vignette of that area's lesson scene. */
   place: (domain: Domain, width: 400 | 800 = 400) =>
-    `${BASE}/place-${PLACE_BY_DOMAIN[domain]}-${width}.webp`,
+    `${BASE}/place-${domain === 'reserved' ? 'self' : domain}-${width}.webp`,
   /** Cartoon face card for an emotion id (falls back to the line icon when missing). */
   face: (emotionId: string, width: 400 | 800 = 400) => `${BASE}/face-${emotionId}-${width}.webp`,
   village: (width: 800 | 1600 = 1600) => `${BASE}/bg-village-${width}.webp`,
   celebrate: (width: 400 | 800 = 800) => `${BASE}/celebrate-${width}.webp`,
-}
-
-/** Which landmark represents each learning area on the village map. */
-export const PLACE_BY_DOMAIN: Record<Domain, string> = {
-  self: 'home',
-  social: 'playground',
-  relation: 'school',
-  mind: 'heart',
-  reserved: 'home',
 }
 
 /** Chat-bubble sizes share one srcset so the browser picks the sharper file on HiDPI. */

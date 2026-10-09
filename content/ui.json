@@ -316,20 +316,20 @@
     "en": "Maumi"
   },
   "place.self": {
-    "ko": "우리 집",
-    "en": "Our Home"
+    "ko": "발표 교실",
+    "en": "Presentation Class"
   },
   "place.social": {
     "ko": "운동장",
     "en": "Playground"
   },
   "place.relation": {
-    "ko": "우리 교실",
-    "en": "Our Classroom"
+    "ko": "쉬는 시간 교실",
+    "en": "Break-time Classroom"
   },
   "place.mind": {
-    "ko": "마음쉼터",
-    "en": "Heart Garden"
+    "ko": "급식실",
+    "en": "Lunchroom"
   },
   "home.stars": {
     "ko": "모은 별",

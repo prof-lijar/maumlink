@@ -44,7 +44,7 @@ All pictures the redesigned screens show live in `public/img/v3` and were genera
 |---|---|---|
 | Companions | `char-haru`, `char-sora`, `char-mina`, `char-jun` | Start, character pick, Home greeting, wrap-up |
 | Guide (마음이) | `guide-wave`, `guide-point`, `guide-think`, `guide-cheer`, `celebrate` | Every question bubble, hint, feedback, wrap-up |
-| Village | `bg-village`, `place-home`, `place-playground`, `place-school`, `place-heart` | Start background, Home map |
+| Village | `bg-village`, `place-self`, `place-social`, `place-relation`, `place-mind` (scene vignettes; the earlier generic buildings were replaced on 2026-10-09 at the user's request) | Start background, Home map |
 | Faces | `face-<emotion id>` × 15 | Emotion cards, chosen-feeling chip, explorers, recap |
 | Scenes | `scene-self-presentation-teasing`, `scene-social-playground`, `scene-relation-pencil-prank`, `scene-mind-lunch-line` | Situation screen and the small scene peek on later steps |
 

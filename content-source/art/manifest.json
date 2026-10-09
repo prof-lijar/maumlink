@@ -11,7 +11,9 @@
       "group": "characters",
       "size": "portrait",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "The boy character from the attached reference (same face, short brown hair, yellow hoodie, blue backpack, blue sneakers), standing full body, front view, waving one hand with a big happy smile. Alone, nobody else."
     },
     {
@@ -19,7 +21,9 @@
       "group": "characters",
       "size": "portrait",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "A Korean girl, 9 years old, in the exact same cartoon style as the boy in the attached reference: long straight dark-brown hair with a small yellow hair clip, pink cardigan over a white t-shirt, blue skirt, white sneakers. Standing full body, front view, waving one hand with a big happy smile. Alone, nobody else."
     },
     {
@@ -27,7 +31,9 @@
       "group": "characters",
       "size": "portrait",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "A Korean girl, 9 years old, in the exact same cartoon style as the boy in the attached reference: two cute pigtails tied with mint-green ribbons, peach-orange sweater, denim overalls, pink sneakers. Standing full body, front view, waving one hand with a big happy smile. Alone, nobody else."
     },
     {
@@ -35,7 +41,9 @@
       "group": "characters",
       "size": "portrait",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "A Korean boy, 9 years old, in the exact same cartoon style as the boy in the attached reference: round glasses, neat black hair, mint-green sweater with a white collar, navy shorts, green sneakers. Standing full body, front view, waving one hand with a big happy smile. Alone, nobody else."
     },
     {
@@ -43,7 +51,9 @@
       "group": "guide",
       "size": "square",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "The small cream-yellow puppy guide character from the attached reference (tiny navy graduation cap with yellow tassel, big round eyes, rosy cheeks), sitting and waving one paw with a happy open-mouth smile. Full body, front view, centred. Alone, no human."
     },
     {
@@ -51,7 +61,9 @@
       "group": "guide",
       "size": "square",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "The small cream-yellow puppy guide character from the attached reference (tiny navy graduation cap with yellow tassel, big round eyes, rosy cheeks), standing on hind legs and presenting with one paw stretched out to the side like a friendly teacher explaining something, gentle smile. Full body, centred. Alone, no human."
     },
     {
@@ -59,7 +71,9 @@
       "group": "guide",
       "size": "square",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "The small cream-yellow puppy guide character from the attached reference (tiny navy graduation cap with yellow tassel, big round eyes, rosy cheeks), sitting with one paw on its chin and head tilted, thinking with a curious, kind expression, mouth closed in a small smile. Full body, centred. Alone, no human. No symbols."
     },
     {
@@ -67,7 +81,9 @@
       "group": "guide",
       "size": "square",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "The small cream-yellow puppy guide character from the attached reference (tiny navy graduation cap with yellow tassel, big round eyes, rosy cheeks), jumping into the air with both paws raised in celebration, eyes closed in a joyful smile, a few small yellow stars and pastel confetti pieces floating around it. Full body, centred. Alone, no human."
     },
     {
@@ -75,7 +91,9 @@
       "group": "guide",
       "size": "landscape",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "The boy and the puppy from the attached reference together, both jumping with joy and arms/paws raised, celebrating, with small yellow stars and pastel confetti floating around them. Full bodies, side by side, centred."
     },
     {
@@ -83,47 +101,20 @@
       "group": "scenes",
       "size": "landscape",
       "transparent": false,
-      "refs": ["ui-ref-2.png"],
+      "refs": [
+        "ui-ref-2.png"
+      ],
       "prompt": "A bright, cheerful cartoon village landscape seen from a slightly elevated three-quarter view, like the game map in the attached reference but WITHOUT any buildings, houses, people, animals or signs: rolling mint-green grass hills, a winding light-sand path looping across the whole scene, a small blue river with a little wooden bridge, round fluffy trees, flowers, soft white clouds in a sky-blue sky at the top. Keep the four corners and centre areas open and fairly empty so landmarks can be placed later. Full-canvas scene, edge to edge."
-    },
-    {
-      "id": "place-home",
-      "group": "places",
-      "size": "square",
-      "transparent": true,
-      "refs": ["ui-ref-2.png"],
-      "prompt": "A single cosy cartoon house icon in the style of the map buildings in the attached reference: cream walls, warm red-orange roof, round wooden door, two windows, small chimney, a tiny flower garden in front. Front three-quarter view, centred, big and chunky. Only the house, nothing else."
-    },
-    {
-      "id": "place-school",
-      "group": "places",
-      "size": "square",
-      "transparent": true,
-      "refs": ["ui-ref-2.png"],
-      "prompt": "A single cheerful cartoon elementary school building icon in the style of the map buildings in the attached reference: pale yellow walls, blue roof, a round clock on the front, big windows, a small flag on top, a little tree beside it. Front three-quarter view, centred, big and chunky. Only the school, nothing else."
-    },
-    {
-      "id": "place-playground",
-      "group": "places",
-      "size": "square",
-      "transparent": true,
-      "refs": ["ui-ref-2.png"],
-      "prompt": "A single cute cartoon playground icon in the style of the map in the attached reference: a red and yellow slide, a small swing set, a colourful ball on a sandy round ground patch, a small tree. Front three-quarter view, centred, big and chunky. Only the playground, no people."
-    },
-    {
-      "id": "place-heart",
-      "group": "places",
-      "size": "square",
-      "transparent": true,
-      "refs": ["ui-ref-2.png"],
-      "prompt": "A single cosy cartoon 'heart rest garden' icon in the style of the map buildings in the attached reference: a round pink pavilion gazebo with a soft pink heart-shaped roof, light wooden posts, a little bench inside, surrounded by pink flowers and a tiny cloud of hearts above. Front three-quarter view, centred, big and chunky. Only the pavilion, no people."
     },
     {
       "id": "scene-self-presentation-teasing",
       "group": "scenes",
       "size": "landscape",
       "transparent": false,
-      "refs": ["characters-ref.png", "ui-ref-1.png"],
+      "refs": [
+        "characters-ref.png",
+        "ui-ref-1.png"
+      ],
       "prompt": "A Korean elementary school classroom scene in the same cartoon style as the attached references. The boy character from the first reference stands at the front of the class holding a presentation paper with both hands, looking a little shy and uneasy (no tears). Two classmates sitting at their desks behind him on the right giggle and whisper to each other about his presentation. Green chalkboard, bright windows. Keep all faces within the central 80 percent of the frame. Subtle, non-cruel expressions, no pointing, no villain faces."
     },
     {
@@ -131,7 +122,10 @@
       "group": "scenes",
       "size": "landscape",
       "transparent": false,
-      "refs": ["characters-ref.png", "ui-ref-1.png"],
+      "refs": [
+        "characters-ref.png",
+        "ui-ref-1.png"
+      ],
       "prompt": "A Korean elementary school playground at recess in the same cartoon style as the attached references. The boy character from the first reference stands a little apart on the left, watching with a hopeful, slightly hesitant expression, wanting to join. On the right three classmates play happily together with a soccer ball. Sunny day, school building and trees in the background. Keep all four children within the central 80 percent of the frame. No exclusion gestures, no tears."
     },
     {
@@ -139,7 +133,10 @@
       "group": "scenes",
       "size": "landscape",
       "transparent": false,
-      "refs": ["characters-ref.png", "ui-ref-1.png"],
+      "refs": [
+        "characters-ref.png",
+        "ui-ref-1.png"
+      ],
       "prompt": "A Korean elementary school classroom at break time in the same cartoon style as the attached references. The boy character from the first reference stands beside a pale wooden desk, playfully hiding a pencil behind his back with a mischievous but friendly grin. His friend, a girl with a short bob haircut in a pink sweater, searches the desk for her missing pencil, looking worried and a little upset, not laughing. The hidden pencil must be clearly visible to the viewer. Keep both children within the central 80 percent of the frame. No tears, no villain faces."
     },
     {
@@ -147,7 +144,10 @@
       "group": "scenes",
       "size": "landscape",
       "transparent": false,
-      "refs": ["characters-ref.png", "ui-ref-1.png"],
+      "refs": [
+        "characters-ref.png",
+        "ui-ref-1.png"
+      ],
       "prompt": "A Korean elementary school lunchroom in the same cartoon style as the attached references. Children holding lunch trays queue toward a serving counter on the right. One child is stepping sideways into the line directly in front of the boy character from the first reference, who holds his tray and looks uncertain and a bit troubled about what to say. Show the interrupted queue clearly through spacing and poses. Keep the main action within the central 80 percent of the frame. No tears, no villain faces."
     },
     {
@@ -155,7 +155,9 @@
       "group": "faces",
       "size": "square",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "Head-and-shoulders portrait of the boy from the attached reference (short brown hair, yellow hoodie), centred, looking at the viewer, showing the feeling ANGRY: furrowed brows pulled down, puffed cheeks, tight frowning mouth, a small red anger mark on the forehead. Clear and readable for a child."
     },
     {
@@ -163,7 +165,9 @@
       "group": "faces",
       "size": "square",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "Head-and-shoulders portrait of the boy from the attached reference (short brown hair, yellow hoodie), centred, looking at the viewer, showing the feeling ANNOYED / IRRITATED: one eyebrow raised, half-closed eyes, mouth pulled to one side in a grumpy wavy line, arms crossed. Clear and readable for a child."
     },
     {
@@ -171,7 +175,9 @@
       "group": "faces",
       "size": "square",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "Head-and-shoulders portrait of the boy from the attached reference (short brown hair, yellow hoodie), centred, looking at the viewer, showing the feeling UPSET / SAD: eyebrows raised in the middle, glossy eyes with one small tear, downturned mouth, head slightly lowered. Clear and readable for a child."
     },
     {
@@ -179,7 +185,9 @@
       "group": "faces",
       "size": "square",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "Head-and-shoulders portrait of the boy from the attached reference (short brown hair, yellow hoodie), centred, showing the feeling HURT / LEFT OUT (서운해요): eyes looking down and away to the side, eyebrows sad, small pouting mouth, shoulders slumped, a little sulky. No tears. Clear and readable for a child."
     },
     {
@@ -187,7 +195,9 @@
       "group": "faces",
       "size": "square",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "Head-and-shoulders portrait of the boy from the attached reference (short brown hair, yellow hoodie), centred, showing the feeling FRUSTRATED / STUFFY (답답해요): eyes squeezed, mouth pressed into a tight line, both hands pressed against his own chest, a few small sweat drops. Clear and readable for a child."
     },
     {
@@ -195,7 +205,9 @@
       "group": "faces",
       "size": "square",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "Head-and-shoulders portrait of the boy from the attached reference (short brown hair, yellow hoodie), centred, showing the feeling IT'S UNFAIR / WRONGED (억울해요): eyebrows raised high in the middle, wide watery eyes, mouth open in protest, both palms raised up at shoulder height as if saying 'but why me'. Clear and readable for a child."
     },
     {
@@ -203,7 +215,9 @@
       "group": "faces",
       "size": "square",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "Head-and-shoulders portrait of the boy from the attached reference (short brown hair, yellow hoodie), centred, showing the feeling WORRIED: eyebrows tilted up and together, eyes looking up to the side, small wobbly mouth, one hand touching his cheek. Clear and readable for a child."
     },
     {
@@ -211,7 +225,9 @@
       "group": "faces",
       "size": "square",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "Head-and-shoulders portrait of the boy from the attached reference (short brown hair, yellow hoodie), centred, showing the feeling NERVOUS / TENSE (긴장돼요): stiff posture, wide eyes, tight small mouth, a couple of sweat drops on the temple, hands clenched together in front of the chest. Clear and readable for a child."
     },
     {
@@ -219,7 +235,9 @@
       "group": "faces",
       "size": "square",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "Head-and-shoulders portrait of the boy from the attached reference (short brown hair, yellow hoodie), centred, showing the feeling EMBARRASSED / ASHAMED (창피해요): very red blushing cheeks, eyes squeezed shut, grimacing mouth, both hands covering the sides of his face. Clear and readable for a child."
     },
     {
@@ -227,7 +245,9 @@
       "group": "faces",
       "size": "square",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "Head-and-shoulders portrait of the boy from the attached reference (short brown hair, yellow hoodie), centred, showing the feeling FLUSTERED / STARTLED (당황스러워요): very wide round eyes, eyebrows up, mouth open in a small 'o', one hand up by the head, a couple of sweat drops. Clear and readable for a child."
     },
     {
@@ -235,7 +255,9 @@
       "group": "faces",
       "size": "square",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "Head-and-shoulders portrait of the boy from the attached reference (short brown hair, yellow hoodie), centred, showing the feeling SHY (부끄러워요): pink blushing cheeks, eyes glancing down, a small bashful smile, one finger touching his cheek, shoulders raised a little. Clear and readable for a child."
     },
     {
@@ -243,7 +265,9 @@
       "group": "faces",
       "size": "square",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "Head-and-shoulders portrait of the boy from the attached reference (short brown hair, yellow hoodie), centred, showing the feeling SCARED: wide trembling eyes with small pupils, eyebrows raised, mouth open in a wobbly shape, both hands held up protectively near the chin, slightly pale. Clear and readable for a child."
     },
     {
@@ -251,7 +275,9 @@
       "group": "faces",
       "size": "square",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "Head-and-shoulders portrait of the boy from the attached reference (short brown hair, yellow hoodie), centred, showing the feeling SORRY / APOLOGETIC (미안해요): head bowed a little, eyebrows raised in the middle, eyes looking up gently, small closed mouth, one hand rubbing the back of his neck. Clear and readable for a child."
     },
     {
@@ -259,7 +285,9 @@
       "group": "faces",
       "size": "square",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "Head-and-shoulders portrait of the boy from the attached reference (short brown hair, yellow hoodie), centred, showing the feeling AMUSED / HAVING FUN (재미있어요): big bright open-mouth laugh, eyes curved into happy arcs, rosy cheeks, both hands clapping. Clear and readable for a child."
     },
     {
@@ -267,8 +295,54 @@
       "group": "faces",
       "size": "square",
       "transparent": true,
-      "refs": ["characters-ref.png"],
+      "refs": [
+        "characters-ref.png"
+      ],
       "prompt": "Head-and-shoulders portrait of the boy from the attached reference (short brown hair, yellow hoodie), centred, showing the feeling NOT SURE / PUZZLED (잘 모르겠어요): head tilted, one eyebrow up, neutral small mouth, one hand scratching the top of his head, both shoulders shrugged. No question-mark symbol. Clear and readable for a child."
+    },
+    {
+      "id": "place-self",
+      "group": "places",
+      "size": "square",
+      "transparent": true,
+      "refs": [
+        "characters-ref.png",
+        "ui-ref-2.png"
+      ],
+      "prompt": "A small classroom vignette: the boy from the reference (yellow hoodie) stands in front of a green chalkboard holding a presentation paper with both hands, looking a little shy; one small wooden school desk beside him. Drawn as a compact, chunky map-landmark vignette in the same style as the buildings on the attached board: rounded shapes, bold outlines, everything standing on a small rounded ground patch, no surrounding background. Characters in the exact cartoon style of the attached reference boy. Only this vignette, centred, big."
+    },
+    {
+      "id": "place-social",
+      "group": "places",
+      "size": "square",
+      "transparent": true,
+      "refs": [
+        "characters-ref.png",
+        "ui-ref-2.png"
+      ],
+      "prompt": "A small playground vignette: the boy from the reference (yellow hoodie, blue backpack) stands a little apart on the left watching hopefully while two classmates on the right play with a soccer ball; a tiny slide and a round tree behind them. Drawn as a compact, chunky map-landmark vignette in the same style as the buildings on the attached board: rounded shapes, bold outlines, everything standing on a small rounded ground patch, no surrounding background. Characters in the exact cartoon style of the attached reference boy. Only this vignette, centred, big."
+    },
+    {
+      "id": "place-relation",
+      "group": "places",
+      "size": "square",
+      "transparent": true,
+      "refs": [
+        "characters-ref.png",
+        "ui-ref-2.png"
+      ],
+      "prompt": "A small classroom break-time vignette: two wooden school desks; the boy from the reference (yellow hoodie) playfully hides a yellow pencil behind his back with a cheeky smile while a girl with a short bob haircut in a pink sweater searches her desk, looking puzzled; a small green chalkboard behind. Drawn as a compact, chunky map-landmark vignette in the same style as the buildings on the attached board: rounded shapes, bold outlines, everything standing on a small rounded ground patch, no surrounding background. Characters in the exact cartoon style of the attached reference boy. Only this vignette, centred, big."
+    },
+    {
+      "id": "place-mind",
+      "group": "places",
+      "size": "square",
+      "transparent": true,
+      "refs": [
+        "characters-ref.png",
+        "ui-ref-2.png"
+      ],
+      "prompt": "A small school lunchroom vignette: a stainless serving counter with colourful food trays on the right; three children holding lunch trays queue toward it, and one child is stepping sideways into the line right in front of the boy from the reference (yellow hoodie), who looks unsure. Drawn as a compact, chunky map-landmark vignette in the same style as the buildings on the attached board: rounded shapes, bold outlines, everything standing on a small rounded ground patch, no surrounding background. Characters in the exact cartoon style of the attached reference boy. Only this vignette, centred, big."
     }
   ]
 }
