@@ -35,7 +35,7 @@ describe('관계 인식 content wiring', () => {
   it('uses the document titles, its own picture and both explore modes', () => {
     expect(social.stepTitles?.step3?.ko).toBe('왜 그런 기분이 들까요?')
     expect(social.stepTitles?.action?.ko).toBe('어떻게 하면 좋을까요?')
-    expect(social.situation.image).toBe('/img/social-playground.png')
+    expect(social.situation.image).toBe('/img/v3/scene-social-playground.png')
     expect(social.step3.type === 'reason' && social.step3.explore).toBe(true)
     expect(social.action.explore).toBe(true)
     expect(explorableFeelings(social)).toEqual(['annoyed', 'angry', 'embarrassed', 'worried'])

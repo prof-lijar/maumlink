@@ -9,6 +9,9 @@ import { speech } from './speech'
 
 export type TextSize = 'normal' | 'large'
 export type Locale = 'ko' | 'en'
+/** The child's companion character on Home / wrap-up (cartoon redesign 2026-10-09). */
+export const AVATARS = ['haru', 'sora', 'mina', 'jun'] as const
+export type Avatar = (typeof AVATARS)[number]
 
 interface SettingsState {
   textSize: TextSize
@@ -16,12 +19,14 @@ interface SettingsState {
   autoRead: boolean
   voiceEnabled: boolean
   started: boolean
+  avatar: Avatar
   locale: Locale
   setTextSize: (v: TextSize) => void
   setSound: (v: boolean) => void
   setAutoRead: (v: boolean) => void
   setVoiceEnabled: (v: boolean) => void
   setStarted: () => void
+  setAvatar: (v: Avatar) => void
   setLocale: (v: Locale) => void
 }
 
@@ -37,8 +42,16 @@ export const StoredSettings = z
     autoRead: z.boolean().catch(true),
     voiceEnabled: z.boolean().catch(true),
     started: z.boolean().catch(false),
+    avatar: z.enum(AVATARS).catch('haru'),
   })
-  .catch({ textSize: 'normal', sound: true, autoRead: true, voiceEnabled: true, started: false })
+  .catch({
+    textSize: 'normal',
+    sound: true,
+    autoRead: true,
+    voiceEnabled: true,
+    started: false,
+    avatar: 'haru',
+  })
 
 export const useSettings = create<SettingsState>()(
   persist(
@@ -48,12 +61,14 @@ export const useSettings = create<SettingsState>()(
       autoRead: true,
       voiceEnabled: true,
       started: false,
+      avatar: 'haru',
       locale: devLocaleFromUrl(),
       setTextSize: (textSize) => set({ textSize }),
       setSound: (sound) => set({ sound }),
       setAutoRead: (autoRead) => set({ autoRead }),
       setVoiceEnabled: (voiceEnabled) => set({ voiceEnabled }),
       setStarted: () => set({ started: true }),
+      setAvatar: (avatar) => set({ avatar }),
       setLocale: (locale) => set({ locale }),
     }),
     {
@@ -64,6 +79,7 @@ export const useSettings = create<SettingsState>()(
         autoRead: s.autoRead,
         voiceEnabled: s.voiceEnabled,
         started: s.started,
+        avatar: s.avatar,
       }),
       merge: (persisted, current) => ({
         ...current,

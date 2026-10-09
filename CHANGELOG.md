@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — 마음마을 cartoon redesign (2026-10-09)
+
+- Whole-app kid-first visual redesign: bright picture-book palette, puppy guide (마음이) speech bubbles on every question and feedback, a companion character chosen on first run (하루 · 소라 · 미나 · 준, changeable in Settings), village-map Home with four landmarks and a star counter, "잘했어요!" ribbon and "오늘의 배움" card on feedback/wrap-up, cartoon emotion faces on every emotion card.
+- 33 new illustrations generated with the Codex CLI (`pnpm art:generate` / `pnpm art:build`, see docs/ILLUSTRATIONS.md); the four situation scenes were re-illustrated in the same style. Legacy image sets stay on disk but leave the offline precache.
+- Lesson wording, emotion ids, option order, feedback and narration are unchanged. New utility strings (place names, character names, banner text) await client review.
+- Tests: unit suite updated for the recap numbering and companion setting; e2e start-gate, a11y and home specs cover the character pick and the village map.
+
 ## Unreleased — 자기 인식 design-document features
 
 - Feedback step on phones: the outcome icon moves up beside the "내가 고른 방법" label, so the chosen method text keeps the card width (259px instead of 175px at 375px) and no longer breaks into cramped lines.

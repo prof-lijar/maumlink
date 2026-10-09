@@ -5,9 +5,12 @@ import type { Scenario } from '@/content/schema'
 import { IconButton, PrimaryButton, SecondaryButton } from '@/design/Button'
 import { VoiceToggle } from '@/design/VoiceToggle'
 import { BrandLogo } from '@/design/BrandLogo'
-import { HeartFriends } from '@/design/HeartFriends'
 import { Card } from '@/design/Card'
-import { ArrowRightIcon, HomeIcon, SettingsIcon } from '@/design/icons'
+import { CharacterArt } from '@/design/CharacterArt'
+import { EmotionFace } from '@/design/EmotionTile'
+import { GuideAvatar } from '@/design/Guide'
+import { Ribbon } from '@/design/Ribbon'
+import { ArrowRightIcon, HomeIcon, SettingsIcon, SparkleIcon } from '@/design/icons'
 import { triedActions, chosenAction, type LessonState } from '@/engine/lessonMachine'
 import { useT } from '@/i18n/useT'
 import { useLesson } from '@/engine/store'
@@ -21,7 +24,7 @@ interface Props {
   onExit: () => void
 }
 
-/** S6 — linked-heart greeting, closing message, concrete choice recap, next/home. */
+/** S6 — companion + guide celebrate, closing message as "오늘의 배움", concrete recap, next/home. */
 export function Wrapup({ scenario, state, onExit }: Props) {
   const { t, L, locale } = useT()
   const navigate = useNavigate()
@@ -47,7 +50,7 @@ export function Wrapup({ scenario, state, onExit }: Props) {
   const feelings = state.feelingIds.map(getEmotion)
 
   return (
-    <div className="wrapup-screen">
+    <div className="wrapup-screen" data-domain={scenario.domain}>
       <header className="wrapup-header">
         <div className="brand-lockup">
           <BrandLogo />
@@ -75,18 +78,35 @@ export function Wrapup({ scenario, state, onExit }: Props) {
         </div>
       </header>
       <main className="wrapup-main">
-        <HeartFriends className="wrapup-friends" />
-        <h1 className="text-story font-bold text-ink">{t('wrapup.title')}</h1>
-        <Card className="w-full" data-testid="closing-card" aria-live="polite">
+        <div className="wrapup-stage" aria-hidden="true">
+          <span className="wrapup-sparkle wrapup-sparkle--1">
+            <SparkleIcon size={28} />
+          </span>
+          <span className="wrapup-sparkle wrapup-sparkle--2">
+            <SparkleIcon size={20} />
+          </span>
+          <CharacterArt className="wrapup-kid" animate />
+          <GuideAvatar pose="cheer" size="xl" className="wrapup-guide" />
+        </div>
+        <h1 className="wrapup-title">
+          <Ribbon>{t('wrapup.title')}</Ribbon>
+        </h1>
+        <Card
+          tone="lesson"
+          label={t('wrapup.lesson')}
+          className="w-full"
+          data-testid="closing-card"
+          aria-live="polite"
+        >
           <p className="text-story font-bold text-ink">{closing}</p>
         </Card>
 
         <section className="journey-recap" aria-label={t('wrapup.path')}>
-          <h2 className="text-caption font-bold text-ink-soft">{t('wrapup.path')}</h2>
+          <h2 className="journey-heading">{t('wrapup.path')}</h2>
           <div className="journey-feelings">
             {feelings.map((f) => (
               <span key={f.id} className="journey-feeling">
-                <img src={`/icons/emotions/${f.icon}`} alt="" width={48} height={48} />
+                <EmotionFace emotion={f} className="journey-face" />
                 <span>{L(f.word)}</span>
               </span>
             ))}
@@ -95,18 +115,20 @@ export function Wrapup({ scenario, state, onExit }: Props) {
             <div className="journey-action" data-testid="journey-actions">
               <span className="text-caption font-bold text-ink-soft">{t('feedback.myChoice')}</span>
               {actions.length === 1 ? (
-                <p className="text-body font-bold">{L(actions[0]!.text)}</p>
+                <p className="journey-step">
+                  <span className="journey-step-number" aria-hidden="true">
+                    01
+                  </span>
+                  <span className="text-body font-bold">{L(actions[0]!.text)}</span>
+                </p>
               ) : (
                 <ul className="journey-action-list">
-                  {actions.map((a) => (
-                    <li key={a.id} className="text-body font-bold">
-                      <img
-                        src={`/icons/outcome/${a.outcomeIcon}.svg`}
-                        alt=""
-                        width={32}
-                        height={32}
-                      />
-                      {L(a.text)}
+                  {actions.map((a, i) => (
+                    <li key={a.id} className="journey-step">
+                      <span className="journey-step-number" aria-hidden="true">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                      <span className="text-body font-bold">{L(a.text)}</span>
                     </li>
                   ))}
                 </ul>

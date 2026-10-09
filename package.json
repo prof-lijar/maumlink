@@ -29,7 +29,9 @@
     "test:acceptance": "playwright test --config playwright.acceptance.config.ts",
     "validate:final-content": "node --import tsx scripts/validate-final-content.ts",
     "narration:import": "node --import tsx scripts/narration-import.ts",
-    "narration:generate:clova": "node --import tsx scripts/narration-generate-clova.ts"
+    "narration:generate:clova": "node --import tsx scripts/narration-generate-clova.ts",
+    "art:generate": "node --import tsx scripts/gen-art-codex.ts",
+    "art:build": "node --import tsx scripts/build-art.ts"
   },
   "dependencies": {
     "@tailwindcss/vite": "4.3.3",

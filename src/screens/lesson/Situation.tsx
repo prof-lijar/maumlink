@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import type { Scenario } from '@/content/schema'
 import { Illustration } from '@/design/Illustration'
-import { HeartFriends } from '@/design/HeartFriends'
+import { GuideAvatar } from '@/design/Guide'
 import { cn } from '@/design/cn'
 import { keySentenceVisible, type LessonState } from '@/engine/lessonMachine'
 import { useT } from '@/i18n/useT'
@@ -29,7 +29,9 @@ export function Situation({ scenario, state, onAdvance }: Props) {
 
   return (
     <div className="situation-layout" data-key-sentence={keyVisible}>
-      <h1 className="story-heading">{L(scenario.situation.title)}</h1>
+      <h1 className="story-heading">
+        <span className="story-heading-pill">{L(scenario.situation.title)}</span>
+      </h1>
       <div className="situation-art">
         <Illustration
           src={imageBase(scenario, locale)}
@@ -53,7 +55,7 @@ export function Situation({ scenario, state, onAdvance }: Props) {
         </Illustration>
       </div>
       <div className="situation-copy">
-        <HeartFriends className="story-friends" />
+        <GuideAvatar pose={keyVisible ? 'point' : 'wave'} size="lg" className="story-guide" />
         <button
           type="button"
           data-testid="story-card"
@@ -84,7 +86,7 @@ export function Situation({ scenario, state, onAdvance }: Props) {
               aria-hidden="true"
               className={cn(
                 'block size-3 rounded-full transition-colors',
-                i <= state.sentenceIndex ? 'bg-link' : 'bg-line',
+                i <= state.sentenceIndex ? 'bg-go' : 'bg-line',
               )}
             />
           ))}

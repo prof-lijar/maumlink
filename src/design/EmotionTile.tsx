@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import type { Emotion } from '@/content/schema'
 import { useT } from '@/i18n/useT'
 import { sound } from '@/services/sound'
+import { art, sprite } from './art'
 import { cn } from './cn'
 import { CheckIcon } from './icons'
 
@@ -13,8 +15,8 @@ interface Props {
 }
 
 /**
- * Face icon + word (PRD §6.7). Tapping speaks the word (parent handles) and toggles.
- * Selected = strong outline and check badge without layout movement.
+ * Cartoon face card + word (PRD §6.7). Tapping speaks the word (parent handles) and toggles.
+ * Selected = blue outline and a check badge without layout movement.
  */
 export function EmotionTile({ emotion, selected, dimmed, onSelect, size = 'normal' }: Props) {
   const { L, t } = useT()
@@ -27,40 +29,45 @@ export function EmotionTile({ emotion, selected, dimmed, onSelect, size = 'norma
       aria-label={word}
       data-emotion={emotion.id}
       className={cn(
-        'emotion-tile tap relative flex flex-col items-center justify-center gap-2 rounded-tile border-2 bg-surface p-3 text-ink transition-[transform,border-color] duration-150 motion-reduce:transition-none',
-        size === 'normal' ? 'min-h-[144px] w-full short:min-h-[112px]' : 'min-h-[120px] w-full',
-        selected
-          ? 'border-select ring-2 ring-select'
-          : 'border-line hoverable:hover:border-ink-soft hoverable:hover:-translate-y-1',
+        'emotion-tile tap',
+        size === 'compact' && 'emotion-tile--compact',
         dimmed && !selected && 'opacity-60',
       )}
+      style={{ ['--tile-tint' as string]: emotion.tint }}
       onClick={() => {
         sound.play('tick')
         onSelect(emotion.id)
       }}
     >
-      <span
-        className="emotion-face flex size-[88px] items-center justify-center rounded-full short:size-[64px]"
-        style={{ backgroundColor: emotion.tint }}
-      >
-        <img
-          src={`/icons/emotions/${emotion.icon}`}
-          alt=""
-          width={64}
-          height={64}
-          className="size-[64px] short:size-[48px]"
-        />
-      </span>
-      <span className="text-emotion font-bold leading-tight">{word}</span>
+      <EmotionFace emotion={emotion} className="emotion-face" />
+      <span className="emotion-word">{word}</span>
       {selected && (
-        <span
-          className="absolute right-2 top-2 flex size-8 items-center justify-center rounded-full bg-select text-white"
-          aria-hidden="true"
-        >
+        <span className="emotion-check" aria-hidden="true">
           <CheckIcon size={20} />
           <span className="sr-only">{t('feeling.selected')}</span>
         </span>
       )}
     </button>
+  )
+}
+
+/** Cartoon face for an emotion; the original line icon stays as a fallback. */
+export function EmotionFace({ emotion, className }: { emotion: Emotion; className?: string }) {
+  const [fallback, setFallback] = useState(false)
+  return (
+    <span className={cn('emotion-face-frame', className)} aria-hidden="true">
+      {fallback ? (
+        <img src={`/icons/emotions/${emotion.icon}`} alt="" width={64} height={64} />
+      ) : (
+        <img
+          {...sprite(art.face(emotion.id, 400), art.face(emotion.id, 800))}
+          alt=""
+          width={400}
+          height={400}
+          decoding="async"
+          onError={() => setFallback(true)}
+        />
+      )}
+    </span>
   )
 }

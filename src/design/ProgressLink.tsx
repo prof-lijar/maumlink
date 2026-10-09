@@ -1,12 +1,12 @@
 import { useT } from '@/i18n/useT'
-import { ArrowRightIcon, CheckIcon, FeelingIcon, HelpIcon, LinkMark, SceneIcon } from './icons'
+import { CheckIcon } from './icons'
 import { cn } from './cn'
 
 const STEPS = 5
 
 /**
- * Five dots joined by a line that fills as the child progresses — the "link" motif
- * (PRD §6.1/§6.7). Current dot uses a larger inset ring; the connecting line follows progression.
+ * Five dots on a mint rail that fills as the child progresses (PRD §6.1/§6.7).
+ * The current dot is larger; finished dots carry a check.
  */
 export function ProgressLink({ index }: { index: number }) {
   const { t } = useT()
@@ -39,19 +39,7 @@ export function ProgressLink({ index }: { index: number }) {
               isCurrent ? 'progress-node--current' : isDone && 'progress-node--done',
             )}
           >
-            {isDone ? (
-              <CheckIcon size={16} />
-            ) : i === 0 ? (
-              <SceneIcon size={18} />
-            ) : i === 1 ? (
-              <FeelingIcon size={18} />
-            ) : i === 2 ? (
-              <HelpIcon size={18} />
-            ) : i === 3 ? (
-              <ArrowRightIcon size={18} />
-            ) : (
-              <LinkMark size={22} />
-            )}
+            {isDone ? <CheckIcon size={14} /> : null}
           </span>
         )
       })}

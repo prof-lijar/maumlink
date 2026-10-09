@@ -49,7 +49,7 @@
     "imageBrief": {
       "ko": "친구들이 내 발표를 듣고 놀려요."
     },
-    "image": "/img/generated/self-presentation-teasing-v2.png",
+    "image": "/img/v3/scene-self-presentation-teasing.png",
     "emphasis": [
       {
         "ko": "속상해"
@@ -60,22 +60,22 @@
         "text": {
           "ko": "ㅋㅋㅋ"
         },
-        "x": 63,
-        "y": 22
+        "x": 70,
+        "y": 30
       },
       {
         "text": {
           "ko": "발표 진짜 못하나~"
         },
-        "x": 76,
-        "y": 9
+        "x": 84,
+        "y": 18
       },
       {
         "text": {
           "ko": "그건 뭐야~?"
         },
-        "x": 89,
-        "y": 24
+        "x": 90,
+        "y": 38
       }
     ]
   },

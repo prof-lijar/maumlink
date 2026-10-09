@@ -1,5 +1,8 @@
 {
-  "app.name": { "ko": "마음잇다", "en": "Maum:Link" },
+  "app.name": {
+    "ko": "마음잇다",
+    "en": "Maum:Link"
+  },
   "app.tagline": {
     "ko": "느린학습자 사회정서교육 앱",
     "en": "Social-emotional learning for slow learners"
@@ -8,34 +11,106 @@
     "ko": "오늘은 어떤 마음을 배워볼까요?",
     "en": "Which feeling shall we learn about today?"
   },
-  "home.start": { "ko": "시작하기", "en": "Start" },
-  "home.done": { "ko": "완료", "en": "Done" },
-  "home.count": { "ko": "상황 {n}개", "en": "{n} situation(s)" },
-  "home.reserved": { "ko": "준비 중", "en": "Coming soon" },
-  "home.pick": { "ko": "어떤 상황을 연습할까요?", "en": "Which situation shall we practice?" },
-  "domain.self": { "ko": "자기 인식", "en": "Self-Awareness" },
-  "domain.social": { "ko": "관계 인식", "en": "Social Awareness" },
-  "domain.relation": { "ko": "관계 관리", "en": "Relationship Management" },
-  "domain.mind": { "ko": "마음건강관리", "en": "Mental Health Care" },
-  "domain.reserved": { "ko": "준비 중", "en": "Coming soon" },
-  "nav.next": { "ko": "다음", "en": "Next" },
-  "nav.back": { "ko": "이전", "en": "Back" },
-  "nav.home": { "ko": "처음으로", "en": "Home" },
-  "nav.continue": { "ko": "계속", "en": "Continue" },
-  "nav.gotIt": { "ko": "알겠어요", "en": "Got it" },
-  "nav.tellMore": { "ko": "더 알려줘요", "en": "Tell me more" },
-  "nav.chooseThis": { "ko": "이걸로 할래요", "en": "Choose this" },
-  "nav.tryAnother": { "ko": "다른 방법 해보기", "en": "Try another way" },
-  "nav.practiceAnother": { "ko": "다른 상황 연습하기", "en": "Practice another situation" },
-  "nav.help": { "ko": "도와줘요", "en": "Help me" },
-  "voice.test": { "ko": "음성 확인", "en": "Test voice" },
+  "home.start": {
+    "ko": "시작하기",
+    "en": "Start"
+  },
+  "home.done": {
+    "ko": "완료",
+    "en": "Done"
+  },
+  "home.count": {
+    "ko": "상황 {n}개",
+    "en": "{n} situation(s)"
+  },
+  "home.reserved": {
+    "ko": "준비 중",
+    "en": "Coming soon"
+  },
+  "home.pick": {
+    "ko": "어떤 상황을 연습할까요?",
+    "en": "Which situation shall we practice?"
+  },
+  "domain.self": {
+    "ko": "자기 인식",
+    "en": "Self-Awareness"
+  },
+  "domain.social": {
+    "ko": "관계 인식",
+    "en": "Social Awareness"
+  },
+  "domain.relation": {
+    "ko": "관계 관리",
+    "en": "Relationship Management"
+  },
+  "domain.mind": {
+    "ko": "마음건강관리",
+    "en": "Mental Health Care"
+  },
+  "domain.reserved": {
+    "ko": "준비 중",
+    "en": "Coming soon"
+  },
+  "nav.next": {
+    "ko": "다음",
+    "en": "Next"
+  },
+  "nav.back": {
+    "ko": "이전",
+    "en": "Back"
+  },
+  "nav.home": {
+    "ko": "처음으로",
+    "en": "Home"
+  },
+  "nav.continue": {
+    "ko": "계속",
+    "en": "Continue"
+  },
+  "nav.gotIt": {
+    "ko": "알겠어요",
+    "en": "Got it"
+  },
+  "nav.tellMore": {
+    "ko": "더 알려줘요",
+    "en": "Tell me more"
+  },
+  "nav.chooseThis": {
+    "ko": "이걸로 할래요",
+    "en": "Choose this"
+  },
+  "nav.tryAnother": {
+    "ko": "다른 방법 해보기",
+    "en": "Try another way"
+  },
+  "nav.practiceAnother": {
+    "ko": "다른 상황 연습하기",
+    "en": "Practice another situation"
+  },
+  "nav.help": {
+    "ko": "도와줘요",
+    "en": "Help me"
+  },
+  "voice.test": {
+    "ko": "음성 확인",
+    "en": "Test voice"
+  },
   "voice.status.idle": {
     "ko": "음성 확인 버튼을 눌러 소리를 확인해 보세요.",
     "en": "Press Test voice to check playback."
   },
-  "voice.status.off": { "ko": "음성이 꺼져 있어요.", "en": "Voice is off." },
-  "voice.status.loading": { "ko": "읽어주기를 준비하고 있어요.", "en": "Preparing the voice." },
-  "voice.status.speaking": { "ko": "읽어주고 있어요.", "en": "Reading aloud." },
+  "voice.status.off": {
+    "ko": "음성이 꺼져 있어요.",
+    "en": "Voice is off."
+  },
+  "voice.status.loading": {
+    "ko": "읽어주기를 준비하고 있어요.",
+    "en": "Preparing the voice."
+  },
+  "voice.status.speaking": {
+    "ko": "읽어주고 있어요.",
+    "en": "Reading aloud."
+  },
   "voice.status.blocked": {
     "ko": "음성 버튼을 눌러 읽어주세요.",
     "en": "Press the voice button to start reading."
@@ -52,52 +127,228 @@
     "ko": "읽어주기를 시작하지 못했어요. 음성 버튼을 다시 눌러 주세요.",
     "en": "Reading could not start. Press the voice button to try again."
   },
-  "voice.label": { "ko": "음성", "en": "Voice" },
-  "voice.turnOff": { "ko": "음성 끄기", "en": "Turn voice off" },
-  "voice.turnOn": { "ko": "음성 켜기", "en": "Turn voice on" },
-  "nav.replay": { "ko": "다시 듣기", "en": "Listen again" },
-  "nav.settings": { "ko": "설정", "en": "Settings" },
-  "nav.close": { "ko": "닫기", "en": "Close" },
-  "step.situation": { "ko": "상황 보기", "en": "Situation" },
-  "step.feeling": { "ko": "감정 알아보기", "en": "Feeling" },
-  "step.step3": { "ko": "왜 그럴까", "en": "Thought" },
-  "step.action": { "ko": "어떻게 할까", "en": "Action" },
-  "step.feedback": { "ko": "피드백", "en": "Feedback" },
+  "voice.label": {
+    "ko": "음성",
+    "en": "Voice"
+  },
+  "voice.turnOff": {
+    "ko": "음성 끄기",
+    "en": "Turn voice off"
+  },
+  "voice.turnOn": {
+    "ko": "음성 켜기",
+    "en": "Turn voice on"
+  },
+  "nav.replay": {
+    "ko": "다시 듣기",
+    "en": "Listen again"
+  },
+  "nav.settings": {
+    "ko": "설정",
+    "en": "Settings"
+  },
+  "nav.close": {
+    "ko": "닫기",
+    "en": "Close"
+  },
+  "step.situation": {
+    "ko": "상황 보기",
+    "en": "Situation"
+  },
+  "step.feeling": {
+    "ko": "감정 알아보기",
+    "en": "Feeling"
+  },
+  "step.step3": {
+    "ko": "왜 그럴까",
+    "en": "Thought"
+  },
+  "step.action": {
+    "ko": "어떻게 할까",
+    "en": "Action"
+  },
+  "step.feedback": {
+    "ko": "피드백",
+    "en": "Feedback"
+  },
   "step3.explore": {
     "ko": "감정 버튼을 누르고 몸의 반응을 살펴봐요.",
     "en": "Press a feeling button to see how the body reacts."
   },
-  "progress.label": { "ko": "{n}단계 중 {i}단계", "en": "Step {i} of {n}" },
-  "feeling.chose": { "ko": "'{emotion}'를 골랐어요.", "en": "You chose '{emotion}'." },
-  "feeling.pickFirst": { "ko": "먼저 하나를 골라요.", "en": "Choose one first." },
+  "progress.label": {
+    "ko": "{n}단계 중 {i}단계",
+    "en": "Step {i} of {n}"
+  },
+  "feeling.chose": {
+    "ko": "'{emotion}'를 골랐어요.",
+    "en": "You chose '{emotion}'."
+  },
+  "feeling.pickFirst": {
+    "ko": "먼저 하나를 골라요.",
+    "en": "Choose one first."
+  },
   "feeling.notSureTwice": {
     "ko": "괜찮아요. 함께 {emotion} 부터 살펴봐요.",
     "en": "That's okay. Let's look at {emotion} together."
   },
-  "feeling.selected": { "ko": "선택함", "en": "Selected" },
-  "hint.title": { "ko": "힌트", "en": "Hint" },
-  "hint.maybe": { "ko": "이런 마음일 수도 있어요", "en": "It might be one of these" },
-  "feedback.myChoice": { "ko": "내가 고른 방법", "en": "What I chose" },
-  "wrapup.path": { "ko": "오늘의 길", "en": "Today's path" },
-  "wrapup.title": { "ko": "잘했어요!", "en": "Well done!" },
-  "confirm.home": { "ko": "처음으로 갈까요?", "en": "Go back home?" },
-  "confirm.yes": { "ko": "네", "en": "Yes" },
-  "confirm.no": { "ko": "아니요", "en": "No" },
-  "settings.title": { "ko": "설정", "en": "Settings" },
-  "settings.textSize": { "ko": "글자 크기", "en": "Text size" },
-  "settings.textNormal": { "ko": "보통", "en": "Normal" },
-  "settings.textLarge": { "ko": "크게", "en": "Large" },
-  "settings.sound": { "ko": "소리", "en": "Sound" },
-  "settings.autoRead": { "ko": "자동으로 읽어주기", "en": "Read aloud automatically" },
-  "settings.on": { "ko": "켜기", "en": "On" },
-  "settings.off": { "ko": "끄기", "en": "Off" },
+  "feeling.selected": {
+    "ko": "선택함",
+    "en": "Selected"
+  },
+  "hint.title": {
+    "ko": "힌트",
+    "en": "Hint"
+  },
+  "hint.maybe": {
+    "ko": "이런 마음일 수도 있어요",
+    "en": "It might be one of these"
+  },
+  "feedback.myChoice": {
+    "ko": "내가 고른 방법",
+    "en": "What I chose"
+  },
+  "wrapup.path": {
+    "ko": "오늘의 길",
+    "en": "Today's path"
+  },
+  "wrapup.title": {
+    "ko": "잘했어요!",
+    "en": "Well done!"
+  },
+  "confirm.home": {
+    "ko": "처음으로 갈까요?",
+    "en": "Go back home?"
+  },
+  "confirm.yes": {
+    "ko": "네",
+    "en": "Yes"
+  },
+  "confirm.no": {
+    "ko": "아니요",
+    "en": "No"
+  },
+  "settings.title": {
+    "ko": "설정",
+    "en": "Settings"
+  },
+  "settings.textSize": {
+    "ko": "글자 크기",
+    "en": "Text size"
+  },
+  "settings.textNormal": {
+    "ko": "보통",
+    "en": "Normal"
+  },
+  "settings.textLarge": {
+    "ko": "크게",
+    "en": "Large"
+  },
+  "settings.sound": {
+    "ko": "소리",
+    "en": "Sound"
+  },
+  "settings.autoRead": {
+    "ko": "자동으로 읽어주기",
+    "en": "Read aloud automatically"
+  },
+  "settings.on": {
+    "ko": "켜기",
+    "en": "On"
+  },
+  "settings.off": {
+    "ko": "끄기",
+    "en": "Off"
+  },
   "tts.unavailable": {
     "ko": "이 기기에서는 읽어주기를 사용할 수 없어요.",
     "en": "Read-aloud is not available on this device."
   },
-  "tts.muted": { "ko": "읽어주기 사용 불가", "en": "Read-aloud unavailable" },
-  "image.placeholder": { "ko": "그림 준비 중", "en": "Illustration coming soon" },
-  "a11y.illustration": { "ko": "상황 그림", "en": "Situation illustration" },
-  "a11y.speak": { "ko": "읽어주기", "en": "Read aloud" },
-  "a11y.sentenceDots": { "ko": "문장 {i} / {n}", "en": "Sentence {i} of {n}" }
+  "tts.muted": {
+    "ko": "읽어주기 사용 불가",
+    "en": "Read-aloud unavailable"
+  },
+  "image.placeholder": {
+    "ko": "그림 준비 중",
+    "en": "Illustration coming soon"
+  },
+  "a11y.illustration": {
+    "ko": "상황 그림",
+    "en": "Situation illustration"
+  },
+  "a11y.speak": {
+    "ko": "읽어주기",
+    "en": "Read aloud"
+  },
+  "a11y.sentenceDots": {
+    "ko": "문장 {i} / {n}",
+    "en": "Sentence {i} of {n}"
+  },
+  "character.title": {
+    "ko": "나의 캐릭터를 선택해요!",
+    "en": "Choose your character!"
+  },
+  "character.hint": {
+    "ko": "마음잇다에서 함께 다닐 친구예요.",
+    "en": "This friend travels with you in Maum:Link."
+  },
+  "character.change": {
+    "ko": "캐릭터 바꾸기",
+    "en": "Change character"
+  },
+  "character.haru": {
+    "ko": "하루",
+    "en": "Haru"
+  },
+  "character.sora": {
+    "ko": "소라",
+    "en": "Sora"
+  },
+  "character.mina": {
+    "ko": "미나",
+    "en": "Mina"
+  },
+  "character.jun": {
+    "ko": "준",
+    "en": "Jun"
+  },
+  "guide.name": {
+    "ko": "마음이",
+    "en": "Maumi"
+  },
+  "place.self": {
+    "ko": "우리 집",
+    "en": "Our Home"
+  },
+  "place.social": {
+    "ko": "운동장",
+    "en": "Playground"
+  },
+  "place.relation": {
+    "ko": "우리 교실",
+    "en": "Our Classroom"
+  },
+  "place.mind": {
+    "ko": "마음쉼터",
+    "en": "Heart Garden"
+  },
+  "home.stars": {
+    "ko": "모은 별",
+    "en": "Stars"
+  },
+  "feedback.great": {
+    "ko": "잘했어요!",
+    "en": "Well done!"
+  },
+  "feedback.rethink": {
+    "ko": "다른 방법도 생각해볼까요?",
+    "en": "Shall we think of another way?"
+  },
+  "wrapup.lesson": {
+    "ko": "오늘의 배움",
+    "en": "Today's lesson"
+  },
+  "a11y.stepDone": {
+    "ko": "완료한 단계",
+    "en": "Completed step"
+  }
 }

@@ -76,7 +76,7 @@ export function Sheet({ open, onClose, title, children, tint, modal }: Props) {
       role="presentation"
     >
       <div
-        className="absolute inset-0 bg-ink/30 motion-safe:animate-[fadeIn_200ms_ease-out]"
+        className="absolute inset-0 bg-ink/35 motion-safe:animate-[fadeIn_200ms_ease-out]"
         onClick={modal ? undefined : onClose}
         aria-hidden="true"
       />
@@ -86,7 +86,7 @@ export function Sheet({ open, onClose, title, children, tint, modal }: Props) {
         aria-modal="true"
         aria-labelledby={`${id}-title`}
         className={cn(
-          'app-sheet relative flex max-h-[85dvh] w-full flex-col rounded-t-card border-2 border-line bg-surface pb-safe shadow-[0_-2px_0_var(--color-line)] motion-safe:animate-[slideUp_240ms_ease-out] md:max-h-[85dvh] lg:max-h-[80dvh] lg:w-[560px] lg:rounded-card',
+          'app-sheet relative flex max-h-[85dvh] w-full flex-col rounded-t-card bg-surface pb-safe motion-safe:animate-[slideUp_240ms_ease-out] md:max-h-[85dvh] lg:max-h-[80dvh] lg:w-[600px] lg:rounded-card',
         )}
         style={tint ? { backgroundColor: tint } : undefined}
       >

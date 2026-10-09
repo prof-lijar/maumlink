@@ -28,6 +28,8 @@ test('start gate and home', async ({ page }) => {
   await page.goto('/')
   await audit(page, 'start-gate')
   await page.getByRole('button', { name: '시작하기' }).click()
+  await audit(page, 'character-pick')
+  await page.getByTestId('character-next').click()
   await audit(page, 'home')
   await page.getByRole('button', { name: '설정' }).click()
   await audit(page, 'settings-sheet')

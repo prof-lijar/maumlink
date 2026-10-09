@@ -11,13 +11,19 @@ import {
 const scenarios = loadScenarios()
 
 test.describe('Start gate (FR-HOME-01)', () => {
-  test('first visit shows 시작하기, then Home', async ({ page }) => {
+  test('first visit shows 시작하기, then the character pick, then Home', async ({ page }) => {
     await page.goto('/')
     await expect(page.getByRole('button', { name: '시작하기' })).toBeVisible()
     await page.getByRole('button', { name: '시작하기' }).click()
+    // The companion pick is one extra tap with a safe default; 소라 is remembered after reload.
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('나의 캐릭터')
+    await page.getByRole('radio', { name: '소라' }).click()
+    await page.getByTestId('character-next').click()
     await expect(page.getByRole('heading', { level: 1 })).toContainText('오늘은 어떤 마음을')
+    await expect(page.getByRole('img', { name: '소라' }).first()).toBeVisible()
     await page.reload()
     await expect(page.getByRole('button', { name: '시작하기' })).toHaveCount(0)
+    await expect(page.getByRole('img', { name: '소라' }).first()).toBeVisible()
   })
 })
 

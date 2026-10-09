@@ -4,6 +4,7 @@ import { VoiceToggle } from '@/design/VoiceToggle'
 import { ProgressLink } from '@/design/ProgressLink'
 import { ArrowLeftIcon, ArrowRightIcon, HomeIcon, SettingsIcon } from '@/design/icons'
 import { useT } from '@/i18n/useT'
+import type { Domain } from '@/content/schema'
 
 export interface BottomBar {
   back?: { label: string; onClick: () => void }
@@ -24,6 +25,8 @@ interface Props {
   screenKey: string
   /** Step caption under the progress track; defaults to the generic label for the step. */
   stepTitle?: string
+  /** Learning area, used to tint the backdrop. */
+  domain?: Domain
 }
 
 /**
@@ -40,6 +43,7 @@ export function LessonShell({
   children,
   screenKey,
   stepTitle,
+  domain,
 }: Props) {
   const { t } = useT()
   const content = useRef<HTMLElement>(null)
@@ -50,7 +54,7 @@ export function LessonShell({
     heading?.focus({ preventScroll: true })
   }, [screenKey])
   return (
-    <div className="lesson-shell flex h-dvh flex-col bg-bg text-ink">
+    <div className="lesson-shell flex h-dvh flex-col text-ink" data-domain={domain}>
       <header className="lesson-header flex shrink-0 items-center justify-between gap-4">
         <div className="flex items-center">
           <IconButton label={t('nav.home')} onClick={onHome}>
@@ -79,7 +83,7 @@ export function LessonShell({
         {children}
       </main>
 
-      <footer className="lesson-footer shrink-0 border-t border-line bg-surface">
+      <footer className="lesson-footer shrink-0">
         <div className="lesson-navigation">
           {bottom.back && (
             <SecondaryButton

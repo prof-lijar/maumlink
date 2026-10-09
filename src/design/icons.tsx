@@ -129,3 +129,20 @@ export function LinkMark({ size = 40, ...rest }: P) {
     </svg>
   )
 }
+
+export const StarIcon = (p: P) => (
+  <Base {...p} fill="currentColor" strokeWidth={1.5}>
+    <path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z" />
+  </Base>
+)
+export const BulbIcon = (p: P) => (
+  <Base {...p}>
+    <path d="M9 18h6M10 21h4" />
+    <path d="M8.5 14.5A6 6 0 1 1 15.5 14.5c-.8.7-1.2 1.6-1.2 2.5h-4.6c0-.9-.4-1.8-1.2-2.5z" />
+  </Base>
+)
+export const SparkleIcon = (p: P) => (
+  <Base {...p}>
+    <path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.5 6.5l2 2M15.5 15.5l2 2M6.5 17.5l2-2M15.5 8.5l2-2" />
+  </Base>
+)

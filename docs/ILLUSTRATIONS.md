@@ -35,3 +35,19 @@ Inspected all three generated outputs. Pencil is visibly hidden, lunch queue is 
 사용자의 체크리스트 후속 작업 요청에 따라 현재 네 PNG를 다시 확인했다. 연필 장면은 숨긴 연필과 찾는 친구가 보이고, 운동장 장면은 떨어진 관찰자와 함께 노는 세 아이가 보인다. 발표 장면은 발표자와 웃으며 이야기하는 두 친구가 보인다. 급식실 장면은 줄 사이로 들어오는 아이를 보여주지만 새치기라는 의미는 원문 이야기와 함께 전달된다. 포함된 UI 글자나 정오답 표시가 없다.
 
 현재 앱에서 계속 사용할 수 있다는 개발 검토 판단이며 원문 작성자·교육 전문가 승인 또는 아동 대상 이해도 검증은 아니다. 최신 사용 지시에 따라 한국어 학습 문구는 PDF 원문으로 복원했고 기존 삽화는 유지했다. 앞선 “문구 변경 없음”은 당시 변경의 기록이다.
+
+## 2026-10-09 — Cartoon set (v3) generated with the Codex CLI
+
+All pictures the redesigned screens show live in `public/img/v3` and were generated once from `content-source/art/manifest.json` with `pnpm art:generate` (Codex CLI `codex exec` + its built-in image tool, 1024–1536 px, transparent PNG for sprites) and converted with `pnpm art:build` (Sharp). Raw renders land in `content-source/art/raw` (gitignored, about 39 MB; regenerate with `pnpm art:generate`); style references (the two client boards and a first boy + puppy render) are in `content-source/art/refs` and are attached to every generation so the set stays consistent.
+
+| Group | Files | Used on |
+|---|---|---|
+| Companions | `char-haru`, `char-sora`, `char-mina`, `char-jun` | Start, character pick, Home greeting, wrap-up |
+| Guide (마음이) | `guide-wave`, `guide-point`, `guide-think`, `guide-cheer`, `celebrate` | Every question bubble, hint, feedback, wrap-up |
+| Village | `bg-village`, `place-home`, `place-playground`, `place-school`, `place-heart` | Start background, Home map |
+| Faces | `face-<emotion id>` × 15 | Emotion cards, chosen-feeling chip, explorers, recap |
+| Scenes | `scene-self-presentation-teasing`, `scene-social-playground`, `scene-relation-pencil-prank`, `scene-mind-lunch-line` | Situation screen and the small scene peek on later steps |
+
+Prompts are the manifest entries plus the shared `style` sentence; they ask for no text, no tears in scenes, no villain faces, and keep the action inside the central 80 %. The speech-bubble positions for the presentation scene were re-tuned to the new picture (`situation.bubbles`).
+
+Review (developer, 2026-10-09): every scene matches its brief — the presentation classmates whisper behind the presenter, the playground shows the observer apart from three players, the hidden pencil is visible behind the prankster's back, the lunch queue is visibly cut in front of the main character. Faces are distinct and readable at 72 px. No embedded text or right/wrong symbols. As with earlier sets, these are provisional illustrations for the content team's pedagogical review, not commissioned final art. To regenerate one item: `pnpm art:generate --only face-shy --force && pnpm art:build`.

@@ -1,6 +1,7 @@
-import { ScenePrompt } from '@/design/ScenePrompt'
 import type { Scenario } from '@/content/schema'
 import { ChoiceCard } from '@/design/ChoiceCard'
+import { GuideBubble } from '@/design/Guide'
+import { ScenePeek } from '@/design/ScenePrompt'
 import { cn } from '@/design/cn'
 import type { LessonEvent, LessonState } from '@/engine/lessonMachine'
 import { useT } from '@/i18n/useT'
@@ -21,13 +22,18 @@ export function Action({ scenario, state, dispatch, wiggle }: Props) {
   useAutoRead(L(q), 'action', q.audio?.[locale])
   return (
     <div className="lesson-question-screen flex flex-col gap-4">
-      <ScenePrompt scenario={scenario}>{L(q)}</ScenePrompt>
+      <div className="question-row">
+        <ScenePeek scenario={scenario} />
+        <GuideBubble pose="think" aria-live="polite">
+          {L(q)}
+        </GuideBubble>
+      </div>
       <div
         key={wiggle}
         role="radiogroup"
         aria-label={L(q)}
         className={cn(
-          'grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-4',
+          'grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4',
           wiggle > 0 && 'motion-safe:animate-[wiggle_300ms_ease-in-out_1]',
         )}
       >
@@ -37,6 +43,7 @@ export function Action({ scenario, state, dispatch, wiggle }: Props) {
             id={o.id}
             domain={scenario.domain}
             text={L(o.text)}
+            icon={o.outcomeIcon}
             selected={state.actionId === o.id}
             dimmed={state.triedActionIds.includes(o.id)}
             onSelect={(id) => {

@@ -58,7 +58,16 @@ export default defineConfig({
       workbox: {
         // FR-PWA-02: everything the app needs offline is precached.
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff2,mp3,json,webmanifest}'],
-        globIgnores: ['**/node_modules/**', 'sw.js', 'workbox-*.js', ...inactiveNarrationGlobs],
+        globIgnores: [
+          '**/node_modules/**',
+          'sw.js',
+          'workbox-*.js',
+          // Earlier illustration sets stay on disk for provenance but no screen references them.
+          'img/generated/**',
+          'img/*.png',
+          'img/*.webp',
+          ...inactiveNarrationGlobs,
+        ],
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         navigateFallback: 'index.html',
       },

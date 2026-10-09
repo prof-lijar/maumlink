@@ -32,3 +32,6 @@ tests/e2e/**/*-snapshots/*-linux.png
 
 # one-time TTS downloads before `pnpm narration:import`
 .narration-downloads
+
+# Raw Codex renders (regenerate with `pnpm art:generate`); the optimised set in public/img/v3 is committed
+content-source/art/raw

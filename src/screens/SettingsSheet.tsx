@@ -7,6 +7,7 @@ import { speechStatusKey, useSpeechStatus } from '@/services/useSpeechStatus'
 import { useSpeak } from '@/services/useSpeak'
 import { SecondaryButton } from '@/design/Button'
 import { SpeakerIcon } from '@/design/icons'
+import { CharacterPicker } from './CharacterPick'
 
 function Segmented<T extends string>({
   label,
@@ -72,7 +73,7 @@ function Segmented<T extends string>({
   )
 }
 
-/** PRD §6.7 / FR-SET-01 — text size, sound, auto-read. No language control (D17). */
+/** PRD §6.7 / FR-SET-01 — text size, sound, auto-read, companion. No language control (D17). */
 export function SettingsSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { t } = useT()
   const s = useSettings()
@@ -127,6 +128,10 @@ export function SettingsSheet({ open, onClose }: { open: boolean; onClose: () =>
           ]}
           onChange={(v) => s.setAutoRead(v === 'on')}
         />
+        <div className="settings-row">
+          <span className="text-body font-bold text-ink">{t('character.change')}</span>
+          <CharacterPicker compact />
+        </div>
       </div>
     </Sheet>
   )

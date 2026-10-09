@@ -261,6 +261,7 @@ export function Lesson() {
         onReplay={replay}
         ttsSupported={supported}
         bottom={bottom}
+        domain={scenario.domain}
       >
         {body}
       </LessonShell>

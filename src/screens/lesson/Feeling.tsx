@@ -1,7 +1,8 @@
-import { ScenePrompt } from '@/design/ScenePrompt'
 import { getEmotion } from '@/content/loader'
 import type { Scenario } from '@/content/schema'
 import { EmotionTile } from '@/design/EmotionTile'
+import { GuideBubble } from '@/design/Guide'
+import { ScenePeek } from '@/design/ScenePrompt'
 import { Sheet } from '@/design/Sheet'
 import { cn } from '@/design/cn'
 import type { LessonEvent, LessonState } from '@/engine/lessonMachine'
@@ -38,13 +39,18 @@ export function Feeling({ scenario, state, dispatch, wiggle }: Props) {
 
   return (
     <div className="lesson-question-screen flex flex-col gap-4">
-      <ScenePrompt scenario={scenario}>{L(q)}</ScenePrompt>
+      <div className="question-row">
+        <ScenePeek scenario={scenario} />
+        <GuideBubble pose="point" aria-live="polite">
+          {L(q)}
+        </GuideBubble>
+      </div>
       <div
         key={wiggle}
         role="group"
         aria-label={L(q)}
         className={cn(
-          'feeling-grid grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-4',
+          'feeling-grid grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4',
           cols,
           wiggle > 0 && 'motion-safe:animate-[wiggle_300ms_ease-in-out_1]',
         )}
@@ -85,7 +91,9 @@ function HintBody({ scenario, onPick }: { scenario: Scenario; onPick: (id: strin
   const suggestions = hint.suggest.map(getEmotion)
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-body text-ink">{L(hint.text)}</p>
+      <GuideBubble as="p" pose="think">
+        {L(hint.text)}
+      </GuideBubble>
       <p className="text-caption font-bold text-ink">{t('hint.maybe')}</p>
       <div className="grid grid-cols-2 gap-4">
         {suggestions.map((e) => (

@@ -225,7 +225,7 @@ describe('자기 인식 lesson (screens)', () => {
     expect(
       within(recap)
         .getAllByRole('listitem')
-        .map((li) => li.textContent),
+        .map((li) => li.querySelector('span:last-child')?.textContent),
     ).toEqual(['숨을 크게 내쉬어보기', '마음을 위로하기 위해 그림을 그려보기'])
   })
 })

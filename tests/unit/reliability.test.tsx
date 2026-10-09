@@ -48,6 +48,7 @@ describe('session recovery', () => {
     expect(StoredSettings.parse({ textSize: 'huge', sound: 'yes', setSound: null })).toEqual({
       textSize: 'normal',
       sound: true,
+      avatar: 'haru',
       autoRead: true,
       voiceEnabled: true,
       started: false,

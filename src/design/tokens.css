@@ -1,5 +1,6 @@
-/* Maum:Link storybook identity — child-focused redesign authorized 2026-10-03.
-   Smaller default type authorized by the user; large text and 64px targets remain. */
+/* Maum:Link "마음마을" cartoon identity — kid-first redesign authorized 2026-10-09.
+   Bright picture-book palette, chunky rounded shapes, a puppy guide and a chosen companion.
+   Large text and 64 px tap targets remain (PRD §6). */
 @import 'tailwindcss';
 @import './surfaces.css';
 @import './lesson-layout.css';
@@ -31,47 +32,53 @@
   --breakpoint-xl: 80rem;
 
   /* Surfaces & text */
-  --color-bg: #fff9ef;
+  --color-bg: #eef7ff;
+  --color-bg-warm: #fff6e3;
   --color-surface: #ffffff;
-  --color-ink: #343047;
-  --color-ink-soft: #655d73;
-  --color-line: #e3d9ca;
+  --color-ink: #3b3344;
+  --color-ink-soft: #6b5f75;
+  --color-line: #dbe7f1;
 
-  /* Actions */
-  --color-go: #5546a3;
+  /* Actions — one sunny orange "go" colour everywhere; blue outline marks a selection. */
+  --color-go: #ea580c;
+  --color-go-deep: #c2410c;
   --color-go-ink: #ffffff;
-  --color-select: #5546a3;
-  --color-link: #f3b290;
-  --color-focus: #5546a3;
+  --color-select: #3b8ff2;
+  --color-selected: #eaf3ff;
+  --color-link: #ffb45c;
+  --color-focus: #1d6fd6;
 
-  /* Brand surfaces: never used to imply a correct or incorrect answer. */
-  --color-brand: #45378b;
-  --color-brand-soft: #c6baf2;
+  /* Brand accents: never used to imply a correct or incorrect answer. */
+  --color-brand: #2f7cd9;
+  --color-brand-soft: #bfe0ff;
   --color-brand-ink: #ffffff;
-  --color-surface-soft: #f5eedf;
-  --color-selected: #eee9fb;
-  --shadow-raised: 0 8px 24px #45378b0a;
+  --color-sun: #ffd84d;
+  --color-sun-deep: #f5a300;
+  --color-mint: #4cc9a0;
+  --color-mint-deep: #19a877;
+  --color-surface-soft: #f3f8fd;
+  --shadow-raised: 0 10px 28px #2f7cd91a;
   --text-brand: clamp(24px, 2.5vw, 32px);
   --text-brand--line-height: 1.2;
   --text-display: clamp(26px, 3vw, 38px);
   --text-display--line-height: 1.35;
 
-  /* Domain tints */
-  --color-domain-self: #fff0d1;
-  --color-domain-self-edge: #dfbe79;
-  --color-domain-social: #e8f1fa;
-  --color-domain-social-edge: #9fbdd8;
-  --color-domain-relation: #fce8df;
-  --color-domain-relation-edge: #dba58e;
-  --color-domain-mind: #e9edda;
-  --color-domain-mind-edge: #b4c28c;
-  --color-domain-reserved: #eee9f6;
-  --color-domain-reserved-edge: #b9aacf;
+  /* Learning-area tints: home (peach), playground (mint), classroom (sky), heart garden (pink). */
+  --color-domain-self: #ffe9d2;
+  --color-domain-self-edge: #ffc08a;
+  --color-domain-social: #dcf5e6;
+  --color-domain-social-edge: #8fdcb3;
+  --color-domain-relation: #dcefff;
+  --color-domain-relation-edge: #93c7f7;
+  --color-domain-mind: #ffe3ec;
+  --color-domain-mind-edge: #ffabc6;
+  --color-domain-reserved: #eceff3;
+  --color-domain-reserved-edge: #c5ccd6;
 
   /* Shape */
   --radius-card: 28px;
-  --radius-btn: 22px;
-  --radius-tile: 28px;
+  --radius-btn: 999px;
+  --radius-tile: 24px;
 
   /* Type roles resolve through runtime vars so the text-size setting rescales everything */
   --text-story: var(--fs-story);
@@ -97,10 +104,10 @@
 @custom-variant hoverable (@media (hover: hover));
 
 :root {
-  /* Compact default requested by the user; the large-text override stays unchanged. */
   --fs-story: clamp(22px, 1vw + 18px, 26px);
   --fs-body: clamp(18px, 0.6vw + 16px, 20px);
-  --fs-btn: 18px;
+  /* 20 px bold counts as large text, so white on the orange "go" colour passes 3:1. */
+  --fs-btn: 20px;
   --fs-emotion: 18px;
   --fs-caption: 14px;
   --h-topbar: 72px;
@@ -109,6 +116,8 @@
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
+  /* The sky-to-cream wash behind every screen. */
+  --bg-sky: linear-gradient(180deg, #e3f2ff 0%, #f4f9ff 45%, #fff6e3 100%);
 }
 
 :root[data-text='large'] {
@@ -118,8 +127,6 @@
   --fs-emotion: 24px;
   --fs-caption: 18px;
 }
-
-/* Navigation keeps 64 px tap targets in both orientations. */
 
 @layer base {
   html {
@@ -225,26 +232,41 @@
     transform: translateX(6px);
   }
 }
-@keyframes drawLine {
-  from {
-    stroke-dashoffset: 1;
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
   }
-  to {
-    stroke-dashoffset: 0;
+  70% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
   }
 }
 @keyframes sparkle {
   0% {
     opacity: 0;
-    transform: scale(0.6);
+    transform: scale(0.6) rotate(0deg);
   }
   50% {
     opacity: 1;
-    transform: scale(1.1);
+    transform: scale(1.1) rotate(12deg);
   }
   100% {
     opacity: 0.9;
-    transform: scale(1);
+    transform: scale(1) rotate(0deg);
   }
 }
 @keyframes pulse {

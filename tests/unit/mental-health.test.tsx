@@ -76,7 +76,7 @@ describe('마음건강관리 lesson (screens)', () => {
     expect(screen.getByTestId('feedback-card')).toHaveTextContent('선생님께 도움을 요청했군요.')
     await user.click(screen.getByTestId('nav-primary'))
     const recap = within(screen.getByTestId('journey-actions')).getAllByRole('listitem')
-    expect(recap.map((li) => li.textContent)).toEqual([
+    expect(recap.map((li) => li.querySelector('span:last-child')?.textContent)).toEqual([
       mind.action.options[0]!.text.ko,
       mind.action.options[3]!.text.ko,
     ])

@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { ScenePrompt } from '@/design/ScenePrompt'
 import { getEmotion } from '@/content/loader'
 import type { BodyPart, Scenario } from '@/content/schema'
 import { BodyOutline } from '@/design/BodyOutline'
-import { HeartFriends } from '@/design/HeartFriends'
 import { Card } from '@/design/Card'
 import { ChoiceCard } from '@/design/ChoiceCard'
+import { EmotionFace } from '@/design/EmotionTile'
+import { GuideAvatar, GuideBubble } from '@/design/Guide'
+import { ScenePeek } from '@/design/ScenePrompt'
 import { cn } from '@/design/cn'
 import { explorableFeelings, type LessonEvent, type LessonState } from '@/engine/lessonMachine'
 import { CheckIcon } from '@/design/icons'
@@ -67,21 +68,15 @@ export function Step3({ scenario, state, dispatch, wiggle }: Props) {
 
   return (
     <div className="lesson-question-screen flex flex-col gap-4">
-      <ScenePrompt scenario={scenario}>{L(step3.question)}</ScenePrompt>
+      <div className="question-row">
+        <ScenePeek scenario={scenario} />
+        <GuideBubble pose="think" aria-live="polite">
+          {L(step3.question)}
+        </GuideBubble>
+      </div>
       {first && (
-        <div className="chosen-feeling flex items-center gap-3" aria-live="polite">
-          <span
-            className="flex size-14 items-center justify-center rounded-full"
-            style={{ backgroundColor: first.tint }}
-          >
-            <img
-              src={`/icons/emotions/${first.icon}`}
-              alt=""
-              width={40}
-              height={40}
-              className="size-10"
-            />
-          </span>
+        <div className="chosen-feeling" aria-live="polite">
+          <EmotionFace emotion={first} className="chosen-feeling-face" />
           <span className="text-body font-bold text-ink">
             {t('feeling.chose', { emotion: feelings.map((f) => L(f.word)).join(', ') })}
           </span>
@@ -128,9 +123,7 @@ export function Step3({ scenario, state, dispatch, wiggle }: Props) {
                           dispatch({ type: 'EXPLORE_FEELING', id })
                         }}
                       >
-                        <span className="body-explorer-face" aria-hidden="true">
-                          <img src={`/icons/emotions/${e.icon}`} alt="" width={40} height={40} />
-                        </span>
+                        <EmotionFace emotion={e} className="body-explorer-face" />
                         <span className="reason-compare-text">
                           <span className="reason-compare-word">{L(e.word)}</span>
                           {open && (
@@ -189,9 +182,7 @@ export function Step3({ scenario, state, dispatch, wiggle }: Props) {
                     dispatch({ type: 'EXPLORE_FEELING', id })
                   }}
                 >
-                  <span className="body-explorer-face" aria-hidden="true">
-                    <img src={`/icons/emotions/${e.icon}`} alt="" width={40} height={40} />
-                  </span>
+                  <EmotionFace emotion={e} className="body-explorer-face" />
                   <span>{L(e.word)}</span>
                   {seen && !active && (
                     <span className="body-explorer-seen" aria-hidden="true">
@@ -257,7 +248,7 @@ export function Step3({ scenario, state, dispatch, wiggle }: Props) {
             role="radiogroup"
             aria-label={L(step3.question)}
             className={cn(
-              'grid grid-cols-1 gap-4 md:grid-cols-2',
+              'grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4',
               wiggle > 0 && 'motion-safe:animate-[wiggle_300ms_ease-in-out_1]',
             )}
           >
@@ -294,14 +285,16 @@ export function Step3({ scenario, state, dispatch, wiggle }: Props) {
 
       {step3.principle && principleAsFeedback && principleShown && (
         <div className="feedback-dialogue motion-safe:animate-[fadeIn_240ms_ease-out]">
-          <HeartFriends />
-          <Card aria-live="polite" data-testid="step3-key-feedback">
+          <GuideAvatar pose="point" size="xl" className="feedback-guide" />
+          <Card aria-live="polite" data-testid="step3-key-feedback" className="feedback-card">
             <p className="text-story font-bold text-ink">{L(step3.principle)}</p>
           </Card>
         </div>
       )}
       {step3.principle && !principleAsFeedback && (
-        <p className="text-body text-ink-soft">{L(step3.principle)}</p>
+        <Card tone="lesson" label={t('wrapup.lesson')}>
+          <p className="text-body font-bold text-ink">{L(step3.principle)}</p>
+        </Card>
       )}
 
       {state.moreShown && step3.more && (

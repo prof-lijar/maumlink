@@ -19,11 +19,19 @@ export interface Prefs {
   started?: boolean
   sound?: boolean
   autoRead?: boolean
+  avatar?: 'haru' | 'sora' | 'mina' | 'jun'
 }
 
 /** Seed persisted settings before the app boots (skips the Start gate unless started=false). */
 export async function seedSettings(page: Page, prefs: Prefs = {}) {
-  const state = { textSize: 'normal', sound: false, autoRead: false, started: true, ...prefs }
+  const state = {
+    textSize: 'normal',
+    sound: false,
+    autoRead: false,
+    started: true,
+    avatar: 'haru',
+    ...prefs,
+  }
   await page.addInitScript((s) => {
     // Seed once; later navigations/reloads must keep whatever the app persisted.
     if (!window.localStorage.getItem('maumlink.settings.v1'))

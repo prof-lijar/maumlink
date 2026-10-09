@@ -2,13 +2,12 @@ import { expect, test } from '@playwright/test'
 import { gotoHome, loadScenarios, seedSettings } from './helpers'
 import { VIEWPORTS } from './viewports'
 
+/** Home is a village map: every learning area shows its landmark picture and label. */
 for (const vp of VIEWPORTS) {
   for (const textSize of ['normal', 'large'] as const) {
-    test.describe(`home cover ${vp.name} ${textSize}`, () => {
+    test.describe(`village landmarks ${vp.name} ${textSize}`, () => {
       test.use({ viewport: { width: vp.width, height: vp.height } })
-      test('each image fills the left side, including cards with completion badges', async ({
-        page,
-      }) => {
+      test('each place shows its picture, name and completion badge', async ({ page }) => {
         await seedSettings(page, { textSize })
         await page.addInitScript(
           (ids) => {
@@ -25,33 +24,22 @@ for (const vp of VIEWPORTS) {
         await gotoHome(page)
         await page.mouse.move(0, 0)
         await page.evaluate(() => document.fonts.ready)
-        const cards = page.locator('.domain-card:not(:disabled)')
+        const cards = page.locator('.place-card:not(:disabled)')
         await expect(cards).toHaveCount(4)
         for (const card of await cards.all()) {
           await card.scrollIntoViewIfNeeded()
           await expect(card.locator('.domain-completed')).toBeVisible()
-          const cover = card.locator('.domain-card-cover')
-          const image = cover.locator(':scope > img')
+          const image = card.locator('.place-art > img')
           await expect(image).toBeVisible()
           await expect
             .poll(() => image.evaluate((el) => (el as HTMLImageElement).naturalWidth))
             .toBeGreaterThan(0)
+          await expect(card.locator('.place-name')).toBeVisible()
           const c = (await card.boundingBox())!
-          const frame = (await cover.boundingBox())!
           const img = (await image.boundingBox())!
-          const border = await card.evaluate((el) =>
-            parseFloat(getComputedStyle(el).borderTopWidth),
-          )
-          expect(Math.abs(frame.y - c.y - border)).toBeLessThanOrEqual(1)
-          expect(Math.abs(frame.y + frame.height - (c.y + c.height - border))).toBeLessThanOrEqual(
-            1,
-          )
-          for (const key of ['x', 'y', 'width', 'height'] as const)
-            expect(
-              Math.abs(img[key] - frame[key]),
-              `${vp.name}/${textSize}: image ${key}`,
-            ).toBeLessThanOrEqual(1)
-          await expect(image).toHaveCSS('object-fit', 'cover')
+          expect(img.width, `${vp.name}/${textSize}: landmark width`).toBeGreaterThanOrEqual(96)
+          expect(img.x).toBeGreaterThanOrEqual(c.x - 1)
+          expect(img.x + img.width).toBeLessThanOrEqual(c.x + c.width + 1)
         }
       })
     })
