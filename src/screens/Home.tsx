@@ -16,12 +16,14 @@ const greeting = '안녕! 오늘은 어느 곳을 탐험할까요?'
 export function Home() {
   const started = useSettings((state) => state.started)
   const avatarId = useProfile((state) => state.avatarId)
+  const [changing, setChanging] = useState(false)
   if (!started) return <StartGate />
   if (!avatarId) return <AvatarSelect />
-  return <ExploreMap />
+  if (changing) return <AvatarSelect onDone={() => setChanging(false)} />
+  return <ExploreMap onChangeAvatar={() => setChanging(true)} />
 }
 
-function ExploreMap() {
+function ExploreMap({ onChangeAvatar }: { onChangeAvatar: () => void }) {
   const navigate = useNavigate()
   const avatarId = useProfile((state) => state.avatarId)
   const completed = useMvpProgress((state) => state.completedEpisodeIds)
@@ -35,9 +37,14 @@ function ExploreMap() {
       <main className="explore-map-main">
         <div className="explore-greeting">
           <div className="explore-greeting__row">
-            <span className="explore-greeting__avatar">
+            <button
+              type="button"
+              className="explore-greeting__avatar"
+              aria-label="캐릭터 바꾸기"
+              onClick={onChangeAvatar}
+            >
               <img src={avatarId ? avatarArt[avatarId] : devkitArt.haruAvatar} alt="" />
-            </span>
+            </button>
             <div className="explore-tools">
               <VoiceButton className="explore-icon-button explore-tool" />
               <button

@@ -92,3 +92,24 @@ describe('main flow: start → explorer → map → area → story', () => {
     expect(completionPercent(1)).toBe(25)
   })
 })
+
+describe('changing the companion from the map', () => {
+  it('opens the character pick from the avatar button and keeps the new choice', async () => {
+    const user = userEvent.setup()
+    useSettings.setState({ started: true })
+    useProfile.setState({ avatarId: 'haru' })
+    renderFlow()
+    await user.click(screen.getByRole('button', { name: '캐릭터 바꾸기' }))
+    expect(screen.getByRole('heading', { name: '나의 캐릭터를 선택해요!' })).toBeInTheDocument()
+    expect(screen.getByRole('radio', { name: '하루' })).toHaveAttribute('aria-checked', 'true')
+    await user.click(screen.getByRole('radio', { name: '미나' }))
+    await user.click(screen.getByRole('button', { name: '다음' }))
+    expect(useProfile.getState().avatarId).toBe('mina')
+    expect(
+      screen.getByRole('heading', { name: '안녕! 오늘은 어느 곳을 탐험할까요?' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: '캐릭터 바꾸기' }).querySelector('img'),
+    ).toHaveAttribute('src', '/img/v3/char-mina-400.webp')
+  })
+})

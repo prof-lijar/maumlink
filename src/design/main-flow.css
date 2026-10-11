@@ -157,11 +157,24 @@
   width: 64px;
   height: 64px;
   flex: none;
+  padding: 0;
   overflow: hidden;
   border: 3px solid #fff;
   border-radius: 18px;
   background: #ffe7c7;
   box-shadow: 0 3px 8px #1e506e26;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.explore-greeting__avatar:hover {
+  transform: translateY(-1px);
+}
+.explore-greeting__avatar:active {
+  transform: scale(0.96);
+}
+.explore-greeting__avatar:focus-visible {
+  outline: 4px solid #123f83;
+  outline-offset: 3px;
 }
 .explore-greeting__avatar img {
   width: 100%;

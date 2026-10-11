@@ -3,10 +3,14 @@ import { avatarArt, avatarArtLarge, avatarNames } from '@/design/devkitAssets'
 import { CheckIcon } from '@/design/icons'
 import { avatarIds, useProfile, type AvatarId } from '@/services/profile'
 
-/** First-run companion pick (1.0 layout): big character on a sunny circle, four face cards. */
-export function AvatarSelect() {
+/**
+ * Companion pick (1.0 layout): big character on a sunny circle, four face cards.
+ * Shown on first run, and again from the map's avatar button to change the companion.
+ */
+export function AvatarSelect({ onDone }: { onDone?: () => void } = {}) {
   const chooseAvatar = useProfile((state) => state.chooseAvatar)
-  const [selected, setSelected] = useState<AvatarId>('haru')
+  const current = useProfile((state) => state.avatarId)
+  const [selected, setSelected] = useState<AvatarId>(current ?? 'haru')
   return (
     <main className="pick-page">
       <h1 className="pick-title">나의 캐릭터를 선택해요!</h1>
@@ -40,7 +44,14 @@ export function AvatarSelect() {
           )
         })}
       </div>
-      <button type="button" className="pick-next" onClick={() => chooseAvatar(selected)}>
+      <button
+        type="button"
+        className="pick-next"
+        onClick={() => {
+          chooseAvatar(selected)
+          onDone?.()
+        }}
+      >
         다음
         <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <path
