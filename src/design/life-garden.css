@@ -1,0 +1,1668 @@
+/* Life-garden episode flow (design_handoff_life_garden/README.md, 390 px reference).
+   Values mirror the handoff exactly at the default text size; `--gs` scales type for the
+   large-text setting so copy never clips. */
+
+@font-face {
+  font-family: 'Noto Sans KR';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/NotoSansKR-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Noto Sans KR';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/NotoSansKR-800.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Jua';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/Jua-400.woff2') format('woff2');
+}
+
+:root {
+  --gs: 1;
+  --garden-ink: #3b2f27;
+  --garden-ink-soft: #7a6b5e;
+  --garden-muted: #8a7a6c;
+  --garden-ink-mid: #6b5b4e;
+  --garden-orange: #ff8a3d;
+  --garden-orange-shadow: #db6a22;
+  --garden-orange-accent: #ff9446;
+  /* 2026-10-10 3차: text tokens darkened one step for 4.5:1 contrast on white and tint. */
+  --garden-orange-text: #b0501a;
+  --garden-orange-deep: #ad4e17;
+  --garden-orange-deeper: #a84a14;
+  --garden-tint: #fff1e4;
+  --garden-tint-soft: #fff6ea;
+  --garden-tint-warm: #fff4ea;
+  --garden-tint-border: #f3d9c2;
+  --garden-card-shadow: #eadfd2;
+  --garden-disabled: #d8cfc6;
+  --garden-disabled-shadow: #bfb4a9;
+  --garden-green: #23824f;
+  --garden-green-bg: #eaf7ee;
+  --garden-green-ink: #24563a;
+  --garden-green-border: #8fd3ac;
+  --garden-error: #f06a4a;
+  --garden-error-bg: #fff0e8;
+  --garden-error-ink: #c24e1a;
+  --garden-hint-bg: #fff8d9;
+  --garden-hint-ink: #5b4a1e;
+  --garden-font-display: 'Jua', var(--font-sans);
+}
+:root[data-text='large'] {
+  --gs: 1.2;
+}
+
+.garden-page {
+  min-height: 100dvh;
+  background: linear-gradient(180deg, #bfe6fa 0%, #e4f3f7 34%, #fff7ec 70%, #fff3e4 100%);
+  color: var(--garden-ink);
+  font-family: var(--font-sans);
+  word-break: keep-all;
+}
+:where(.garden-page) button {
+  font-family: inherit;
+  cursor: pointer;
+}
+:where(.garden-page) button:focus-visible {
+  outline: 3px solid #3e7cb8;
+  outline-offset: 3px;
+}
+.garden-column {
+  max-width: 560px;
+  margin-inline: auto;
+}
+.garden-stack {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 18px 40px;
+  gap: 14px;
+}
+.garden-stack--roomy {
+  gap: 16px;
+}
+.garden-title {
+  margin: 0;
+  padding: 6px 2px 0;
+  font-family: var(--garden-font-display);
+  font-size: calc(23px * var(--gs));
+  font-weight: 400;
+}
+.garden-title:focus {
+  outline: none;
+}
+
+/* ── shared pieces ─────────────────────────────────────────────── */
+
+.garden-round-button {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 3px 0 #d9e6ee;
+  color: var(--garden-ink);
+  font-size: 20px;
+}
+.garden-round-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #d9e6ee;
+}
+
+.garden-chip {
+  align-self: flex-start;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--garden-tint);
+  color: var(--garden-orange-deep);
+  font-size: calc(11.5px * var(--gs));
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.garden-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 4px;
+  padding: 16px;
+  border: none;
+  border-radius: 999px;
+  background: var(--garden-orange);
+  box-shadow: 0 5px 0 var(--garden-orange-shadow);
+  color: var(--garden-ink);
+  font-family: var(--garden-font-display);
+  font-size: calc(19px * var(--gs));
+}
+.garden-cta:not(:disabled):active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 var(--garden-orange-shadow);
+}
+.garden-cta:disabled {
+  background: var(--garden-disabled);
+  box-shadow: 0 5px 0 var(--garden-disabled-shadow);
+  cursor: not-allowed;
+}
+
+.garden-card {
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 4px 0 var(--garden-card-shadow);
+}
+
+.garden-guide {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px 14px 12px;
+}
+.garden-guide p,
+.garden-guide h1 {
+  margin: 0;
+  font-size: calc(14px * var(--gs));
+  font-weight: 700;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+.garden-guide h1:focus {
+  outline: none;
+}
+
+.garden-safety {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 18px;
+  background: var(--garden-green-bg);
+}
+.garden-safety__chip {
+  flex: none;
+  margin-top: 1px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--garden-green);
+  color: #fff;
+  font-size: calc(11px * var(--gs));
+  font-weight: 800;
+  white-space: nowrap;
+}
+.garden-safety p {
+  margin: 0;
+  color: var(--garden-green-ink);
+  font-size: calc(13.5px * var(--gs));
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.garden-note {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--garden-hint-bg);
+  color: var(--garden-hint-ink);
+  font-size: calc(13.5px * var(--gs));
+  line-height: 1.55;
+}
+.garden-alert {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--garden-error-bg);
+  color: var(--garden-error-ink);
+  font-size: calc(13.5px * var(--gs));
+  font-weight: 700;
+  text-align: center;
+}
+.garden-alert small {
+  display: block;
+  margin-top: 4px;
+  font-size: inherit;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.garden-celebrate {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: center;
+}
+.garden-celebrate__cheer {
+  font-family: var(--garden-font-display);
+  font-size: calc(34px * var(--gs));
+  color: #f07a2a;
+  text-shadow: 0 2px 0 #fff;
+}
+.garden-celebrate h1 {
+  margin: 0;
+  font-family: var(--garden-font-display);
+  font-size: calc(21px * var(--gs));
+  font-weight: 400;
+}
+.garden-celebrate h1:focus {
+  outline: none;
+}
+
+.garden-badge {
+  display: flex;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+  width: 250px;
+  height: 250px;
+  margin-top: 6px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    #d2eefb 55%,
+    #e7f6fd 56%,
+    #e7f6fd 68%,
+    rgba(231, 246, 253, 0) 69%
+  );
+}
+.garden-badge img {
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.garden-badge--small {
+  width: 210px;
+  height: 210px;
+  margin-top: 0;
+}
+.garden-badge--small img {
+  width: 176px;
+  height: 176px;
+}
+
+/* ── 1. episode list ───────────────────────────────────────────── */
+
+.garden-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 22px 18px 40px;
+}
+.garden-list__main {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.garden-list__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 18px;
+}
+.garden-list__brand {
+  font-family: var(--garden-font-display);
+  font-size: calc(21px * var(--gs));
+  white-space: nowrap;
+}
+.garden-hero {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 18px 18px 14px;
+  border-radius: 28px;
+  background: linear-gradient(160deg, #ffb067 0%, #ff9446 100%);
+  box-shadow:
+    0 6px 0 #e87a2e,
+    0 14px 24px rgba(232, 122, 46, 0.25);
+}
+.garden-hero__art {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  height: 96px;
+  overflow: hidden;
+  border-radius: 22px;
+  background: #fff9ef;
+}
+.garden-hero__art img {
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+}
+.garden-hero__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.garden-hero__copy .garden-chip {
+  padding: 3px 9px;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: calc(11px * var(--gs));
+}
+.garden-hero h1 {
+  margin: 0;
+  color: #fff;
+  font-family: var(--garden-font-display);
+  font-size: calc(30px * var(--gs));
+  font-weight: 400;
+  line-height: 1.1;
+  text-shadow: 0 2px 0 rgba(180, 80, 20, 0.35);
+}
+.garden-hero p {
+  margin: 0;
+  color: #fff;
+  font-size: calc(13.5px * var(--gs));
+  font-weight: 500;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+.garden-list__label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  padding: 6px 4px 0;
+}
+.garden-list__label h2 {
+  margin: 0;
+  font-family: var(--garden-font-display);
+  font-size: calc(19px * var(--gs));
+  font-weight: 400;
+  white-space: nowrap;
+}
+.garden-episodes {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.garden-episode {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 14px 14px 12px;
+  border: none;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow:
+    0 4px 0 var(--garden-card-shadow),
+    0 8px 18px rgba(120, 90, 60, 0.08);
+  color: var(--garden-ink);
+  text-align: left;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+@media (hover: hover) {
+  .garden-episode:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      0 5px 0 #f3c9a4,
+      0 10px 22px rgba(232, 122, 46, 0.15);
+  }
+}
+.garden-episode:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 var(--garden-card-shadow);
+}
+.garden-episode__tile {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  font-family: var(--garden-font-display);
+  font-size: 28px;
+}
+.garden-episode__tile img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+.garden-episode__copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.garden-episode__no {
+  color: var(--garden-orange-text);
+  font-size: calc(11.5px * var(--gs));
+  font-weight: 800;
+}
+.garden-episode__title {
+  font-family: var(--garden-font-display);
+  font-size: calc(19px * var(--gs));
+}
+.garden-episode__desc {
+  color: var(--garden-ink-soft);
+  font-size: calc(12.5px * var(--gs));
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+.garden-episode__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+.garden-episode__done {
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: #17774a;
+  color: #fff;
+  font-size: calc(12.5px * var(--gs));
+  font-weight: 800;
+}
+
+/* ── common episode header (screens 2–6) ───────────────────────── */
+
+.garden-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 30px 18px 10px;
+  background: linear-gradient(180deg, #bfe6fa 70%, rgba(191, 230, 250, 0));
+}
+.garden-header .garden-round-button {
+  width: 42px;
+  height: 42px;
+  box-shadow: 0 3px 0 #cfe0ea;
+  font-size: 19px;
+}
+.garden-steps {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  padding: 0 6px;
+}
+.garden-steps > span:not(.sr-only) {
+  display: flex;
+  flex: 1;
+  align-items: center;
+}
+.garden-steps__line {
+  flex: 1;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.8);
+}
+.garden-steps__dot {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: #e3eef3;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+.garden-steps .is-done .garden-steps__line,
+.garden-steps .is-done .garden-steps__dot {
+  background: var(--garden-orange-accent);
+}
+/* VoiceToggle rendered as the handoff's 42 px orange sound button. */
+.garden-subheader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 18px 0;
+}
+.garden-subheader__chip {
+  padding: 6px 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 2px 0 var(--garden-tint-border);
+  color: var(--garden-orange-deep);
+  font-size: calc(12.5px * var(--gs));
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── 2. question ───────────────────────────────────────────────── */
+
+.garden-scene {
+  position: relative;
+  padding-bottom: 64px;
+}
+.garden-scene__frame {
+  aspect-ratio: 1024 / 572;
+  overflow: hidden;
+  border: 4px solid #fff;
+  border-radius: 26px;
+  background: #fbebd2;
+  box-shadow: 0 8px 20px rgba(60, 100, 130, 0.18);
+}
+.garden-scene__frame > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.garden-scene__frame--composed {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4%;
+  padding: 6% 8% 0;
+}
+.garden-scene__frame--composed > img {
+  width: auto;
+  height: 82%;
+  object-fit: contain;
+}
+.garden-scene .garden-guide {
+  position: absolute;
+  right: 10px;
+  bottom: 0;
+  left: 10px;
+  box-shadow:
+    0 4px 0 var(--garden-card-shadow),
+    0 10px 20px rgba(120, 90, 60, 0.1);
+}
+/* A long situation sentence (or large text) cannot fit a fixed 64 px overlap. */
+:root[data-text='large'] .garden-scene {
+  padding-bottom: 0;
+}
+:root[data-text='large'] .garden-scene .garden-guide {
+  position: relative;
+  inset: auto;
+  margin: -48px 10px 0;
+}
+
+.garden-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.garden-choice {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 8px 10px 10px;
+  border: 2.5px solid #fff;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 4px 0 var(--garden-card-shadow);
+}
+.garden-choice[data-selected='true'] {
+  border-color: var(--garden-orange-accent);
+  background: var(--garden-tint-warm);
+  box-shadow: 0 4px 0 #f3b887;
+}
+.garden-choice__pick {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--garden-ink);
+  text-align: left;
+}
+.garden-choice__key {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--garden-tint);
+  color: var(--garden-orange-text);
+  font-family: var(--garden-font-display);
+  font-size: 18px;
+}
+.garden-choice[data-selected='true'] .garden-choice__key {
+  background: var(--garden-orange-accent);
+  color: #fff;
+}
+.garden-choice__text {
+  font-size: calc(15px * var(--gs));
+  font-weight: 700;
+  line-height: 1.4;
+}
+.garden-speak {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--garden-tint);
+}
+
+.garden-help {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.garden-help button {
+  padding: 11px;
+  border: 2px solid var(--garden-tint-border);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--garden-orange-deeper);
+  font-size: calc(14px * var(--gs));
+  font-weight: 800;
+}
+.garden-help button[aria-expanded='true'] {
+  background: var(--garden-tint);
+}
+
+/* ── 3 / 5 / 6. results ────────────────────────────────────────── */
+
+.garden-message {
+  margin: 0;
+  padding: 18px;
+  font-size: calc(15px * var(--gs));
+  font-weight: 500;
+  line-height: 1.6;
+  text-align: center;
+  text-wrap: pretty;
+}
+
+/* ── 4. sequence mini game ─────────────────────────────────────── */
+
+.garden-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 14px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.65);
+  list-style: none;
+}
+.garden-slot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 58px;
+  padding: 8px 12px 8px 8px;
+  border: 2.5px dashed #e3d3c2;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.4);
+  color: #c27a45;
+}
+.garden-slot__num {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--garden-disabled);
+  color: #fff;
+  font-family: var(--garden-font-display);
+  font-size: 18px;
+}
+.garden-slot__label {
+  flex: 1;
+  font-size: calc(14.5px * var(--gs));
+  font-weight: 800;
+  line-height: 1.4;
+}
+.garden-slot__check {
+  color: var(--garden-green);
+  font-size: 18px;
+  font-weight: 800;
+}
+.garden-slot[data-state='current'] {
+  border-color: var(--garden-orange-accent);
+  background: var(--garden-tint-soft);
+  animation: garden-floaty 1.6s ease-in-out infinite;
+}
+.garden-slot[data-state='current'] .garden-slot__num {
+  background: var(--garden-orange-accent);
+}
+.garden-slot[data-state='filled'] {
+  border-style: solid;
+  border-color: var(--garden-green-border);
+  background: #fff;
+  box-shadow: 0 3px 0 #d5eedf;
+  color: var(--garden-ink);
+  animation: garden-bounce-in 0.4s ease-out;
+}
+.garden-slot[data-state='filled'] .garden-slot__num {
+  background: var(--garden-green);
+}
+
+.garden-order-feedback {
+  min-height: 20px;
+  margin: 0;
+  color: var(--garden-ink-mid);
+  font-size: calc(13.5px * var(--gs));
+  font-weight: 800;
+  text-align: center;
+}
+.garden-order-feedback[data-tone='wrong'] {
+  color: var(--garden-error-ink);
+}
+
+.garden-pool {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+.garden-pool__card {
+  width: calc(50% - 5px);
+  min-height: 76px;
+  padding: 12px;
+  border: 2.5px solid var(--garden-tint-border);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 5px 0 var(--garden-card-shadow);
+  color: var(--garden-ink);
+  font-size: calc(14px * var(--gs));
+  font-weight: 800;
+  line-height: 1.4;
+  text-wrap: pretty;
+  transform: rotate(var(--tilt, 0deg));
+  transition: transform 0.15s;
+}
+@media (hover: hover) {
+  .garden-pool__card:not(:disabled):hover {
+    transform: translateY(-3px) rotate(0deg);
+  }
+}
+.garden-pool__card[data-wrong='true'] {
+  border-color: var(--garden-error);
+  background: #fff0ea;
+  box-shadow: 0 5px 0 #f6c1b2;
+}
+/* Two identical keyframes let a repeated wrong tap restart the shake. */
+.garden-pool__card[data-shake='a'] {
+  animation: garden-shake-a 0.45s ease-in-out;
+}
+.garden-pool__card[data-shake='b'] {
+  animation: garden-shake-b 0.45s ease-in-out;
+}
+.garden-pool__card[data-placed='true'] {
+  border-style: dashed;
+  border-color: #e3d3c2;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+  cursor: default;
+}
+
+.garden-done {
+  margin: 0;
+  padding: 14px;
+  border-radius: 20px;
+  background: #fff4d6;
+  color: var(--garden-orange-text);
+  font-family: var(--garden-font-display);
+  font-size: calc(20px * var(--gs));
+  text-align: center;
+  animation: garden-bounce-in 0.5s ease-out;
+}
+
+/* ── 5. order done ─────────────────────────────────────────────── */
+
+.garden-steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.garden-steps-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 3px 0 var(--garden-card-shadow);
+  font-size: calc(14.5px * var(--gs));
+  font-weight: 700;
+}
+.garden-steps-list__num {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--garden-green);
+  color: #fff;
+  font-family: var(--garden-font-display);
+  font-size: 16px;
+  font-weight: 400;
+}
+.garden-summary {
+  margin: 0;
+  padding: 16px 18px;
+  border-radius: 22px;
+  background: var(--garden-tint-soft);
+  font-size: calc(14.5px * var(--gs));
+  font-weight: 500;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+/* ── 6. complete ───────────────────────────────────────────────── */
+
+.garden-complete-title {
+  margin: 0;
+  font-family: var(--garden-font-display);
+  font-size: calc(25px * var(--gs));
+  font-weight: 400;
+  text-align: center;
+}
+.garden-complete-title:focus {
+  outline: none;
+}
+.garden-learned {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 18px;
+}
+.garden-learned p {
+  margin: 0;
+  font-size: calc(15px * var(--gs));
+  font-weight: 500;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+.garden-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.7);
+}
+.garden-progress__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.garden-progress__count {
+  font-size: calc(13.5px * var(--gs));
+  font-weight: 700;
+  white-space: nowrap;
+}
+.garden-progress__percent {
+  color: var(--garden-orange-text);
+  font-family: var(--garden-font-display);
+  font-size: calc(17px * var(--gs));
+}
+.garden-progress__track {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #f1e4d6;
+}
+.garden-progress__fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--garden-orange-accent);
+}
+.garden-finish {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 10px;
+  margin-top: 4px;
+}
+.garden-finish--three {
+  grid-template-columns: 1fr 1fr;
+}
+.garden-finish--three .garden-cta {
+  grid-column: 1 / -1;
+}
+.garden-retry {
+  width: 100%;
+}
+/* Child-facing skill label (e.g. 내 행동 조절하기) on the list and game screens. */
+.garden-skill-tag {
+  padding: 2px 9px;
+  border: 1.5px solid #9cc7e6;
+  border-radius: 999px;
+  background: #eef6fd;
+  color: #245c87;
+  font-size: calc(11.5px * var(--gs));
+  font-weight: 800;
+  white-space: nowrap;
+}
+.garden-finish__again {
+  padding: 14px 10px;
+  border: 2px solid var(--garden-tint-border);
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 4px 0 var(--garden-card-shadow);
+  color: var(--garden-orange-deeper);
+  font-size: calc(15px * var(--gs));
+  font-weight: 800;
+}
+.garden-finish .garden-cta {
+  margin-top: 0;
+  padding: 14px 10px;
+  box-shadow: 0 4px 0 var(--garden-orange-shadow);
+  font-size: calc(18px * var(--gs));
+}
+.garden-finish__again:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 var(--garden-card-shadow);
+}
+
+/* ── animations ────────────────────────────────────────────────── */
+
+@keyframes garden-shake-a {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-8px) rotate(-3deg);
+  }
+  40% {
+    transform: translateX(7px) rotate(3deg);
+  }
+  60% {
+    transform: translateX(-5px);
+  }
+  80% {
+    transform: translateX(4px);
+  }
+}
+@keyframes garden-shake-b {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-8px) rotate(-3deg);
+  }
+  40% {
+    transform: translateX(7px) rotate(3deg);
+  }
+  60% {
+    transform: translateX(-5px);
+  }
+  80% {
+    transform: translateX(4px);
+  }
+}
+@keyframes garden-bounce-in {
+  0% {
+    transform: translateY(16px) scale(0.9);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(-4px) scale(1.03);
+    opacity: 1;
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes garden-floaty {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .garden-page *,
+  .garden-page *::before {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Sorting keeps stable card positions, with tap and pointer-drag controls. */
+.garden-sort-instruction,
+.garden-sort-status {
+  margin: 0;
+  font-size: calc(15px * var(--gs));
+  line-height: 1.6;
+}
+.garden-sort-status {
+  font-weight: 800;
+}
+.garden-sort-cards {
+  display: grid;
+  gap: 10px;
+}
+.garden-sort-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 76px;
+  padding: 13px 16px;
+  text-align: left;
+  border: 2px solid #dccbbb;
+  border-radius: 18px;
+  background: #fff;
+  color: var(--garden-ink);
+  overflow-wrap: anywhere;
+}
+.garden-sort-card[aria-pressed='true'] {
+  border-color: #a64c15;
+  background: #fff3e5;
+  box-shadow: 0 0 0 1px #a64c15;
+}
+.garden-sort-card[data-review='true'] {
+  border-style: dashed;
+}
+.garden-sort-card:disabled {
+  cursor: default;
+}
+.garden-sort-card__text {
+  font-size: calc(18px * var(--gs));
+  font-weight: 800;
+  line-height: 1.55;
+}
+.garden-sort-card__label {
+  color: #645144;
+  font-size: calc(13px * var(--gs));
+  line-height: 1.5;
+}
+.garden-sort-feedback {
+  padding: 16px;
+  border-radius: 18px;
+  background: #fff6df;
+  color: #59431d;
+}
+.garden-sort-feedback p {
+  margin: 0 0 12px;
+  font-weight: 800;
+}
+.garden-sort-feedback ul,
+.garden-sort-review ul {
+  margin: 0;
+  padding-left: 20px;
+}
+.garden-sort-feedback li + li,
+.garden-sort-review li + li {
+  margin-top: 14px;
+}
+.garden-sort-feedback strong,
+.garden-sort-feedback span {
+  display: block;
+  font-size: calc(15px * var(--gs));
+  line-height: 1.6;
+}
+.garden-sort-review,
+.garden-sort-model {
+  display: grid;
+  gap: 14px;
+}
+.garden-sort-review__group {
+  padding: 18px;
+  border: 1px solid #b8cebb;
+  border-radius: 20px;
+  background: #f3faf1;
+}
+.garden-sort-review__group[data-category='rethink'] {
+  border-color: #d5be8d;
+  background: #fff8e8;
+}
+.garden-sort-review h2 {
+  margin: 0 0 14px;
+  font-size: calc(19px * var(--gs));
+}
+.garden-sort-review li {
+  font-size: calc(17px * var(--gs));
+  font-weight: 800;
+  line-height: 1.6;
+}
+.garden-sort-review small {
+  display: block;
+  color: #645144;
+  font-size: calc(14px * var(--gs));
+  font-weight: 500;
+}
+
+.garden-sort-guide {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.garden-sort-guide h1 {
+  font-family: var(--garden-font-display);
+  font-size: calc(23px * var(--gs));
+  font-weight: 400;
+}
+.garden-sort-guide p {
+  font-size: calc(16px * var(--gs));
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+/* Keep the drop targets in reach while a lower card is being dragged. */
+.garden-sort-card {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+  scroll-margin-top: calc(240px * var(--gs));
+}
+.garden-sort-card[data-dragging='true'] {
+  opacity: 0.4;
+  cursor: grabbing;
+}
+.garden-sort-ghost {
+  position: fixed;
+  z-index: 30;
+  width: 280px;
+  max-width: calc(100vw - 16px);
+  padding: 14px 18px;
+  border: 2px solid #a64c15;
+  border-radius: 18px;
+  background: #fff7e9;
+  box-shadow: 0 10px 24px #3b2f2740;
+  color: var(--garden-ink);
+  font-size: calc(18px * var(--gs));
+  font-weight: 800;
+  line-height: 1.5;
+  pointer-events: none;
+  overflow-wrap: anywhere;
+}
+
+/* ── step episodes (2차 개선): story lines, step label, dialogue, missions ─── */
+
+.garden-story p {
+  margin: 0;
+  font-size: calc(14px * var(--gs));
+  font-weight: 700;
+  line-height: 1.55;
+  animation: garden-story-in 0.4s ease-out both;
+}
+@keyframes garden-story-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+.garden-story {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+.garden-step-label {
+  align-self: flex-start;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--garden-tint);
+  color: var(--garden-orange-text);
+  font-size: calc(12px * var(--gs));
+  font-weight: 800;
+}
+.garden-reflect p {
+  margin: 0;
+}
+.garden-reflect p + p {
+  margin-top: 6px;
+}
+.garden-reflect__closing {
+  color: var(--garden-green-ink);
+  font-weight: 800;
+}
+.garden-help--single {
+  grid-template-columns: 1fr;
+}
+.garden-dialogue {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.garden-dialogue__line {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+.garden-dialogue__line[data-speaker='friend'] {
+  flex-direction: row-reverse;
+}
+.garden-dialogue__line img {
+  width: 52px;
+  height: 52px;
+  flex: none;
+  border: 3px solid #fff;
+  border-radius: 16px;
+  background: #ffe7c7;
+  object-fit: cover;
+}
+.garden-dialogue__line p {
+  position: relative;
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: 20px 20px 20px 6px;
+  background: #fff;
+  box-shadow: 0 3px 0 var(--garden-card-shadow);
+  font-size: calc(16px * var(--gs));
+  font-weight: 800;
+  line-height: 1.45;
+}
+.garden-dialogue__line[data-speaker='friend'] p {
+  border-radius: 20px 20px 6px 20px;
+  background: #eef6fd;
+}
+.garden-hint-dialogue {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.garden-persp-zones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.garden-persp-zone {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 10px;
+  border: 2px dashed #7aa98c;
+  border-radius: 20px;
+  background: #f1f8f3;
+}
+.garden-persp-zone[data-person='friend'] {
+  border-color: #8cb4d6;
+  background: #eef6fd;
+}
+.garden-persp-zone__target {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 4px;
+  border: none;
+  border-radius: 14px;
+  background: #fffc;
+  color: var(--garden-ink);
+  cursor: pointer;
+}
+.garden-persp-zone__target:not(:disabled) {
+  outline: 3px solid var(--garden-orange-accent);
+  outline-offset: -3px;
+}
+.garden-persp-zone__target img {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  object-fit: cover;
+}
+.garden-persp-zone__target strong {
+  font-family: var(--garden-font-display);
+  font-size: calc(17px * var(--gs));
+  font-weight: 400;
+}
+.garden-persp-zone__target small {
+  color: #66584c;
+  font-size: calc(12px * var(--gs));
+}
+.garden-persp-card .garden-sort-card__text {
+  font-size: calc(15px * var(--gs));
+}
+.garden-seq-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.garden-seq-slot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 60px;
+  padding: 8px 10px;
+  border: 2px dashed var(--garden-tint-border);
+  border-radius: 18px;
+  background: #fffaf4;
+}
+.garden-seq-slot[data-filled] {
+  border-style: solid;
+  background: #fff;
+}
+.garden-seq-slot__mark {
+  flex: none;
+  color: var(--garden-orange-text);
+  font-size: calc(22px * var(--gs));
+  font-weight: 800;
+}
+.garden-seq-slot__empty {
+  color: #66584c;
+  font-size: calc(14px * var(--gs));
+}
+.garden-seq-slot__card {
+  flex: 1;
+  padding: 6px 4px;
+  border: none;
+  background: none;
+  color: var(--garden-ink);
+  font-size: calc(16px * var(--gs));
+  font-weight: 800;
+  text-align: left;
+  cursor: pointer;
+}
+@media (prefers-reduced-motion: reduce) {
+  .garden-story p {
+    animation: none;
+  }
+}
+
+/* ── 3차 개선: emotion–body match, expression practice ─────────────────── */
+
+.garden-match {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr);
+  gap: 10px 0;
+  align-items: stretch;
+}
+.garden-match__lines {
+  grid-column: 2;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.garden-match__lines line {
+  stroke: #9cc7e6;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+.garden-match__lines line[data-last] {
+  stroke: var(--garden-orange-accent);
+}
+.garden-match__card {
+  min-height: 72px;
+}
+.garden-match__card[data-side='body'] {
+  background: #f4f9fd;
+}
+.garden-practice {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.garden-practice__listener {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  align-self: flex-end;
+  padding: 10px 18px;
+  border: 2px solid #9cc7e6;
+  border-radius: 999px;
+  background: #eef6fd;
+  color: #245c87;
+  font-family: var(--garden-font-display);
+  font-size: calc(17px * var(--gs));
+}
+.garden-practice__listener img {
+  width: 64px;
+  height: 76px;
+  object-fit: contain;
+  border-radius: 12px;
+}
+.garden-cta--soft {
+  background: #1f7a4a;
+  color: #fff;
+  box-shadow: 0 5px 0 #155c37;
+}
+@media (max-width: 360px) {
+  .garden-match {
+    grid-template-columns: minmax(0, 1fr) 24px minmax(0, 1fr);
+  }
+}
+
+/* ── 좋은 행동 나누기: wide panels that hold the sorted cards (2026-10-10 사용자 요청) ── */
+
+.garden-sort-zones {
+  display: grid;
+  gap: 14px;
+}
+.garden-sort-zone {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px 16px;
+  border: 2px solid #b8cebb;
+  border-radius: 20px;
+  background: #f3faf1;
+}
+.garden-sort-zone[data-category='rethink'] {
+  border-color: #d5be8d;
+  background: #fff8e8;
+}
+.garden-sort-zone[data-ready] {
+  border-style: dashed;
+  border-color: #4f7a5d;
+}
+.garden-sort-zone[data-category='rethink'][data-ready] {
+  border-color: #9a7434;
+}
+.garden-sort-zone[data-over='true'] {
+  outline: 4px solid #365f83;
+  outline-offset: 2px;
+  box-shadow: 0 4px 12px #365f8330;
+}
+.garden-sort-zone__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 2px;
+  border: none;
+  background: none;
+  color: var(--garden-ink);
+  text-align: left;
+  cursor: pointer;
+}
+.garden-sort-zone__head:disabled {
+  cursor: default;
+  color: var(--garden-ink);
+}
+.garden-sort-zone__head strong {
+  font-size: calc(21px * var(--gs));
+  font-weight: 700;
+}
+.garden-sort-zone__head small {
+  margin-left: auto;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: #ffffffcc;
+  color: #4a3d33;
+  font-size: calc(13px * var(--gs));
+  font-weight: 800;
+}
+.garden-sort-zone__icon {
+  font-size: 26px;
+  line-height: 1;
+}
+.garden-sort-zone__empty {
+  margin: 0;
+  padding: 14px;
+  border: 2px dashed #c9d9cc;
+  border-radius: 14px;
+  color: #5d5045;
+  font-size: calc(14px * var(--gs));
+  text-align: center;
+}
+.garden-sort-zone[data-category='rethink'] .garden-sort-zone__empty {
+  border-color: #e3d2ad;
+}
+.garden-sort-zone__cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.garden-sort-zone__cards .garden-sort-card {
+  min-height: 0;
+  padding-block: 12px;
+  background: #fff;
+}
+.garden-sort-card__label:empty {
+  display: none;
+}
+
+/* ── 친구와 대화하기 (chat-style conversation) ───────────────────────────── */
+
+.garden-chat {
+  gap: 12px;
+}
+.garden-chat .garden-dialogue__line[data-speaker='me'] p {
+  background: #fff6ea;
+}
+.garden-dialogue__line[data-action] p {
+  color: #5d5045;
+  font-style: italic;
+  font-weight: 700;
+}
+.garden-chat__tip {
+  margin: 0;
+  padding: 14px 16px;
+  border: 2px solid #8fd3ac;
+  background: var(--garden-green-bg);
+  color: var(--garden-green-ink);
+  font-size: calc(15px * var(--gs));
+  font-weight: 700;
+  line-height: 1.55;
+}
+.garden-chat__tip--retry {
+  border-color: #f0cf8f;
+  background: var(--garden-hint-bg);
+  color: var(--garden-hint-ink);
+}
+.garden-chat__turn {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scroll-margin-bottom: 24px;
+}
+.garden-chat__prompt {
+  margin: 4px 0 0;
+  font-size: calc(17px * var(--gs));
+  font-weight: 800;
+  line-height: 1.5;
+}
+.garden-chat__option {
+  min-height: 0;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.garden-chat__option[data-action] .garden-sort-card__text {
+  color: #5d5045;
+  font-style: italic;
+}
+
+/* 대화창: a tinted panel, friend on the left and me on the right, typing dots. */
+.garden-chat-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 12px 16px;
+  border: 2px solid #cfe3f2;
+  border-radius: 22px;
+  background: #eaf4fb;
+}
+.garden-chat-panel__label {
+  margin: 0;
+  color: #245c87;
+  font-size: calc(13px * var(--gs));
+  font-weight: 800;
+}
+.garden-chat-panel__empty {
+  margin: 0;
+  padding: 18px 8px;
+  color: #4a5a68;
+  font-size: calc(14px * var(--gs));
+  text-align: center;
+}
+.garden-chat .garden-dialogue__line[data-speaker='me'] {
+  flex-direction: row-reverse;
+}
+.garden-chat .garden-dialogue__line[data-speaker='friend'] {
+  flex-direction: row;
+}
+.garden-chat .garden-dialogue__line[data-speaker='me'] p {
+  border-radius: 20px 20px 6px 20px;
+  background: #fff3df;
+}
+.garden-chat .garden-dialogue__line[data-speaker='friend'] p {
+  border-radius: 20px 20px 20px 6px;
+  background: #fff;
+}
+.garden-chat__dots {
+  display: inline-flex;
+  gap: 5px;
+  padding: 4px 2px;
+}
+.garden-chat__dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #8aa4b8;
+  animation: garden-typing 1s infinite ease-in-out;
+}
+.garden-chat__dots i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.garden-chat__dots i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes garden-typing {
+  0%,
+  80%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .garden-chat__dots i {
+    animation: none;
+    opacity: 0.7;
+  }
+}

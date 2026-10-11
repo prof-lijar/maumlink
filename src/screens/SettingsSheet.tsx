@@ -88,7 +88,7 @@ export function SettingsSheet({ open, onClose }: { open: boolean; onClose: () =>
             onClick={() => {
               s.setVoiceEnabled(true)
               speech.unlock()
-              void speak(t('home.greeting'))
+              void speak(t('voice.sample'))
             }}
           >
             {t('voice.test')}

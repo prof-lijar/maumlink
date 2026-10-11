@@ -1,0 +1,93 @@
+{
+  "id": "B03",
+  "version": 3,
+  "domainId": "B",
+  "title": "다음 활동을 준비해요",
+  "situation": {
+    "text": "블록 놀이를 하다가 저녁 먹을 시간이 되었어요. 거실 바닥에 블록이 있어요. 무엇을 하면 좋을까요?",
+    "alt": "블록 놀이를 하다가 저녁 먹을 시간이 되었어요. 거실 바닥에 블록이 있어요. 무엇을 하면 좋을까요?"
+  },
+  "choice": {
+    "prompt": "지금 어떻게 하면 좋을까요?",
+    "choices": [
+      {
+        "id": "A",
+        "text": "블록을 바닥에 그대로 두어요.",
+        "feedback": "바닥에 두면 밟을 수 있어요. 정해진 상자에 넣어요."
+      },
+      {
+        "id": "B",
+        "text": "블록을 소파 밑으로 밀어 넣어요.",
+        "feedback": "보이지 않는 곳에 밀기보다 블록 상자에 정리해요."
+      },
+      {
+        "id": "C",
+        "text": "블록을 정리하고 손을 씻으러 가요.",
+        "feedback": "쓴 물건을 정리했어요. 이제 저녁을 먹을 준비가 되었어요."
+      }
+    ],
+    "acceptedChoiceIds": ["C"],
+    "hint": "다음 일을 하기 전에 쓴 물건을 먼저 정리해요.",
+    "modelChoiceId": "C"
+  },
+  "sequence": {
+    "prompt": "어떤 순서로 하면 좋을까요?",
+    "cards": [
+      {
+        "id": "step2",
+        "text": "블록을 정해진 상자에 넣어요."
+      },
+      {
+        "id": "step3",
+        "text": "손을 씻고 식탁으로 가요."
+      },
+      {
+        "id": "step1",
+        "text": "하던 블록 놀이를 멈춰요."
+      }
+    ],
+    "acceptedOrders": [["step1", "step2", "step3"]],
+    "hint": "하던 블록 놀이를 멈춰요.",
+    "feedback": "먼저 하던 블록 놀이를 멈춰요. 그다음 블록을 정해진 상자에 넣어요. 마지막으로 손을 씻고 식탁으로 가요.",
+    "modelOrder": ["step1", "step2", "step3"]
+  },
+  "takeaway": "쓴 물건을 정리했어요. 이제 저녁을 먹을 준비가 되었어요.",
+  "safetyNote": "정리할 시간이 더 필요하면 가족에게 말해도 좋아요.",
+  "review": {
+    "state": "draft",
+    "educatorSafetyNote": "갑작스러운 전환을 강요하지 않는다. 더 필요한 시간을 요청하는 행동은 오답으로 일반화하지 않는다.",
+    "source": "docs/SPEC.md §5.1; docs/SORTING-CONTENT.md (2026-10-10)"
+  },
+  "sorting": {
+    "kind": "behavior_sort",
+    "prompt": "저녁 먹기 전 할 행동을 나눠 봐요.",
+    "cards": [
+      {
+        "id": "hide",
+        "text": "블록을 소파 밑으로 밀어요.",
+        "category": "rethink",
+        "feedback": "숨기기보다 정해진 블록 상자에 넣어요."
+      },
+      {
+        "id": "time",
+        "text": "“정리할 시간이 더 필요해요.”라고 말해요.",
+        "category": "do",
+        "feedback": "시간이 더 필요하면 가족에게 말해도 괜찮아요."
+      },
+      {
+        "id": "put",
+        "text": "블록을 정해진 상자에 넣어요.",
+        "category": "do",
+        "feedback": "블록을 치우면 안전하게 걸어갈 수 있어요."
+      },
+      {
+        "id": "leave",
+        "text": "바닥에 블록을 그대로 두어요.",
+        "category": "rethink",
+        "feedback": "바닥의 블록을 밟을 수 있어요. 상자에 정리해요."
+      }
+    ],
+    "hint": "블록을 정리해요. 시간이 더 필요하면 말해요.",
+    "feedback": "정리하고 다음 일을 준비해요. 필요한 시간도 말할 수 있어요."
+  }
+}

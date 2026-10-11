@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import { defineConfig, type Plugin } from 'vite'
+import { validateBehaviorContent } from './scripts/validate-behavior-content.ts'
 import { formatReport, validateAll } from './scripts/validate-core.ts'
 import { NARRATION_VOICES, resolveNarrationVoice } from './src/services/narration/voices.ts'
 
@@ -18,6 +19,8 @@ function contentValidation(): Plugin {
   return {
     name: 'maumlink:validate-content',
     buildStart() {
+      const behaviorErrors = validateBehaviorContent(root)
+      if (behaviorErrors.length) throw new Error(behaviorErrors.join('\n'))
       const report = validateAll(root)
       if (report.errors.length > 0) {
         throw new Error(`\n${formatReport(report)}`)
@@ -30,12 +33,14 @@ function contentValidation(): Plugin {
 }
 
 // https://vite.dev/config/
-export default defineConfig({
+// `--mode native` builds the Capacitor app bundle: assets ship inside the APK, so no service worker.
+export default defineConfig(({ mode }) => ({
   plugins: [
     contentValidation(),
     react(),
     tailwindcss(),
     VitePWA({
+      disable: mode === 'native',
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       manifest: {
@@ -82,4 +87,4 @@ export default defineConfig({
   build: {
     target: 'es2020',
   },
-})
+}))

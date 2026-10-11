@@ -35,3 +35,6 @@ tests/e2e/**/*-snapshots/*-linux.png
 
 # Raw Codex renders (regenerate with `pnpm art:generate`); the optimised set in public/img/v3 is committed
 content-source/art/raw
+# local package store and raw design archives (extracted copies live in handoff/)
+.pnpm-store/
+*.zip

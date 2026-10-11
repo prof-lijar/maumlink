@@ -43,8 +43,8 @@ class SpeechService {
   private isSynthesisSupported(): boolean {
     return (
       typeof window !== 'undefined' &&
-      'speechSynthesis' in window &&
-      'SpeechSynthesisUtterance' in window
+      Boolean(window.speechSynthesis) &&
+      typeof window.SpeechSynthesisUtterance === 'function'
     )
   }
   setEnabled(enabled: boolean): void {

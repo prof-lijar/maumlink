@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>탐험 지도</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:'Noto Sans KR',system-ui,sans-serif;-webkit-font-smoothing:antialiased;word-break:keep-all;line-height:1.3;color:#1d2b3a;background:linear-gradient(180deg,#bfe6fb 0%,#dff3fd 40%,#eef8fd 100%);min-height:100%}
+button{font-family:inherit;line-height:1.3;word-break:keep-all}
+.screen{max-width:430px;margin:0 auto;padding:12px 16px 28px}
+
+/* 헤더 */
+.header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:4px 4px 14px}
+.header h1{margin:0;flex:1;min-width:0;white-space:nowrap;font-size:27px;line-height:1.25;font-weight:900;letter-spacing:-.5px}
+.header-actions{display:flex;gap:10px;padding-top:2px}
+.icon-btn{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;transition:transform .1s}
+.icon-btn:active{transform:scale(.94)}
+.btn-sound{border:2px solid #6b5bb5;background:#f1edff;color:#4b3c96}
+.btn-settings{border:none;background:#fff;box-shadow:0 3px 0 #cfe0ea;color:#3b8fb8;font-size:22px}
+
+/* 카드 */
+.card{display:flex;align-items:center;gap:14px;background:#fff;border-radius:22px;box-shadow:0 2px 0 rgba(30,80,110,.06)}
+.greeting{padding:14px 16px;margin-bottom:10px}
+.avatar{width:48px;height:48px;border-radius:14px;background:#ffe7c7;flex:none;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.greeting-text{font-size:15px;font-weight:800;line-height:1.35;white-space:nowrap}
+.progress{padding:14px 18px;margin-bottom:14px}
+.progress-count{font-size:20px;font-weight:900}
+.progress-label{font-size:12.5px;color:#4a5a68;font-weight:500;white-space:nowrap}
+.progress-track{flex:1;height:14px;border-radius:7px;background:#dfe6ea;overflow:hidden}
+.progress-fill{height:100%;border-radius:7px;background:#0f7a5a;transition:width .4s}
+.progress-pct{flex:none;font-size:19px;font-weight:900;min-width:46px;text-align:right}
+
+/* 지도 */
+.map{position:relative;border-radius:28px;border:5px solid #fff;overflow:hidden;
+  background:linear-gradient(rgba(255,255,255,.35),rgba(255,255,255,.35)),url(assets/map-bg.png) center/cover no-repeat,#cfeefc;
+  padding:18px 10px 20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px 10px}
+.place{justify-self:center;border:none;background:none;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;transition:transform .15s}
+.place:hover{transform:translateY(-3px)}
+.place:active{transform:scale(.97)}
+.place--wide{grid-column:1 / span 2;width:250px}
+.place--half{width:100%}
+.place-title{position:relative;z-index:1;margin-bottom:-14px;font-size:18px;font-weight:900;color:#13314a;line-height:1.2;white-space:nowrap;letter-spacing:-.3px;text-shadow:0 0 6px #fff,0 0 3px #fff,0 2px 0 #fff}
+.place-img{width:100%;background:center/contain no-repeat;filter:drop-shadow(0 6px 6px rgba(40,90,60,.18))}
+.place-tag{position:relative;z-index:1;margin-top:-22px;max-width:100%;background:rgba(255,255,255,.82);border-radius:999px;padding:5px 14px;display:flex;flex-direction:column;align-items:center;gap:3px;box-shadow:0 2px 8px rgba(30,70,50,.12)}
+.place-sub{font-size:11.5px;font-weight:700;color:#3a5163;white-space:nowrap}
+.place-status{display:flex;align-items:center;gap:5px}
+.dots{display:flex;gap:2px}
+.dot{width:12px;height:5px;border-radius:3px;background:#dfe6ea}
+.dot.on{background:#0f7a5a}
+.place-count{font-size:11px;font-weight:800;color:#0f7a5a}
+</style>
+</head>
+<body>
+<main class="screen">
+  <header class="header">
+    <h1>오늘은 어디로<br>가볼까요?</h1>
+    <div class="header-actions">
+      <button class="icon-btn btn-sound" id="btnSound" aria-label="소리">🔊</button>
+      <button class="icon-btn btn-settings" id="btnSettings" aria-label="설정">⚙</button>
+    </div>
+  </header>
+
+  <section class="card greeting">
+    <div class="avatar"><!-- 캐릭터 이미지: <img src="assets/character.png" alt=""> --></div>
+    <div class="greeting-text">안녕! 오늘은 어느 곳을 탐험할까요?</div>
+  </section>
+
+  <section class="card progress">
+    <div style="flex:none">
+      <div class="progress-count"><span id="doneCount">0</span> / <span id="totalCount">0</span></div>
+      <div class="progress-label">완료한 에피소드</div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-pct" id="progressPct">0%</div>
+  </section>
+
+  <section class="map" id="map"></section>
+</main>
+
+<script>
+// ── 데이터: 실제 앱 데이터로 교체 ──
+const PLACES = [
+  { id: 'garden',  name: '생활 정원', sub: '생활 속 상황 대처',     img: 'assets/playground.png', layout: 'wide', h: 140, done: [true, true, false] },
+  { id: 'home',    name: '우리 집',   sub: '자기관리',             img: 'assets/home.png',       layout: 'half', h: 150, done: [false, false, false] },
+  { id: 'school',  name: '학교',      sub: '대인관계',             img: 'assets/classroom.png',  layout: 'half', h: 150, done: [false, false, false] },
+  { id: 'shelter', name: '도움 쉼터', sub: '안전하게 쉬고 도움받기', img: 'assets/tree.png',       layout: 'wide', h: 160, done: [false, false, false] },
+];
+
+// ── 장소 클릭 시 호출: 기존 클릭 후 로직에 연결 ──
+function onPlaceSelect(place) {
+  console.log('place selected:', place.id);
+  // TODO: 기존 로직 연결 (예: navigate(`/place/${place.id}`))
+}
+
+let soundOn = true;
+
+function renderProgress() {
+  const all = PLACES.flatMap(p => p.done);
+  const done = all.filter(Boolean).length;
+  const pct = all.length ? Math.round(done / all.length * 100) : 0;
+  document.getElementById('doneCount').textContent = done;
+  document.getElementById('totalCount').textContent = all.length;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+function renderMap() {
+  const map = document.getElementById('map');
+  map.innerHTML = '';
+  PLACES.forEach(p => {
+    const n = p.done.filter(Boolean).length;
+    const btn = document.createElement('button');
+    btn.className = 'place place--' + p.layout;
+    btn.setAttribute('aria-label', `${p.name}, ${p.sub}, ${n}/${p.done.length} 완료`);
+    btn.innerHTML = `
+      <div class="place-title">${p.name}</div>
+      <div class="place-img" style="height:${p.h}px;background-image:url(${p.img})"></div>
+      <div class="place-tag">
+        <div class="place-sub">${p.sub}</div>
+        <div class="place-status">
+          <div class="dots">${p.done.map(v => `<span class="dot${v ? ' on' : ''}"></span>`).join('')}</div>
+          <span class="place-count">${n}/${p.done.length}</span>
+        </div>
+      </div>`;
+    btn.addEventListener('click', () => onPlaceSelect(p));
+    map.appendChild(btn);
+  });
+}
+
+document.getElementById('btnSound').addEventListener('click', e => {
+  soundOn = !soundOn;
+  e.currentTarget.textContent = soundOn ? '🔊' : '🔇';
+});
+document.getElementById('btnSettings').addEventListener('click', () => {
+  // TODO: 설정 화면 연결
+});
+
+renderProgress();
+renderMap();
+</script>
+</body>
+</html>

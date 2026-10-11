@@ -4,7 +4,6 @@ import { MemoryRouter, Route, Routes } from 'react-router'
 import { beforeEach, expect, it } from 'vitest'
 import { scenarios, getEmotion } from '@/content/loader'
 import { useLesson } from '@/engine/store'
-import { Home } from '@/screens/Home'
 import { Lesson } from '@/screens/lesson/Lesson'
 import { useSettings } from '@/services/settings'
 import { useProgress } from '@/services/progress'
@@ -16,21 +15,17 @@ beforeEach(() => {
 })
 
 it.each(scenarios)(
-  '$id: story, visual questions and concrete recap preserve the lesson',
+  '$id: archived lesson engine still renders its saved content',
   async (scenario) => {
     const user = userEvent.setup()
     render(
-      <MemoryRouter>
+      <MemoryRouter initialEntries={[`/lesson/${scenario.id}`]}>
         <Routes>
-          <Route path="/" element={<Home />} />
           <Route path="/lesson/:scenarioId" element={<Lesson />} />
           <Route path="/lesson/:scenarioId/done" element={<Lesson />} />
         </Routes>
       </MemoryRouter>,
     )
-    expect(screen.queryByText('준비 중')).not.toBeInTheDocument()
-    // Home exposes the actual story title, so children need not decode the domain name.
-    await user.click(screen.getByRole('button', { name: new RegExp(scenario.situation.title.ko) }))
     for (const sentence of scenario.situation.story) {
       expect(screen.getByTestId('story-card').textContent).toBe(sentence.ko)
       expect(screen.getAllByTestId('story-card')).toHaveLength(1)
@@ -66,10 +61,7 @@ it.each(scenarios)(
     expect(within(recap).getByText(feeling.word.ko)).toBeInTheDocument()
     expect(within(recap).getByText(action.text.ko)).toBeInTheDocument()
     expect(screen.getByTestId('closing-card')).toHaveTextContent(scenario.closing.ko)
-    await user.click(screen.getByTestId('wrapup-home'))
-    expect(
-      screen.getByRole('button', { name: new RegExp(scenario.situation.title.ko) }),
-    ).toHaveTextContent('완료')
+    expect(useProgress.getState().isCompleted(scenario.id)).toBe(true)
   },
 )
 

@@ -1,0 +1,93 @@
+{
+  "id": "B01",
+  "version": 2,
+  "domainId": "B",
+  "title": "내 가방을 챙겨요",
+  "situation": {
+    "text": "내일 학교에 가져갈 준비물 그림이 있어요. 공책과 필통을 챙기려고 해요. 무엇을 먼저 할까요?",
+    "alt": "내일 학교에 가져갈 준비물 그림이 있어요. 공책과 필통을 챙기려고 해요. 무엇을 먼저 할까요?"
+  },
+  "choice": {
+    "prompt": "지금 어떻게 하면 좋을까요?",
+    "choices": [
+      {
+        "id": "A",
+        "text": "그림 목록에서 챙길 물건을 확인해요.",
+        "feedback": "목록을 먼저 봤어요. 필요한 물건을 찾아 넣을 수 있어요."
+      },
+      {
+        "id": "B",
+        "text": "눈에 보이는 물건을 모두 가방에 넣어요.",
+        "feedback": "모든 물건 대신 목록에 있는 준비물을 찾아요."
+      },
+      {
+        "id": "C",
+        "text": "준비물을 보지 않고 가방을 닫아요.",
+        "feedback": "가방을 닫기 전에 필요한 물건이 있는지 확인해요."
+      }
+    ],
+    "acceptedChoiceIds": ["A"],
+    "hint": "필요한 물건을 알려 주는 그림을 찾아요.",
+    "modelChoiceId": "A"
+  },
+  "sequence": {
+    "prompt": "어떤 순서로 하면 좋을까요?",
+    "cards": [
+      {
+        "id": "step2",
+        "text": "목록의 물건을 가방에 넣어요."
+      },
+      {
+        "id": "step3",
+        "text": "목록과 가방 속 물건을 확인해요."
+      },
+      {
+        "id": "step1",
+        "text": "그림 준비물 목록을 봐요."
+      }
+    ],
+    "acceptedOrders": [["step1", "step2", "step3"]],
+    "hint": "그림 준비물 목록을 봐요.",
+    "feedback": "먼저 그림 준비물 목록을 봐요. 그다음 목록의 물건을 가방에 넣어요. 마지막으로 목록과 가방 속 물건을 확인해요.",
+    "modelOrder": ["step1", "step2", "step3"]
+  },
+  "takeaway": "목록을 먼저 봤어요. 필요한 물건을 찾아 넣을 수 있어요.",
+  "safetyNote": "필요한 물건이 없으면 보호자에게 알려요.",
+  "review": {
+    "state": "draft",
+    "educatorSafetyNote": "준비물이 없으면 보호자에게 알린다. 없는 물건을 아동의 잘못으로 표현하지 않고 반드시 구매하도록 유도하지 않는다.",
+    "source": "docs/SPEC.md §5.1; docs/SORTING-CONTENT.md (2026-10-10)"
+  },
+  "sorting": {
+    "kind": "behavior_sort",
+    "prompt": "가방을 챙길 때 할 행동을 나눠 봐요.",
+    "cards": [
+      {
+        "id": "all",
+        "text": "보이는 물건을 모두 넣어요.",
+        "category": "rethink",
+        "feedback": "모두 넣기보다 목록에 있는 물건을 찾아요."
+      },
+      {
+        "id": "list",
+        "text": "그림 준비물 목록을 봐요.",
+        "category": "do",
+        "feedback": "목록을 보면 필요한 물건을 알 수 있어요."
+      },
+      {
+        "id": "close",
+        "text": "확인하지 않고 가방을 닫아요.",
+        "category": "rethink",
+        "feedback": "닫기 전에 목록과 가방 속을 확인해요."
+      },
+      {
+        "id": "missing",
+        "text": "없는 준비물은 가족에게 알려요.",
+        "category": "do",
+        "feedback": "준비물이 없으면 도움을 청해도 괜찮아요."
+      }
+    ],
+    "hint": "그림 목록을 보고 필요한 물건을 찾아요.",
+    "feedback": "목록을 확인해요. 없는 물건은 가족에게 알려요."
+  }
+}

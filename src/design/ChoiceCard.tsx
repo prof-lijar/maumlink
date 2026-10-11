@@ -3,46 +3,68 @@ import type { Domain, OptionId } from '@/content/schema'
 import { useT } from '@/i18n/useT'
 import { sound } from '@/services/sound'
 import { cn } from './cn'
-import { CheckIcon, SpeakerIcon } from './icons'
+import { CheckIcon, GardenSpeakerIcon, SpeakerIcon } from './icons'
+
+const badgeTint: Record<Domain, string> = {
+  self: 'bg-domain-self text-ink',
+  social: 'bg-domain-social text-ink',
+  relation: 'bg-domain-relation text-ink',
+  mind: 'bg-domain-mind text-ink',
+  reserved: 'bg-domain-reserved text-ink',
+}
 
 interface Props {
   id: OptionId
-  domain: Domain
+  domain?: Domain
   text: string
+  illustrationSrc?: string
   selected: boolean
   dimmed?: boolean
-  /** Outcome pictogram name (public/icons/outcome/<name>.svg) shown in the badge. */
-  icon?: string
   onSelect: (id: OptionId) => void
-  onSpeak: () => void
+  /** Omit to hide the per-card speaker (the life-garden game has no voice buttons). */
+  onSpeak?: () => void
   children?: ReactNode
+  /** `garden` renders the life-garden handoff card (letter badge, orange selection). */
+  variant?: 'storybook' | 'garden'
 }
 
-/** Action / multiple-choice card (PRD §6.7): picture badge, text, speaker; min 96 px tall. */
+/** Action / multiple-choice card (PRD §6.7): letter badge, text, speaker; min 96 px tall. */
 export function ChoiceCard({
   id,
   domain,
   text,
+  illustrationSrc,
   selected,
   dimmed,
-  icon,
   onSelect,
   onSpeak,
   children,
+  variant = 'storybook',
 }: Props) {
   const { t } = useT()
+  const garden = variant === 'garden'
   return (
     <div
       data-selected={selected}
-      data-domain-tone={domain}
-      className={cn('choice-card', dimmed && !selected && 'choice-card--tried')}
+      className={cn(
+        garden
+          ? 'garden-choice'
+          : 'choice-card relative flex min-h-[96px] flex-wrap items-stretch rounded-card border-2 bg-surface transition-[border-color,transform] duration-150 motion-reduce:transition-none lg:min-h-[120px]',
+        !garden && (selected ? 'border-select ring-2 ring-select' : 'border-line'),
+        !garden && dimmed && !selected && 'bg-bg',
+        !garden && illustrationSrc && 'choice-card--illustrated',
+      )}
     >
       <button
         type="button"
         role="radio"
         aria-checked={selected}
         data-option={id}
-        className="choice-main tap"
+        className={
+          garden
+            ? 'garden-choice__pick'
+            : 'tap min-w-0 flex flex-1 items-center gap-3 px-4 py-4 text-left md:px-5'
+        }
         onKeyDown={(event) => {
           if (
             !['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp', 'Home', 'End'].includes(event.key)
@@ -73,27 +95,41 @@ export function ChoiceCard({
           onSelect(id)
         }}
       >
-        <span className="choice-letter" aria-hidden="true">
-          {selected ? (
-            <CheckIcon size={28} />
-          ) : icon ? (
-            <img src={`/icons/outcome/${icon}.svg`} alt="" width={36} height={36} />
-          ) : (
-            id
-          )}
-        </span>
-        <span className="choice-text">{text}</span>
+        {garden ? (
+          <span className="garden-choice__key" aria-hidden="true">
+            {id}
+          </span>
+        ) : illustrationSrc ? (
+          <img className="choice-card__illustration" src={illustrationSrc} alt="" />
+        ) : (
+          <span
+            className={cn(
+              'choice-letter flex size-12 shrink-0 items-center justify-center text-btn font-bold',
+              domain ? badgeTint[domain] : 'bg-domain-social text-ink',
+            )}
+            aria-hidden="true"
+          >
+            {selected ? <CheckIcon size={26} /> : id}
+          </span>
+        )}
+        <span className={garden ? 'garden-choice__text' : 'flex-1 text-body text-ink'}>{text}</span>
       </button>
-      <button
-        type="button"
-        aria-label={t('a11y.speak')}
-        title={text}
-        className="choice-speaker tap"
-        onClick={onSpeak}
-      >
-        <SpeakerIcon size={26} />
-      </button>
-      {children && <div className="choice-ack">{children}</div>}
+      {onSpeak && (
+        <button
+          type="button"
+          aria-label={t('a11y.speak')}
+          title={text}
+          className={
+            garden
+              ? 'garden-speak'
+              : 'choice-speaker tap flex shrink-0 items-center justify-center self-center text-ink-soft'
+          }
+          onClick={onSpeak}
+        >
+          {garden ? <GardenSpeakerIcon color="#E8742A" /> : <SpeakerIcon size={26} />}
+        </button>
+      )}
+      {children && <div className="choice-ack basis-full text-body text-ink-soft">{children}</div>}
     </div>
   )
 }

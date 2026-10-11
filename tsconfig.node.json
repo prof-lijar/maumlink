@@ -27,7 +27,9 @@
     "vitest.config.ts",
     "playwright.config.ts",
     "playwright.acceptance.config.ts",
+    "playwright.behavior.config.ts",
     "scripts",
-    "tests/e2e"
+    "tests/e2e",
+    "tests/behavior"
   ]
 }
