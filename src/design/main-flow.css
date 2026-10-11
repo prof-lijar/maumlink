@@ -240,7 +240,7 @@
   object-position: top;
 }
 .explore-progress {
-  margin-bottom: 14px;
+  margin-bottom: 0;
   padding: 14px 18px;
 }
 .explore-progress > div:first-child {
