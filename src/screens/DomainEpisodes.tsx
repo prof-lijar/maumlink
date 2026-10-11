@@ -1,4 +1,5 @@
 import { Navigate, useNavigate, useParams } from 'react-router'
+import { KidBackIcon } from '@/design/icons'
 import { episodeTile, mapPlaces } from '@/design/devkitAssets'
 import { episodesFor, getDomain } from '@/content/episodeIndex'
 import { useMvpProgress } from '@/services/mvpProgress'
@@ -21,11 +22,11 @@ export function DomainEpisodes() {
         <header className="garden-list__header">
           <button
             type="button"
-            className="garden-round-button"
+            className="garden-round-button garden-back-button"
             aria-label="지도로 돌아가기"
             onClick={() => navigate('/')}
           >
-            ←
+            <KidBackIcon />
           </button>
           <span className="garden-list__brand">마음마을 탐험대</span>
         </header>

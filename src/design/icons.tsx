@@ -233,3 +233,18 @@ export function KidGearIcon({ size = 26 }: { size?: number }) {
     </svg>
   )
 }
+
+/** Chunky back arrow for the story and list headers (same picture-book stroke as the tools). */
+export function KidBackIcon({ size = 26 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+      <path
+        d="M14.5 6.5 5 16l9.5 9.5v-6H27v-7H14.5z"
+        fill="#fff"
+        stroke="#3b2f27"
+        strokeWidth={2.4}
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}

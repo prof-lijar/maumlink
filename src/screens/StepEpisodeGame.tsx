@@ -4,6 +4,7 @@ import type { EpisodeStep, StepEpisode } from '@/content/stepSchema'
 import { episodesFor, getEpisode } from '@/content/episodeIndex'
 import type { OptionId } from '@/content/schema'
 import { ChoiceCard } from '@/design/ChoiceCard'
+import { KidBackIcon } from '@/design/icons'
 import { conversationFaces, faceArt, sceneArt, sceneSrcSet } from '@/design/devkitAssets'
 import {
   clearStepGame,
@@ -157,11 +158,11 @@ export function StepEpisodeGame({ episode }: { episode: StepEpisode }) {
         <header className="garden-header">
           <button
             type="button"
-            className="garden-round-button"
+            className="garden-round-button garden-back-button"
             aria-label="에피소드 목록으로 돌아가기"
             onClick={() => navigate(listPath)}
           >
-            ←
+            <KidBackIcon />
           </button>
           <div
             className="garden-steps"
