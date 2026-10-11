@@ -84,7 +84,7 @@ pnpm test:e2e            # 현재 흐름 브라우저 검사(tests/behavior, 시
 
 ```bash
 pnpm build:native        # 네이티브용 웹 빌드 + cap sync android
-pnpm android:apk         # 디버그 APK (JDK 21 필요, 예: Android Studio 내장 JBR)
+pnpm android:apk         # 디버그 APK (JDK 21 필요. Android Studio가 없으면 JAVA_HOME을 JDK 21로, ANDROID_HOME을 SDK로 지정)
 adb install -r android/app/build/outputs/apk/debug/app-debug.apk
 ```
 
