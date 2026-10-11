@@ -5,7 +5,14 @@ import { episodesFor, getEpisode } from '@/content/episodeIndex'
 import type { OptionId } from '@/content/schema'
 import { ChoiceCard } from '@/design/ChoiceCard'
 import { KidBackIcon } from '@/design/icons'
-import { conversationFaces, faceArt, sceneArt, sceneSrcSet } from '@/design/devkitAssets'
+import {
+  conversationFaces,
+  faceArt,
+  sceneArt,
+  scenePanels,
+  scenePanelSrcSet,
+  sceneSrcSet,
+} from '@/design/devkitAssets'
 import {
   clearStepGame,
   completionScreen,
@@ -199,13 +206,31 @@ export function StepEpisodeGame({ episode }: { episode: StepEpisode }) {
           {game.screen === 0 && (
             <>
               <div className="garden-scene">
-                <div className="garden-scene__frame">
-                  <img
-                    src={sceneArt[episode.id]}
-                    srcSet={sceneSrcSet(episode.id)}
-                    sizes="(min-width: 600px) 560px, 100vw"
-                    alt={episode.situation.alt}
-                  />
+                <div
+                  className="garden-scene__frame"
+                  data-panels={scenePanels[episode.id]?.length}
+                  role={scenePanels[episode.id] ? 'img' : undefined}
+                  aria-label={scenePanels[episode.id] ? episode.situation.alt : undefined}
+                >
+                  {scenePanels[episode.id] ? (
+                    scenePanels[episode.id]!.map((src, i) => (
+                      <img
+                        key={src}
+                        src={src}
+                        srcSet={scenePanelSrcSet(src)}
+                        sizes="(min-width: 600px) 560px, 100vw"
+                        alt=""
+                        style={{ animationDelay: `${i * 0.5}s` }}
+                      />
+                    ))
+                  ) : (
+                    <img
+                      src={sceneArt[episode.id]}
+                      srcSet={sceneSrcSet(episode.id)}
+                      sizes="(min-width: 600px) 560px, 100vw"
+                      alt={episode.situation.alt}
+                    />
+                  )}
                   {episode.situation.bubbles && (
                     <div className="garden-scene__bubbles" aria-hidden="true">
                       {episode.situation.bubbles.map((bubble, i) => (

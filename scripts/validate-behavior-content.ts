@@ -3,7 +3,7 @@ import { readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { StepEpisodeSchema } from '../src/content/stepSchema.ts'
 
-export const EPISODE_COUNT = 4
+export const EPISODE_COUNT = 5
 
 export function validateBehaviorContent(root: string): string[] {
   const errors: string[] = []
@@ -11,7 +11,7 @@ export function validateBehaviorContent(root: string): string[] {
     episodes: { id: string; title: string; domainId: string }[]
   }
   const files = readdirSync(join(root, 'content/episodes')).filter((file) => file.endsWith('.json'))
-  // One reviewed story per social-emotional area (자기 인식 · 관계 인식 · 관계 관리 · 마음건강관리).
+  // One reviewed story per social-emotional area (자기 인식 · 관계 인식 · 관계 관리 · 마음건강관리 · 자기관리).
   if (files.length !== EPISODE_COUNT || index.episodes.length !== EPISODE_COUNT)
     errors.push(`Story content must have exactly ${EPISODE_COUNT} episodes`)
   const seen = new Set<string>()

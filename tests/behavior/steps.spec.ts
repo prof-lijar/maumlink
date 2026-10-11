@@ -36,7 +36,7 @@ for (const [width, height] of [
   [820, 1180],
   [1280, 800],
 ]) {
-  test(`the four reviewed stories play through at ${width}px`, async ({ page }) => {
+  test(`the five reviewed stories play through at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height })
     const errors: string[] = []
     page.on('pageerror', (error) => errors.push(error.message))
@@ -111,7 +111,7 @@ for (const [width, height] of [
     await expect(page.locator('main').getByText(/관계를 회복하는 좋은 방법이에요/)).toBeVisible()
     await next(page)
     await page.getByRole('button', { name: '마무리하기' }).click()
-    await expect(page.locator('main').getByText('완료한 이야기 2 / 4')).toBeVisible()
+    await expect(page.locator('main').getByText('완료한 이야기 2 / 5')).toBeVisible()
 
     // A01 친구들이 내 발표 실수를 듣고 놀린다 (자기 인식): emotion → body → emotion–body link
     await page.goto('/area/A')
@@ -130,7 +130,7 @@ for (const [width, height] of [
     await page.getByRole('button', { name: '완료하기' }).click()
     await page.getByRole('radio', { name: /혼자서 산책하기/ }).click()
     await page.getByRole('button', { name: '마무리하기' }).click()
-    await expect(page.locator('main').getByText('완료한 이야기 3 / 4')).toBeVisible()
+    await expect(page.locator('main').getByText('완료한 이야기 3 / 5')).toBeVisible()
 
     // D01 내 차례인데 친구가 새치기를 했어요 (마음건강관리): feeling → coping → expression → help → practice
     await page.goto('/area/D')
@@ -152,11 +152,27 @@ for (const [width, height] of [
     await page.screenshot({ path: `.tmp/d04-practice-${width}.png`, fullPage: true })
     await checkScreen(page)
     await page.getByRole('button', { name: '마무리하기' }).click()
-    await expect(page.locator('main').getByText('완료한 이야기 4 / 4')).toBeVisible()
+    await expect(page.locator('main').getByText('완료한 이야기 4 / 5')).toBeVisible()
     await page.reload()
-    await expect(page.locator('main').getByText('완료한 이야기 4 / 4')).toBeVisible()
+    await expect(page.locator('main').getByText('완료한 이야기 4 / 5')).toBeVisible()
+
+    // E01 선생님 설명 중 하고 싶은 말이 떠올랐어요 (자기관리): every pick accepted, two-panel scene
+    await page.goto('/area/E')
+    await page.getByRole('button', { name: /하고 싶은 말이 떠올랐어요/ }).click()
+    await expect(page.locator('.garden-scene__frame img')).toHaveCount(2)
+    await next(page)
+    await page.getByRole('radio', { name: '아쉬워요' }).click()
+    await next(page)
+    await page.getByRole('radio', { name: /지금 들려주고 싶어서/ }).click()
+    await next(page)
+    await page.getByRole('radio', { name: /새로운 생각이 잘 떠올라요/ }).click()
+    await checkScreen(page)
+    await next(page)
+    await page.getByRole('radio', { name: /먼저 선생님 말씀을/ }).click()
+    await page.getByRole('button', { name: '마무리하기' }).click()
+    await expect(page.locator('main').getByText('완료한 이야기 5 / 5')).toBeVisible()
     await page.getByRole('button', { name: '탐험 지도로 돌아가기' }).click()
-    for (const area of ['자기 인식', '관계 인식', '관계 관리', '마음건강관리'])
+    for (const area of ['자기 인식', '관계 인식', '관계 관리', '마음건강관리', '자기관리'])
       await expect(
         page.getByRole('button', { name: new RegExp(`^${area}, .*1개 중 1개 완료`) }),
       ).toBeVisible()
@@ -226,7 +242,7 @@ for (const choice of ['A', 'C']) {
     await page.screenshot({ path: `.tmp/d04-practice-${choice}.png`, fullPage: true })
     await checkScreen(page)
     await page.getByRole('button', { name: '마무리하기' }).click()
-    await expect(page.locator('main').getByText('완료한 이야기 1 / 4')).toBeVisible()
+    await expect(page.locator('main').getByText('완료한 이야기 1 / 5')).toBeVisible()
     await page.getByRole('button', { name: '다시 연습하기' }).click()
     await expect(page.getByRole('heading', { name: '상황을 살펴봐요' })).toBeFocused()
     await page.getByRole('button', { name: '에피소드 목록으로 돌아가기' }).click()

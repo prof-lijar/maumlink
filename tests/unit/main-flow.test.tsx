@@ -40,7 +40,7 @@ describe('main flow: start → explorer → map → area → story', () => {
     expect(
       screen.getByRole('heading', { name: '안녕! 오늘은 어느 곳을 탐험할까요?' }),
     ).toBeInTheDocument()
-    expect(screen.getByRole('status', { name: /전체 4개 중 0퍼센트/ })).toBeInTheDocument()
+    expect(screen.getByRole('status', { name: /전체 5개 중 0퍼센트/ })).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /^관계 인식, 운동장, 1개 중 0개 완료/ }))
     expect(screen.getByRole('heading', { name: '관계 인식' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: '에피소드 1개' })).toBeInTheDocument()
@@ -57,7 +57,7 @@ describe('main flow: start → explorer → map → area → story', () => {
     useSettings.setState({ started: true })
     useProfile.setState({ avatarId: 'haru' })
     renderFlow()
-    for (const name of ['자기 인식', '관계 인식', '관계 관리', '마음건강관리'])
+    for (const name of ['자기 인식', '관계 인식', '관계 관리', '마음건강관리', '자기관리'])
       expect(screen.getByRole('button', { name: new RegExp(`^${name}, `) })).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /^자기 인식,/ }))
     expect(screen.getByText('나를 느끼는 여행')).toBeInTheDocument()
@@ -76,20 +76,22 @@ describe('main flow: start → explorer → map → area → story', () => {
       '관계 인식',
       '관계 관리',
       '마음건강관리',
+      '자기관리',
     ])
     expect(episodeIndex.episodes.map((e) => `${e.domainId}:${e.id}`)).toEqual([
       'A:A01',
       'B:B01',
       'C:C01',
       'D:D01',
+      'E:E01',
     ])
   })
 
   it('keeps progress separate from the previous 1.0 lesson records', () => {
     localStorage.setItem('maumlink.progress.v1', JSON.stringify({ entries: { old: { times: 1 } } }))
-    expect(episodeIndex.episodes).toHaveLength(4)
+    expect(episodeIndex.episodes).toHaveLength(5)
     expect(useMvpProgress.getState().completedEpisodeIds).toEqual([])
-    expect(completionPercent(1)).toBe(25)
+    expect(completionPercent(1)).toBe(20)
   })
 })
 

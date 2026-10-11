@@ -34,7 +34,13 @@ function play(id: string) {
 
 describe('step episode data and mission engines', () => {
   it('loads the step episodes', () => {
-    expect(stepEpisodes.map((episode) => episode.id).sort()).toEqual(['A01', 'B01', 'C01', 'D01'])
+    expect(stepEpisodes.map((episode) => episode.id).sort()).toEqual([
+      'A01',
+      'B01',
+      'C01',
+      'D01',
+      'E01',
+    ])
     expect(b01.domainId).toBe('B')
     expect(c01.domainId).toBe('C')
   })
@@ -293,9 +299,14 @@ describe('잘 모르겠어요, 미션 건너뛰기, 이전으로, 새 완료 기
       for (const step of episode.steps)
         if (
           step.kind === 'reflect' &&
-          !['나를 도와주는 방법', '어떻게 하면 좋을까요?'].includes(step.label)
+          ![
+            '나를 도와주는 방법',
+            '어떻게 하면 좋을까요?',
+            '친구의 마음과 행동 알아보기',
+            '나도 해볼 수 있어요',
+          ].includes(step.label)
         )
-          expect(step.options.some((option) => option.text === '잘 모르겠어요.')).toBe(true)
+          expect(step.options.some((option) => /^잘 모르겠어요\.?$/.test(option.text))).toBe(true)
     const user = userEvent.setup()
     play('A01')
     await user.click(screen.getByRole('button', { name: /다음/ }))
@@ -339,5 +350,42 @@ describe('잘 모르겠어요, 미션 건너뛰기, 이전으로, 새 완료 기
     expect(JSON.parse(localStorage.getItem('maumlink.progress.mvp-v1')!).state).toEqual({
       completedEpisodeIds: ['A01', 'B02'],
     })
+  })
+})
+
+describe('E01 자기관리: every pick is accepted and the two-panel scene shows', () => {
+  it('walks feelings, reasons, 마음과 행동 feedback and self-talk to completion', async () => {
+    const user = userEvent.setup()
+    play('E01')
+    expect(screen.getByText('하고 싶은 말이 생겼을 때')).toBeInTheDocument()
+    expect(
+      screen.getByRole('img', { name: /교실에서 선생님이 설명 중임/ }).querySelectorAll('img'),
+    ).toHaveLength(2)
+    expect(
+      screen.getByText('선생님이 “설명이 끝나면 말해주렴”이라고 하셨어요.'),
+    ).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /다음/ }))
+    expect(screen.getByRole('radio', { name: '아쉬워요' }).querySelector('img')).toHaveAttribute(
+      'src',
+      '/img/v3/face-disappointed-400.webp',
+    )
+    await user.click(screen.getByRole('radio', { name: '괜찮아요' }))
+    expect(screen.getByText(/그 때 마음이 어떤지 알아차리는 것이 중요해요/)).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /다음/ }))
+    await user.click(screen.getByRole('radio', { name: /잊어버릴까 봐/ }))
+    expect(screen.getByText(/민수는 하고 싶은 말이 많았군요/)).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /다음/ }))
+    await user.click(screen.getByRole('radio', { name: /기다리는 것이 어려워요/ }))
+    expect(
+      screen.getByText(
+        '그래요. 기다리는 것은 민수에게 어려울 수 있어요. 조금씩 연습하면 도움이 돼요.',
+      ),
+    ).toBeInTheDocument()
+    expect(screen.queryByText('다시 한 번 생각해 볼까요?')).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /다음/ }))
+    await user.click(screen.getByRole('radio', { name: /손을 들고 내 차례를/ }))
+    expect(screen.getByText(/내가 할 수 있는 방법을 선택해 보아요/)).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /마무리하기/ }))
+    await waitFor(() => expect(useMvpProgress.getState().completedEpisodeIds).toEqual(['E01']))
   })
 })

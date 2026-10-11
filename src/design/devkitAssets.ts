@@ -59,6 +59,7 @@ export const placeArt: Record<DomainId, string> = {
   B: sprite('place-social'),
   C: sprite('place-relation'),
   D: sprite('place-mind'),
+  E: sprite('place-manage'),
 }
 
 /** Home map: generated village background and the landmark for each place. */
@@ -67,10 +68,11 @@ export const mapPlaces: Record<DomainId, { image: string; height: number; wide: 
   A: { image: sprite('place-self', 800), height: 150, wide: true },
   B: { image: sprite('place-social', 800), height: 150, wide: false },
   C: { image: sprite('place-relation', 800), height: 150, wide: false },
-  D: { image: sprite('place-mind', 800), height: 160, wide: true },
+  D: { image: sprite('place-mind', 800), height: 150, wide: false },
+  E: { image: sprite('place-manage', 800), height: 150, wide: false },
 }
 
-const episodeIds = ['A01', 'B01', 'C01', 'D01'] as const
+const episodeIds = ['A01', 'B01', 'C01', 'D01', 'E01'] as const
 
 /** Small same-style object pictures for the episode list and completion rows. */
 export const episodeThumb: Record<string, string> = Object.fromEntries(
@@ -83,6 +85,7 @@ const sceneIds: Record<string, string> = {
   B01: 'scene-social-playground',
   C01: 'scene-relation-pencil-prank',
   D01: 'scene-mind-lunch-line',
+  E01: 'scene-E01-urge',
 }
 export const sceneArt: Record<string, string> = Object.fromEntries(
   episodeIds.map((id) => [id, scene(sceneIds[id] ?? `scene-${id}`)]),
@@ -90,6 +93,13 @@ export const sceneArt: Record<string, string> = Object.fromEntries(
 export const sceneArtLarge: Record<string, string> = Object.fromEntries(
   episodeIds.map((id) => [id, scene(sceneIds[id] ?? `scene-${id}`, 1600)]),
 )
+/** Extra cuts for stories whose source asks for several panels (first panel is `sceneArt`). */
+export const scenePanels: Record<string, string[]> = {
+  E01: [scene('scene-E01-urge'), scene('scene-E01-speak')],
+}
+export const scenePanelSrcSet = (src: string) =>
+  `${src} 800w, ${src.replace('-800.webp', '-1600.webp')} 1600w`
+
 /** srcset so HiDPI phones get the 1600 px scene. */
 export const sceneSrcSet = (id: string) => `${sceneArt[id]} 800w, ${sceneArtLarge[id]} 1600w`
 
@@ -107,6 +117,7 @@ const tileTint: Record<DomainId, string> = {
   B: '#fff0dc',
   C: '#e4f1fb',
   D: '#fde8ef',
+  E: '#fff8d9',
 }
 /** List tiles: the episode's thumbnail on a tint for its place. */
 export const episodeTile = (id: string): EpisodeTile => ({

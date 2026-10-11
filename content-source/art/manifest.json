@@ -349,6 +349,69 @@
         "characters-ref.png"
       ],
       "prompt": "A kind Korean female elementary-school teacher, upper body, front view, warm smile, dark bob hair, beige cardigan over a white blouse, holding a small notebook. Same cartoon style as the boy in the attached reference. Alone. No text."
+    },
+    {
+      "id": "scene-E01-urge",
+      "group": "scenes",
+      "size": "landscape",
+      "transparent": false,
+      "refs": [
+        "characters-ref.png",
+        "ui-ref-1.png"
+      ],
+      "prompt": "Panel 1 of a classroom story. A kind female teacher stands at the green chalkboard explaining, holding a book. The boy sits at his desk in the middle row with a bright, excited idea: eyes sparkling, mouth closed in a big eager smile, one hand half-raised, a small glowing lightbulb-like sparkle above his head (no text). Classmates listen quietly. Korean elementary-school picture-book scene in the same cartoon style as the attached references; the boy character from the first reference (short brown hair, yellow hoodie) is 민수, the main character. Keep all faces within the central 80 percent of the frame. Gentle, non-critical expressions, no tears, no villain faces, no text."
+    },
+    {
+      "id": "scene-E01-speak",
+      "group": "scenes",
+      "size": "landscape",
+      "transparent": false,
+      "refs": [
+        "characters-ref.png",
+        "ui-ref-1.png"
+      ],
+      "prompt": "Panel 2 of the same classroom story. The boy has stood up slightly from his desk and is talking excitedly with his mouth open and hands out, before the teacher has finished. The kind female teacher at the chalkboard turns to him with a calm, warm face and a gentle 'one moment' palm gesture. Classmates look on kindly, not annoyed. Korean elementary-school picture-book scene in the same cartoon style as the attached references; the boy character from the first reference (short brown hair, yellow hoodie) is 민수, the main character. Keep all faces within the central 80 percent of the frame. Gentle, non-critical expressions, no tears, no villain faces, no text."
+    },
+    {
+      "id": "thumb-E01",
+      "group": "thumbs",
+      "size": "square",
+      "transparent": true,
+      "refs": [
+        "characters-ref.png"
+      ],
+      "prompt": "A round white speech bubble with a small glowing yellow lightbulb inside it, and a tiny raised hand peeking from the bottom edge. A single simple object drawn as a chunky, glossy sticker icon in the same cartoon style as the attached reference: bold outlines, bright pastel colours, soft shading, slight 3D feel, centred and filling most of the canvas. No people, no faces, no text, no background."
+    },
+    {
+      "id": "place-manage",
+      "group": "places",
+      "size": "square",
+      "transparent": true,
+      "refs": [
+        "characters-ref.png",
+        "ui-ref-2.png"
+      ],
+      "prompt": "A small lesson-time classroom vignette: a kind female teacher at a green chalkboard, and the boy from the reference (yellow hoodie) sitting at a wooden school desk with one hand raised, waiting his turn with a calm smile. Drawn as a compact, chunky map-landmark vignette in the same style as the buildings on the attached board: rounded shapes, bold outlines, everything standing on a small rounded ground patch, no surrounding background. Characters in the exact cartoon style of the attached reference boy. Only this vignette, centred, big."
+    },
+    {
+      "id": "face-disappointed",
+      "group": "faces",
+      "size": "square",
+      "transparent": true,
+      "refs": [
+        "characters-ref.png"
+      ],
+      "prompt": "Head-and-shoulders portrait of the boy from the attached reference (short brown hair, yellow hoodie), centred, looking at the viewer, showing the feeling DISAPPOINTED / 아쉬워요 (a little let down, wishing he could): eyebrows slightly raised and drawn together, small sideways pout, eyes looking slightly down and to the side, shoulders a little dropped, no tears. Clear and readable for a child."
+    },
+    {
+      "id": "face-okay",
+      "group": "faces",
+      "size": "square",
+      "transparent": true,
+      "refs": [
+        "characters-ref.png"
+      ],
+      "prompt": "Head-and-shoulders portrait of the boy from the attached reference (short brown hair, yellow hoodie), centred, looking at the viewer, showing the feeling OKAY / 괜찮아요 (calm and fine): relaxed eyebrows, soft gentle smile with mouth closed, eyes calm, one hand giving a small relaxed thumbs-up near the shoulder. Clear and readable for a child."
     }
   ]
 }

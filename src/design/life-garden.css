@@ -1764,3 +1764,15 @@
     animation: none;
   }
 }
+
+/* Several cuts (설계서: 상황을 3~4컷으로 구분): stacked panels inside one frame. */
+.garden-scene__frame[data-panels] {
+  display: grid;
+  gap: 4px;
+  aspect-ratio: auto;
+  background: #fff;
+}
+.garden-scene__frame[data-panels] > img {
+  aspect-ratio: 1024 / 572;
+  animation: garden-story-in 0.4s ease-out both;
+}

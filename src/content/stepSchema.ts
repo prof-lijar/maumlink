@@ -145,15 +145,17 @@ export type ExpressionChoiceMissionData = z.infer<typeof ExpressionChoiceStep>
 export const StepEpisodeSchema = z
   .object({
     format: z.literal('steps'),
-    id: z.string().regex(/^[ABCD]\d{2}$/),
+    id: z.string().regex(/^[ABCDE]\d{2}$/),
     version: z.number().int().positive(),
-    domainId: z.enum(['A', 'B', 'C', 'D']),
+    domainId: z.enum(['A', 'B', 'C', 'D', 'E']),
     title: z.string().min(1),
     /** Shown one sentence per line on the first screen. */
     situation: z.object({
       sentences: z.array(z.string().min(1)).min(1),
       /** Short speech bubbles drawn over the scene picture (from the source document). */
       bubbles: z.array(z.string().min(1)).optional(),
+      /** Number of scene pictures (`scene-<ID>-1…`), when the source asks for several cuts. */
+      panels: z.number().int().min(2).max(4).optional(),
       alt: z.string().min(1),
     }),
     steps: z.array(EpisodeStepSchema).min(1),
