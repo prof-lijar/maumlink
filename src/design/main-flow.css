@@ -206,22 +206,30 @@
 .explore-tool {
   display: grid;
   place-items: center;
-  width: 42px;
-  height: 42px;
-  border: none;
+  width: 46px;
+  height: 46px;
+  border: 3px solid #fff;
   border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 3px 0 #cfe0ea;
-  color: #13314a;
-  font-size: 19px;
+  background: linear-gradient(160deg, #ffb067, #ff9446);
+  box-shadow:
+    0 4px 0 #e87a2e,
+    0 6px 14px rgba(232, 122, 46, 0.3);
+  color: #fff;
   cursor: pointer;
+  transition: transform 0.15s;
+}
+.explore-tool:hover {
+  transform: translateY(-1px);
 }
 .explore-tool:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 #cfe0ea;
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #e87a2e;
 }
 .explore-tool[data-voice='off'] {
-  color: #6b7a88;
+  background: linear-gradient(160deg, #cfe0ea, #b7cad8);
+  box-shadow:
+    0 4px 0 #8fa6b8,
+    0 6px 14px rgba(60, 100, 130, 0.2);
 }
 .explore-greeting__avatar {
   width: 64px;

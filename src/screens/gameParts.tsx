@@ -1,5 +1,6 @@
 import type { ButtonHTMLAttributes, ReactNode, RefObject } from 'react'
 import { useNavigate } from 'react-router'
+import { KidSpeakerIcon } from '@/design/icons'
 import { episodes } from '@/content/episodeIndex'
 import { devkitArt } from '@/design/devkitAssets'
 import { completionPercent, useMvpProgress } from '@/services/mvpProgress'
@@ -30,7 +31,7 @@ export function VoiceButton({ className }: { className?: string }) {
         if (next) speech.unlock()
       }}
     >
-      <span aria-hidden="true">{enabled ? '🔊' : '🔇'}</span>
+      <KidSpeakerIcon muted={!enabled} />
     </button>
   )
 }

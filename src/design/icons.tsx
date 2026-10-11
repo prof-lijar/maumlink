@@ -167,3 +167,69 @@ export function GardenSpeakerIcon({
     </svg>
   )
 }
+
+/* Chunky picture-book icons for the kids' tool buttons: thick brown outline, white fill. */
+const kidStroke = { stroke: '#3b2f27', strokeWidth: 2.4, strokeLinejoin: 'round' } as const
+
+/** Speaker with sound waves; `muted` swaps the waves for a friendly slash. */
+export function KidSpeakerIcon({ size = 26, muted = false }: { size?: number; muted?: boolean }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+      <path
+        d="M5 12.5h5.2l6.8-5.6c.8-.7 2-.1 2 .9v16.4c0 1-1.2 1.6-2 .9l-6.8-5.6H5c-1 0-1.8-.8-1.8-1.8v-3.4c0-1 .8-1.8 1.8-1.8z"
+        fill="#fff"
+        {...kidStroke}
+      />
+      {muted ? (
+        <path
+          d="M22 12.5l6 7M28 12.5l-6 7"
+          fill="none"
+          stroke="#3b2f27"
+          strokeWidth={2.8}
+          strokeLinecap="round"
+        />
+      ) : (
+        <>
+          <path
+            d="M22.5 12.2a5.4 5.4 0 0 1 0 7.6"
+            fill="none"
+            stroke="#fff"
+            strokeWidth={2.8}
+            strokeLinecap="round"
+          />
+          <path
+            d="M26 9a10 10 0 0 1 0 14"
+            fill="none"
+            stroke="#fff"
+            strokeWidth={2.8}
+            strokeLinecap="round"
+          />
+        </>
+      )}
+    </svg>
+  )
+}
+
+/** A cute rounded gear for the adult settings entry. */
+export function KidGearIcon({ size = 26 }: { size?: number }) {
+  const teeth = Array.from({ length: 8 }, (_, i) => (i * 360) / 8)
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+      {teeth.map((angle) => (
+        <rect
+          key={angle}
+          x={13.2}
+          y={2.2}
+          width={5.6}
+          height={7}
+          rx={2.4}
+          fill="#fff"
+          transform={`rotate(${angle} 16 16)`}
+          {...kidStroke}
+        />
+      ))}
+      <circle cx={16} cy={16} r={9.2} fill="#fff" {...kidStroke} />
+      <circle cx={16} cy={16} r={3.6} fill="#ffb067" {...kidStroke} />
+    </svg>
+  )
+}

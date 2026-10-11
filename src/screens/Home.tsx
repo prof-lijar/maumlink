@@ -2,6 +2,7 @@ import { useState, type CSSProperties } from 'react'
 import { useNavigate } from 'react-router'
 import { domains, episodes, episodesFor } from '@/content/episodeIndex'
 import { avatarArt, devkitArt, mapBackground, mapPlaces } from '@/design/devkitAssets'
+import { KidGearIcon } from '@/design/icons'
 import { StartGate } from './StartGate'
 import { AvatarSelect } from './AvatarSelect'
 import { SettingsSheet } from './SettingsSheet'
@@ -45,7 +46,7 @@ function ExploreMap() {
               aria-label="어른 설정"
               onClick={() => setSettingsOpen(true)}
             >
-              <span aria-hidden="true">⚙</span>
+              <KidGearIcon />
             </button>
           </div>
         </div>
