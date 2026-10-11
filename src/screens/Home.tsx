@@ -34,21 +34,23 @@ function ExploreMap() {
     <div className="explore-map-page">
       <main className="explore-map-main">
         <div className="explore-greeting">
-          <span className="explore-greeting__avatar">
-            <img src={avatarId ? avatarArt[avatarId] : devkitArt.haruAvatar} alt="" />
-          </span>
-          <h1>{greeting}</h1>
-          <div className="explore-tools">
-            <VoiceButton className="explore-icon-button explore-tool" />
-            <button
-              type="button"
-              className="explore-icon-button explore-tool"
-              aria-label="어른 설정"
-              onClick={() => setSettingsOpen(true)}
-            >
-              <KidGearIcon />
-            </button>
+          <div className="explore-greeting__row">
+            <span className="explore-greeting__avatar">
+              <img src={avatarId ? avatarArt[avatarId] : devkitArt.haruAvatar} alt="" />
+            </span>
+            <div className="explore-tools">
+              <VoiceButton className="explore-icon-button explore-tool" />
+              <button
+                type="button"
+                className="explore-icon-button explore-tool"
+                aria-label="어른 설정"
+                onClick={() => setSettingsOpen(true)}
+              >
+                <KidGearIcon />
+              </button>
+            </div>
           </div>
+          <h1>{greeting}</h1>
         </div>
         <div
           className="explore-card explore-progress"
