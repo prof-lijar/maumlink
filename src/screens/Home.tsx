@@ -83,7 +83,7 @@ function ExploreMap() {
                 data-place={domain.id}
                 data-wide={art.wide || undefined}
                 onClick={() => navigate(`/area/${domain.id}`)}
-                aria-label={`${domain.mapName}, ${domain.name}, ${marks.length}개 중 ${done}개 완료`}
+                aria-label={`${domain.mapName}, ${domain.place}, ${marks.length}개 중 ${done}개 완료`}
               >
                 <span className="explore-place__name">{domain.mapName}</span>
                 <img
@@ -93,7 +93,7 @@ function ExploreMap() {
                   style={{ height: art.height }}
                 />
                 <span className="explore-place__tag">
-                  <span className="explore-place__category">{domain.name}</span>
+                  <span className="explore-place__category">{domain.place}</span>
                   <span className="explore-place__status">
                     <span className="explore-place__dots">
                       {marks.map((on, i) => (

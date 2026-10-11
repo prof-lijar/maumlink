@@ -11,6 +11,6 @@ const behaviorErrors = validateBehaviorContent(root)
 if (behaviorErrors.length) console.error(behaviorErrors.join('\n'))
 else
   console.log(
-    `Behavior content: ${EPISODE_COUNT} episodes (choice + sorting, and step episodes), schema checks passed (drafts; educator review pending).`,
+    `Story content: ${EPISODE_COUNT} reviewed stories, schema checks passed (step arrangement awaits educator review).`,
   )
 process.exit(report.errors.length || behaviorErrors.length ? 1 : 0)

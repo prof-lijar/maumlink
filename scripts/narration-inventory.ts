@@ -1,7 +1,6 @@
 /** Export exact spoken Korean phrases for production; no API calls or credentials. */
 import { createHash } from 'node:crypto'
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
-import { BehaviorEpisodeSchema } from '../src/content/behaviorSchema.ts'
 import { UiFile } from '../src/content/schema.ts'
 import { StepEpisodeSchema } from '../src/content/stepSchema.ts'
 import { NARRATION_VOICES } from '../src/services/narration/voices'
@@ -25,7 +24,7 @@ const add = (text: string | undefined, source: string) => {
 
 for (const key of ['home.greeting', 'voice.sample']) add(ui[key]?.ko, `ui.${key}`)
 
-/** Fixed lines the game screens read before content text (see BehaviorGame/StepEpisodeGame). */
+/** Fixed lines the game screens read before content text (see StepEpisodeGame). */
 for (const [id, text] of Object.entries({
   completion: '잘했어요! 오늘도 새로운 방법을 배웠어요.',
   goodChoice: '잘했어요! 좋은 방법을 골랐어요.',
@@ -96,36 +95,6 @@ for (const file of readdirSync('content/episodes').filter((name) => name.endsWit
         }
       }
     })
-    put(episode.takeaway, 'takeaway')
-  } else {
-    const episode = BehaviorEpisodeSchema.parse(raw)
-    const put = (text: string | undefined, field: string) => add(text, `${episode.id}.${field}`)
-    put(episode.situation.text, 'situation')
-    put(episode.choice.prompt, 'choice.prompt')
-    for (const choice of episode.choice.choices) {
-      put(choice.text, `choice.${choice.id}`)
-      put(choice.feedback, `choice.${choice.id}.feedback`)
-    }
-    put(episode.choice.hint, 'choice.hint')
-    put(episode.sorting.prompt, 'sorting.prompt')
-    for (const card of episode.sorting.cards) {
-      put(card.text, `sorting.${card.id}`)
-      put(card.feedback, `sorting.${card.id}.feedback`)
-    }
-    put(episode.sorting.hint, 'sorting.hint')
-    put(episode.sorting.feedback, 'sorting.feedback')
-    if (episode.conversation) {
-      put(episode.conversation.intro, 'conversation.intro')
-      episode.conversation.turns.forEach((turn, j) => {
-        put(turn.prompt, `conversation.turns.${j}.prompt`)
-        for (const line of turn.options) {
-          put(line.text, `conversation.turns.${j}.${line.id}`)
-          put(line.reply, `conversation.turns.${j}.${line.id}.reply`)
-          put(line.tip, `conversation.turns.${j}.${line.id}.tip`)
-        }
-      })
-      put(episode.conversation.closing, 'conversation.closing')
-    }
     put(episode.takeaway, 'takeaway')
   }
 }

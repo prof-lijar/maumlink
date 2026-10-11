@@ -36,13 +36,13 @@ for (const [width, height] of [
   [820, 1180],
   [1280, 800],
 ]) {
-  test(`five representative stories play through at ${width}px`, async ({ page }) => {
+  test(`the four reviewed stories play through at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height })
     const errors: string[] = []
     page.on('pageerror', (error) => errors.push(error.message))
 
-    // C01 친구들과 함께 놀고 싶어요 (생활 정원)
-    await page.goto('/area/A')
+    // B01 친구들과 함께 놀고 싶어요 (관계 인식)
+    await page.goto('/area/B')
     await page.getByRole('button', { name: /친구들과 함께 놀고 싶어요/ }).click()
     await expect(page.getByRole('heading', { name: '상황을 살펴봐요' })).toBeFocused()
     await next(page)
@@ -90,7 +90,7 @@ for (const [width, height] of [
     ).toBeVisible()
     await checkScreen(page)
 
-    // C05 나는 장난이었는데 친구는 속상해요 (학교)
+    // C01 나는 장난이었는데, 친구는 속상해요 (관계 관리)
     await page.goto('/area/C')
     await page.getByRole('button', { name: /나는 장난이었는데/ }).click()
     await next(page)
@@ -111,11 +111,11 @@ for (const [width, height] of [
     await expect(page.locator('main').getByText(/관계를 회복하는 좋은 방법이에요/)).toBeVisible()
     await next(page)
     await page.getByRole('button', { name: '마무리하기' }).click()
-    await expect(page.locator('main').getByText('완료한 이야기 2 / 15')).toBeVisible()
+    await expect(page.locator('main').getByText('완료한 이야기 2 / 4')).toBeVisible()
 
-    // C04 친구들이 내 발표를 놀렸어요 (자기인식): emotion → body → emotion–body link
-    await page.getByRole('button', { name: '다른 이야기 만나기' }).click()
-    await page.getByRole('button', { name: /친구들이 내 발표를 놀렸어요/ }).click()
+    // A01 친구들이 내 발표 실수를 듣고 놀린다 (자기 인식): emotion → body → emotion–body link
+    await page.goto('/area/A')
+    await page.getByRole('button', { name: /친구들이 내 발표 실수를/ }).click()
     await next(page)
     await page.getByRole('radio', { name: '속상해요' }).click()
     await next(page)
@@ -130,25 +130,11 @@ for (const [width, height] of [
     await page.getByRole('button', { name: '완료하기' }).click()
     await page.getByRole('radio', { name: /혼자서 산책하기/ }).click()
     await page.getByRole('button', { name: '마무리하기' }).click()
-    await expect(page.locator('main').getByText('완료한 이야기 3 / 15')).toBeVisible()
+    await expect(page.locator('main').getByText('완료한 이야기 3 / 4')).toBeVisible()
 
-    // B02 나도 할 말이 있어요 (자기관리): reason → action → sequence
-    await page.goto('/episode/B02/play')
-    await next(page)
-    await page.getByRole('radio', { name: /재미있는 생각이/ }).click()
-    await next(page)
-    await page.getByRole('radio', { name: /손을 들고 내 차례를/ }).click()
-    await page.getByRole('button', { name: '선택 확인하기' }).click()
-    await next(page)
-    for (const text of ['잠깐 멈춰요.', '손을 들어요.', '내 차례에 이야기해요.'])
-      await page.getByRole('button', { name: text, exact: true }).click()
-    await page.getByRole('button', { name: '확인하기' }).click()
-    await page.getByRole('button', { name: '마무리하기' }).click()
-    await expect(page.locator('main').getByText('완료한 이야기 4 / 15')).toBeVisible()
-
-    // D04 친구가 자꾸 새치기해요 (마음건강관리): feeling → coping → expression → help → practice
+    // D01 내 차례인데 친구가 새치기를 했어요 (마음건강관리): feeling → coping → expression → help → practice
     await page.goto('/area/D')
-    await page.getByRole('button', { name: /친구가 자꾸 새치기해요/ }).click()
+    await page.getByRole('button', { name: /내 차례인데 친구가 새치기를/ }).click()
     await next(page)
     await page.getByRole('radio', { name: '답답해요' }).click()
     await next(page)
@@ -166,18 +152,20 @@ for (const [width, height] of [
     await page.screenshot({ path: `.tmp/d04-practice-${width}.png`, fullPage: true })
     await checkScreen(page)
     await page.getByRole('button', { name: '마무리하기' }).click()
-    await expect(page.locator('main').getByText('완료한 이야기 5 / 15')).toBeVisible()
+    await expect(page.locator('main').getByText('완료한 이야기 4 / 4')).toBeVisible()
     await page.reload()
-    await expect(page.locator('main').getByText('완료한 이야기 5 / 15')).toBeVisible()
+    await expect(page.locator('main').getByText('완료한 이야기 4 / 4')).toBeVisible()
     await page.getByRole('button', { name: '탐험 지도로 돌아가기' }).click()
-    await expect(page.getByRole('button', { name: /^학교, .*6개 중 3개 완료/ })).toBeVisible()
-    await expect(page.getByRole('button', { name: /^도움 쉼터, .*4개 중 1개 완료/ })).toBeVisible()
+    for (const area of ['자기 인식', '관계 인식', '관계 관리', '마음건강관리'])
+      await expect(
+        page.getByRole('button', { name: new RegExp(`^${area}, .*1개 중 1개 완료`) }),
+      ).toBeVisible()
     expect(errors).toEqual([])
   })
 }
 
 for (const choice of ['A', 'C']) {
-  test(`D04 nonrecommended ${choice}: feedback, hints, resume, reading-only completion and replay`, async ({
+  test(`D01 nonrecommended ${choice}: feedback, hints, resume, reading-only completion and replay`, async ({
     page,
   }) => {
     await page.setViewportSize({ width: 820, height: 1180 })
@@ -189,7 +177,7 @@ for (const choice of ['A', 'C']) {
         configurable: true,
       })
     })
-    await page.goto('/episode/D04/play')
+    await page.goto('/episode/D01/play')
     const scene = page.locator('.garden-scene__frame img')
     await expect(scene).toHaveAttribute('src', '/img/v3/scene-mind-lunch-line-800.webp')
     expect(await scene.evaluate((node) => (node as HTMLImageElement).naturalWidth)).toBeGreaterThan(
@@ -238,38 +226,42 @@ for (const choice of ['A', 'C']) {
     await page.screenshot({ path: `.tmp/d04-practice-${choice}.png`, fullPage: true })
     await checkScreen(page)
     await page.getByRole('button', { name: '마무리하기' }).click()
-    await expect(page.locator('main').getByText('완료한 이야기 1 / 15')).toBeVisible()
+    await expect(page.locator('main').getByText('완료한 이야기 1 / 4')).toBeVisible()
     await page.getByRole('button', { name: '다시 연습하기' }).click()
     await expect(page.getByRole('heading', { name: '상황을 살펴봐요' })).toBeFocused()
     await page.getByRole('button', { name: '에피소드 목록으로 돌아가기' }).click()
-    await expect(page.getByRole('button', { name: /친구가 자꾸 새치기해요/ })).toContainText('완료')
+    await expect(page.getByRole('button', { name: /내 차례인데 친구가 새치기를/ })).toContainText(
+      '완료',
+    )
   })
 }
 
 test('incompatible step save restarts silently; earlier completion stays', async ({ page }) => {
-  await page.goto('/episode/D04/play')
+  await page.goto('/episode/D01/play')
   const old = await page.evaluate(() => {
-    const key = 'maumlink.steps.mvp-v1.D04'
+    const key = 'maumlink.steps.mvp-v1.D01'
     const saved = JSON.parse(localStorage.getItem(key)!)
     saved.contentVersion = 0
     const raw = JSON.stringify(saved)
     localStorage.setItem(key, raw)
     localStorage.setItem(
       'maumlink.progress.mvp-v2',
-      JSON.stringify({ state: { completedEpisodeIds: ['D04'] }, version: 0 }),
+      JSON.stringify({ state: { completedEpisodeIds: ['D01'] }, version: 0 }),
     )
     return raw
   })
   await page.reload()
   // No recovery notice: the story starts over and the stale save is replaced.
   await expect(page.getByRole('heading', { name: '상황을 살펴봐요' })).toBeFocused()
-  expect(await page.evaluate(() => localStorage.getItem('maumlink.steps.mvp-v1.D04'))).not.toBe(old)
+  expect(await page.evaluate(() => localStorage.getItem('maumlink.steps.mvp-v1.D01'))).not.toBe(old)
   await page.getByRole('button', { name: '에피소드 목록으로 돌아가기' }).click()
-  await expect(page.getByRole('button', { name: /친구가 자꾸 새치기해요/ })).toContainText('완료')
+  await expect(page.getByRole('button', { name: /내 차례인데 친구가 새치기를/ })).toContainText(
+    '완료',
+  )
 })
 
 test('storage full: completion still renders with an honest warning', async ({ page }) => {
-  await page.goto('/episode/D04/play')
+  await page.goto('/episode/D01/play')
   await next(page)
   await page.getByRole('radio', { name: '속상해요', exact: true }).click()
   await next(page)
@@ -294,5 +286,5 @@ test('storage full: completion still renders with an honest warning', async ({ p
   ).toBeVisible()
   await expect(page.locator('main').getByText(/완료 기록을 저장하지 못했어요/)).toBeVisible()
   await page.getByRole('button', { name: '다른 이야기 만나기' }).click()
-  await expect(page.getByRole('heading', { name: '도움 쉼터' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '마음건강관리' })).toBeVisible()
 })

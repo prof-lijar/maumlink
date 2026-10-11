@@ -35,7 +35,7 @@ export function DomainEpisodes() {
               <img src={mapPlaces[domain.id].image} alt={domain.mapName} />
             </div>
             <div className="garden-hero__copy">
-              <span className="garden-chip">{domain.name}</span>
+              <span className="garden-chip">{domain.place}</span>
               <h1>{domain.mapName}</h1>
               <p>{domain.description}</p>
             </div>

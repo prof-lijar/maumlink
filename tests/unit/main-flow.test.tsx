@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { Home } from '@/screens/Home'
 import { DomainEpisodes } from '@/screens/DomainEpisodes'
-import { BehaviorGame } from '@/screens/BehaviorGame'
+import { EpisodePlay } from '@/screens/EpisodePlay'
 import { episodeIndex } from '@/content/episodeIndex'
 import { useProfile } from '@/services/profile'
 import { useMvpProgress, completionPercent } from '@/services/mvpProgress'
@@ -23,14 +23,14 @@ function renderFlow() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/area/:domainId" element={<DomainEpisodes />} />
-        <Route path="/episode/:episodeId/play" element={<BehaviorGame />} />
+        <Route path="/episode/:episodeId/play" element={<EpisodePlay />} />
       </Routes>
     </MemoryRouter>,
   )
 }
 
-describe('new main flow', () => {
-  it('opens the question screen through start, avatar, map, and episode list', async () => {
+describe('main flow: start → explorer → map → area → story', () => {
+  it('opens a story through start, avatar, map, and the area list', async () => {
     const user = userEvent.setup()
     renderFlow()
     await user.click(screen.getByRole('button', { name: '시작하기' }))
@@ -40,86 +40,55 @@ describe('new main flow', () => {
     expect(
       screen.getByRole('heading', { name: '안녕! 오늘은 어느 곳을 탐험할까요?' }),
     ).toBeInTheDocument()
-    expect(screen.getByRole('status', { name: /전체 15개 중 0퍼센트/ })).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: /^학교, 교실에서 지내기/ }))
-    expect(screen.getByRole('heading', { name: '학교' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: '에피소드 6개' })).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: /나도 할 말이 있어요/ }))
+    expect(screen.getByRole('status', { name: /전체 4개 중 0퍼센트/ })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /^관계 인식, 운동장, 1개 중 0개 완료/ }))
+    expect(screen.getByRole('heading', { name: '관계 인식' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: '에피소드 1개' })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /친구들과 함께 놀고 싶어요/ }))
     expect(screen.getByRole('heading', { name: '상황을 살펴봐요' })).toBeInTheDocument()
-    expect(screen.getByText('이야기 02 · 나도 할 말이 있어요')).toBeInTheDocument()
-    expect(screen.getByText(/선생님이 수업 내용을 설명하고 있어요/)).toBeInTheDocument()
+    expect(screen.getByText('이야기 01 · 친구들과 함께 놀고 싶어요')).toBeInTheDocument()
+    expect(
+      screen.getByText('나는 친구들과 같이 놀고 싶지만 친구들은 아직 나를 부르지 않았어요.'),
+    ).toBeInTheDocument()
   })
 
-  it('lists A03 under the school with its scene and no guide dog', async () => {
+  it('shows each area with its own scene landmark and the reviewed story scene', async () => {
     const user = userEvent.setup()
     useSettings.setState({ started: true })
     useProfile.setState({ avatarId: 'haru' })
     renderFlow()
-    expect(
-      screen.getByRole('button', { name: /^생활 정원, .*2개 중 0개 완료/ }),
-    ).toBeInTheDocument()
-    await user.click(
-      screen.getByRole('button', { name: /^학교, 교실에서 지내기, 6개 중 0개 완료/ }),
-    )
-    expect(screen.getByRole('heading', { name: '학교' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: '에피소드 6개' })).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: /하던 일이 잘 안돼요/ }))
-    expect(screen.getByText('이야기 04 · 하던 일이 잘 안돼요')).toBeInTheDocument()
-    expect(screen.getByRole('img', { name: /종이 접기/ })).toHaveAttribute(
+    for (const name of ['자기 인식', '관계 인식', '관계 관리', '마음건강관리'])
+      expect(screen.getByRole('button', { name: new RegExp(`^${name}, `) })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /^자기 인식,/ }))
+    expect(screen.getByText('나를 느끼는 여행')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /친구들이 내 발표 실수를/ }))
+    expect(screen.getByRole('img', { name: '친구들이 내 발표를 듣고 놀려요.' })).toHaveAttribute(
       'src',
-      '/img/v3/scene-A03-800.webp',
+      '/img/v3/scene-self-presentation-teasing-800.webp',
     )
+    expect(screen.getByText('내가 노력하여 만든 발표를 친구들이 놀리니 속상해')).toBeInTheDocument()
     expect(screen.queryByAltText('안내 강아지')).not.toBeInTheDocument()
   })
 
-  it('shows the crayon scene for C02', async () => {
-    useSettings.setState({ started: true })
-    useProfile.setState({ avatarId: 'haru' })
-    render(
-      <MemoryRouter initialEntries={['/episode/C02/play']}>
-        <Routes>
-          <Route path="/episode/:episodeId/play" element={<BehaviorGame />} />
-        </Routes>
-      </MemoryRouter>,
-    )
-    expect(screen.getByRole('img', { name: /빨간 색연필로 그림/ })).toHaveAttribute(
-      'src',
-      '/img/v3/scene-C02-800.webp',
-    )
-  })
-
-  it('shows skill tags in the school list and opens the presentation story', async () => {
-    const user = userEvent.setup()
-    useSettings.setState({ started: true })
-    useProfile.setState({ avatarId: 'haru' })
-    renderFlow()
-    await user.click(screen.getByRole('button', { name: /^학교,/ }))
-    for (const tag of ['자기 관리', '자기 인식', '관계 관리'])
-      expect(screen.getByText(tag)).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: /친구들이 내 발표를 놀렸어요/ }))
-    expect(screen.getByText('이야기 05 · 친구들이 내 발표를 놀렸어요')).toBeInTheDocument()
-    expect(screen.getByText('내가 노력하여 만든 발표를 친구들이 놀리니 속상해')).toBeInTheDocument()
-  })
-
-  it('groups episodes by place after the 2026-10-10 reshuffle', () => {
-    const byDomain = (id: string) =>
-      episodeIndex.episodes.filter((e) => e.domainId === id).map((e) => e.id)
-    expect(byDomain('A')).toEqual(['C01', 'C03'])
-    expect(byDomain('B')).toEqual(['B01', 'A02', 'B03'])
-    expect(byDomain('C')).toEqual(['A01', 'B02', 'C02', 'A03', 'C04', 'C05'])
-    expect(byDomain('D')).toEqual(['D01', 'D02', 'D03', 'D04'])
+  it('holds one reviewed story per social-emotional area', () => {
     expect(episodeIndex.domains.map((d) => d.name)).toEqual([
-      '밖에서 친구와 놀기',
-      '집에서 스스로 하기',
-      '교실에서 지내기',
-      '쉬고 도움받기',
+      '자기 인식',
+      '관계 인식',
+      '관계 관리',
+      '마음건강관리',
+    ])
+    expect(episodeIndex.episodes.map((e) => `${e.domainId}:${e.id}`)).toEqual([
+      'A:A01',
+      'B:B01',
+      'C:C01',
+      'D:D01',
     ])
   })
 
-  it('keeps progress separate from the previous four lessons', () => {
+  it('keeps progress separate from the previous 1.0 lesson records', () => {
     localStorage.setItem('maumlink.progress.v1', JSON.stringify({ entries: { old: { times: 1 } } }))
-    expect(episodeIndex.episodes).toHaveLength(15)
+    expect(episodeIndex.episodes).toHaveLength(4)
     expect(useMvpProgress.getState().completedEpisodeIds).toEqual([])
-    expect(completionPercent(1)).toBe(7)
+    expect(completionPercent(1)).toBe(25)
   })
 })

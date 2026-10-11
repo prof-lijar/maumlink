@@ -15,7 +15,6 @@ const scene = (id: string, width: 800 | 1600 = 800) => `${V3}/${id}-${width}.web
 export const devkitArt = {
   village: scene('bg-village', 1600),
   villageNarrow: scene('bg-village', 800),
-  classroom: scene('scene-B02'),
   haruFull: sprite('char-haru', 800),
   haruAvatar: sprite('char-haru'),
   haruWave: sprite('char-haru'),
@@ -24,9 +23,6 @@ export const devkitArt = {
   dog: sprite('guide-wave', 800),
   guidePoint: sprite('guide-point'),
   guideCheer: sprite('guide-cheer'),
-  b02Intro: scene('scene-B02'),
-  b02Success: sprite('celebrate', 800),
-  b02Retry: sprite('guide-think'),
   teacher: sprite('teacher'),
 } as const
 
@@ -59,38 +55,22 @@ export function conversationFaces(avatarId: AvatarId | null) {
 
 /** Landmark art per place (생활 정원 · 우리 집 · 학교 · 도움 쉼터). */
 export const placeArt: Record<DomainId, string> = {
-  A: sprite('place-playground'),
-  B: sprite('place-home'),
-  C: sprite('place-school'),
-  D: sprite('place-heart'),
+  A: sprite('place-self'),
+  B: sprite('place-social'),
+  C: sprite('place-relation'),
+  D: sprite('place-mind'),
 }
 
 /** Home map: generated village background and the landmark for each place. */
 export const mapBackground = scene('bg-village', 1600)
 export const mapPlaces: Record<DomainId, { image: string; height: number; wide: boolean }> = {
-  A: { image: sprite('place-playground', 800), height: 140, wide: true },
-  B: { image: sprite('place-home', 800), height: 150, wide: false },
-  C: { image: sprite('place-school', 800), height: 150, wide: false },
-  D: { image: sprite('place-heart', 800), height: 160, wide: true },
+  A: { image: sprite('place-self', 800), height: 150, wide: true },
+  B: { image: sprite('place-social', 800), height: 150, wide: false },
+  C: { image: sprite('place-relation', 800), height: 150, wide: false },
+  D: { image: sprite('place-mind', 800), height: 160, wide: true },
 }
 
-const episodeIds = [
-  'A01',
-  'A02',
-  'A03',
-  'B01',
-  'B02',
-  'B03',
-  'C01',
-  'C02',
-  'C03',
-  'C04',
-  'C05',
-  'D01',
-  'D02',
-  'D03',
-  'D04',
-] as const
+const episodeIds = ['A01', 'B01', 'C01', 'D01'] as const
 
 /** Small same-style object pictures for the episode list and completion rows. */
 export const episodeThumb: Record<string, string> = Object.fromEntries(
@@ -99,10 +79,10 @@ export const episodeThumb: Record<string, string> = Object.fromEntries(
 
 /** The scene picture (1536 × 1024 renders) shown above the situation text. */
 const sceneIds: Record<string, string> = {
-  C01: 'scene-social-playground',
-  C04: 'scene-self-presentation-teasing',
-  C05: 'scene-relation-pencil-prank',
-  D04: 'scene-mind-lunch-line',
+  A01: 'scene-self-presentation-teasing',
+  B01: 'scene-social-playground',
+  C01: 'scene-relation-pencil-prank',
+  D01: 'scene-mind-lunch-line',
 }
 export const sceneArt: Record<string, string> = Object.fromEntries(
   episodeIds.map((id) => [id, scene(sceneIds[id] ?? `scene-${id}`)]),
@@ -115,17 +95,6 @@ export const sceneSrcSet = (id: string) => `${sceneArt[id]} 800w, ${sceneArtLarg
 
 /** Cartoon face card for a reviewed emotion id (angry, upset, …, not-sure). */
 export const faceArt = (emotionId: string) => sprite(`face-${emotionId}`)
-
-export const b02ChoiceArt: Record<string, string> = {
-  A: sprite('b02-speak-now'),
-  B: sprite('b02-raise-hand'),
-  C: sprite('b02-talk-friend'),
-}
-export const b02SequenceArt: Record<string, string> = {
-  pause: sprite('b02-pause'),
-  raise: sprite('b02-raise-hand'),
-  speak: sprite('b02-speak-turn'),
-}
 
 export interface EpisodeTile {
   background: string

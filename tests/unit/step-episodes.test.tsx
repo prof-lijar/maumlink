@@ -2,17 +2,17 @@ import { MemoryRouter, Route, Routes } from 'react-router'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { BehaviorGame } from '@/screens/BehaviorGame'
-import { getStepEpisode, stepEpisodes } from '@/content/behaviorEpisode'
+import { EpisodePlay } from '@/screens/EpisodePlay'
+import { getStepEpisode, stepEpisodes } from '@/content/episodes'
 import type { SequenceMissionData } from '@/content/stepSchema'
 import { initialSequence, loadStepGame, reduceSequence, shuffleCards } from '@/engine/stepGame'
 import { useMvpProgress } from '@/services/mvpProgress'
 import { useProfile } from '@/services/profile'
 import { useSettings } from '@/services/settings'
 
+const b01 = getStepEpisode('B01')!
 const c01 = getStepEpisode('C01')!
-const c05 = getStepEpisode('C05')!
-const sequence = c05.steps.find((s) => s.kind === 'sequence') as SequenceMissionData
+const sequence = c01.steps.find((s) => s.kind === 'sequence') as SequenceMissionData
 
 beforeEach(() => {
   localStorage.clear()
@@ -25,7 +25,7 @@ function play(id: string) {
   return render(
     <MemoryRouter initialEntries={[`/episode/${id}/play`]}>
       <Routes>
-        <Route path="/episode/:episodeId/play" element={<BehaviorGame />} />
+        <Route path="/episode/:episodeId/play" element={<EpisodePlay />} />
         <Route path="/area/:domainId" element={<p>목록 화면</p>} />
       </Routes>
     </MemoryRouter>,
@@ -34,15 +34,9 @@ function play(id: string) {
 
 describe('step episode data and mission engines', () => {
   it('loads the step episodes', () => {
-    expect(stepEpisodes.map((episode) => episode.id).sort()).toEqual([
-      'B02',
-      'C01',
-      'C04',
-      'C05',
-      'D04',
-    ])
-    expect(c01.domainId).toBe('A')
-    expect(c05.domainId).toBe('C')
+    expect(stepEpisodes.map((episode) => episode.id).sort()).toEqual(['A01', 'B01', 'C01', 'D01'])
+    expect(b01.domainId).toBe('B')
+    expect(c01.domainId).toBe('C')
   })
 
   it('sequence: shuffled start, incomplete orders cannot be checked, both repair orders are accepted', () => {
@@ -65,10 +59,10 @@ describe('step episode data and mission engines', () => {
 })
 
 describe('step episode screens', () => {
-  it('C01: feeling and thought picks have no wrong answer; friend conversation with retry; check question', async () => {
+  it('B01: feeling and thought picks have no wrong answer; friend conversation with retry; check question', async () => {
     const user = userEvent.setup()
-    play('C01')
-    expect(screen.getByText('관계 인식')).toBeInTheDocument()
+    play('B01')
+    expect(screen.getByText('나와 너의 생각이 다를 수 있어!')).toBeInTheDocument()
     expect(
       screen.getByText('나는 친구들과 같이 놀고 싶지만 친구들은 아직 나를 부르지 않았어요.'),
     ).toBeInTheDocument()
@@ -87,7 +81,7 @@ describe('step episode screens', () => {
     await user.click(screen.getByRole('button', { name: /다음/ }))
 
     await user.click(screen.getByRole('radio', { name: /놀기 싫어한다고 생각해서/ }))
-    expect(screen.getByText(/나와 너의 생각이 다를 수 있어!/)).toBeInTheDocument()
+    expect(screen.getByText(/친구의 생각은 겉으로 보이는 행동만으로/)).toBeInTheDocument()
     expect(screen.getByText(/직접 물어보면 더 잘 알 수 있어요/)).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /다음/ }))
 
@@ -128,15 +122,15 @@ describe('step episode screens', () => {
     expect(screen.getByText(/맞아요! 친구의 생각을 정확히 알려면/)).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /마무리하기/ }))
 
-    await waitFor(() => expect(useMvpProgress.getState().completedEpisodeIds).toEqual(['C01']))
-    expect(screen.getByText(c01.takeaway)).toBeInTheDocument()
+    await waitFor(() => expect(useMvpProgress.getState().completedEpisodeIds).toEqual(['B01']))
+    expect(screen.getByText(b01.takeaway)).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: '다른 이야기 만나기' }))
     expect(screen.getByText('목록 화면')).toBeInTheDocument()
   })
 
-  it('C05: friend feeling, action feedback, repair sequence with hint, extra guidance, back and resume', async () => {
+  it('C01: friend feeling, action feedback, repair sequence with hint, extra guidance, back and resume', async () => {
     const user = userEvent.setup()
-    const view = play('C05')
+    const view = play('C01')
     await user.click(screen.getByRole('button', { name: /다음/ }))
     await user.click(screen.getByRole('radio', { name: '화가 나요' }))
     expect(screen.getByText(/친구의 마음은 나와 다를 수 있어요/)).toBeInTheDocument()
@@ -178,8 +172,8 @@ describe('step episode screens', () => {
     expect(screen.getByText('친구의 물건을 숨겼다면 먼저 무엇을 해야 할까요?')).toBeInTheDocument()
     // Saved mid-mission: a remount restores the placed cards.
     view.unmount()
-    expect(loadStepGame(c05)?.screen).toBe(5)
-    play('C05')
+    expect(loadStepGame(c01)?.screen).toBe(5)
+    play('C01')
     expect(screen.getByRole('button', { name: /1번째: 미안하다고 말해요/ })).toBeInTheDocument()
     // Tap a placed card to take it back, then 다시 해보기 clears the rest.
     await user.click(screen.getByRole('button', { name: /3번째: 친구의 마음을/ }))
@@ -193,19 +187,19 @@ describe('step episode screens', () => {
 
     expect(screen.getByText(/마음이 풀릴 때까지 기다려 줄 수도 있어요/)).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /마무리하기/ }))
-    await waitFor(() => expect(useMvpProgress.getState().completedEpisodeIds).toEqual(['C05']))
-    expect(screen.getByText(c05.takeaway)).toBeInTheDocument()
+    await waitFor(() => expect(useMvpProgress.getState().completedEpisodeIds).toEqual(['C01']))
+    expect(screen.getByText(c01.takeaway)).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: '다시 연습하기' }))
     expect(screen.getByRole('heading', { name: '상황을 살펴봐요' })).toBeInTheDocument()
-    expect(useMvpProgress.getState().completedEpisodeIds).toEqual(['C05'])
+    expect(useMvpProgress.getState().completedEpisodeIds).toEqual(['C01'])
   })
 })
 
-describe('3차: emotion–body match, expression choice, restored B02', () => {
-  it('C04: feeling and body picks, any emotion–body link is explained, links change and reset', async () => {
+describe('자기 인식·마음건강관리: emotion–body match, expression choice', () => {
+  it('A01: feeling and body picks, any emotion–body link is explained, links change and reset', async () => {
     const user = userEvent.setup()
-    play('C04')
-    expect(screen.getByText('자기 인식')).toBeInTheDocument()
+    play('A01')
+    expect(screen.getByText('나를 느끼는 여행')).toBeInTheDocument()
     // The source document's speech bubbles sit on the scene.
     expect(screen.getByText('발표 진짜 못하나~')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /다음/ }))
@@ -245,42 +239,14 @@ describe('3차: emotion–body match, expression choice, restored B02', () => {
     await user.click(screen.getByRole('radio', { name: /그림을 그려보기/ }))
     expect(screen.getByText(/그림을 그린다면 어떤 마음이 들까요/)).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /마무리하기/ }))
-    await waitFor(() => expect(useMvpProgress.getState().completedEpisodeIds).toEqual(['C04']))
+    await waitFor(() => expect(useMvpProgress.getState().completedEpisodeIds).toEqual(['A01']))
     expect(screen.getByText(/우리 모두는 소중하니까요/)).toBeInTheDocument()
   })
 
-  it('B02: ungraded reasons, action feedback, sequence with wrong order → hint → retry', async () => {
+  it('D01: feelings, both 말하기 and 도움 요청 accepted, two linked situations, practice without audio', async () => {
     const user = userEvent.setup()
-    play('B02')
-    await user.click(screen.getByRole('button', { name: /다음/ }))
-    await user.click(screen.getByRole('radio', { name: /잊어버릴까 봐요/ }))
-    expect(screen.getByText(/어떻게 행동으로 표현할지는 선택할 수 있어요/)).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: /다음/ }))
-    await user.click(screen.getByRole('radio', { name: /선생님 말씀 중에도/ }))
-    await user.click(screen.getByRole('button', { name: /선택 확인하기/ }))
-    expect(screen.getByText(/설명을 듣기 어려울 수 있어요/)).toBeInTheDocument()
-    await user.click(screen.getByRole('radio', { name: /손을 들고 내 차례를/ }))
-    await user.click(screen.getByRole('button', { name: /선택 확인하기/ }))
-    await user.click(screen.getByRole('button', { name: /다음/ }))
-    expect(screen.getByRole('heading', { name: '말하기 전에 잠깐!' })).toBeInTheDocument()
-    for (const text of ['손을 들어요.', '잠깐 멈춰요.', '내 차례에 이야기해요.'])
-      await user.click(screen.getByRole('button', { name: text }))
-    await user.click(screen.getByRole('button', { name: /확인하기/ }))
-    expect(screen.getByText('먼저 무엇을 하면 좋을지 다시 생각해 볼까요?')).toBeInTheDocument()
-    expect(screen.getByText('하고 싶은 말이 생기면 먼저 잠깐 멈춰요.')).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: '다시 해보기' }))
-    for (const text of ['잠깐 멈춰요.', '손을 들어요.', '내 차례에 이야기해요.'])
-      await user.click(screen.getByRole('button', { name: text }))
-    await user.click(screen.getByRole('button', { name: /확인하기/ }))
-    expect(screen.getByText(/잠깐 멈추고 기다리면 내 차례에/)).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: /마무리하기/ }))
-    await waitFor(() => expect(useMvpProgress.getState().completedEpisodeIds).toEqual(['B02']))
-  })
-
-  it('D04: feelings, both 말하기 and 도움 요청 accepted, two linked situations, practice without audio', async () => {
-    const user = userEvent.setup()
-    play('D04')
-    expect(screen.getByText('마음건강관리')).toBeInTheDocument()
+    play('D01')
+    expect(screen.getByText('내 마음을 표현하고 도움을 요청해요')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /다음/ }))
     await user.click(screen.getByRole('radio', { name: '억울해요' }))
     expect(screen.getByText(/힘든 마음을 혼자 참지 않아도 괜찮아요/)).toBeInTheDocument()
@@ -314,7 +280,7 @@ describe('3차: emotion–body match, expression choice, restored B02', () => {
     await user.click(screen.getByRole('button', { name: /연습했어요/ }))
     expect(screen.getByText(/잘했어요! 힘든 일이 생기면/)).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /마무리하기/ }))
-    await waitFor(() => expect(useMvpProgress.getState().completedEpisodeIds).toEqual(['D04']))
+    await waitFor(() => expect(useMvpProgress.getState().completedEpisodeIds).toEqual(['D01']))
     expect(screen.getByText(/믿을 만한 어른에게 이야기해요/)).toBeInTheDocument()
   })
 })
@@ -331,7 +297,7 @@ describe('잘 모르겠어요, 미션 건너뛰기, 이전으로, 새 완료 기
         )
           expect(step.options.some((option) => option.text === '잘 모르겠어요.')).toBe(true)
     const user = userEvent.setup()
-    play('C04')
+    play('A01')
     await user.click(screen.getByRole('button', { name: /다음/ }))
     await user.click(screen.getByRole('radio', { name: /잘 모르겠어요/ }))
     expect(screen.getByText(/잘 모르겠어도 괜찮아요/)).toBeInTheDocument()
@@ -341,7 +307,7 @@ describe('잘 모르겠어요, 미션 건너뛰기, 이전으로, 새 완료 기
 
   it('a 상황별 미션 can be skipped and the episode still completes', async () => {
     const user = userEvent.setup()
-    play('C04')
+    play('A01')
     await user.click(screen.getByRole('button', { name: /다음/ }))
     await user.click(screen.getByRole('radio', { name: '속상해요' }))
     await user.click(screen.getByRole('button', { name: /다음/ }))
@@ -353,7 +319,7 @@ describe('잘 모르겠어요, 미션 건너뛰기, 이전으로, 새 완료 기
     await user.click(screen.getByRole('button', { name: '이 미션 건너뛰기' }))
     await user.click(screen.getByRole('radio', { name: /숨을 크게/ }))
     await user.click(screen.getByRole('button', { name: /마무리하기/ }))
-    await waitFor(() => expect(useMvpProgress.getState().completedEpisodeIds).toEqual(['C04']))
+    await waitFor(() => expect(useMvpProgress.getState().completedEpisodeIds).toEqual(['A01']))
     expect(
       screen.getByRole('heading', { name: '잘했어요! 오늘도 새로운 방법을 배웠어요.' }),
     ).toBeInTheDocument()
@@ -366,9 +332,9 @@ describe('잘 모르겠어요, 미션 건너뛰기, 이전으로, 새 완료 기
     )
     const { PROGRESS_KEY } = await import('@/services/mvpProgress')
     expect(PROGRESS_KEY).toBe('maumlink.progress.mvp-v2')
-    useMvpProgress.getState().markCompleted('C01')
+    useMvpProgress.getState().markCompleted('B01')
     expect(JSON.parse(localStorage.getItem(PROGRESS_KEY)!).state.completedEpisodeIds).toEqual([
-      'C01',
+      'B01',
     ])
     expect(JSON.parse(localStorage.getItem('maumlink.progress.mvp-v1')!).state).toEqual({
       completedEpisodeIds: ['A01', 'B02'],

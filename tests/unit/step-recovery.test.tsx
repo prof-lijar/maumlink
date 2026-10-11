@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { getStepEpisode } from '@/content/behaviorEpisode'
+import { getStepEpisode } from '@/content/episodes'
 import { StepEpisodeSchema } from '@/content/stepSchema'
 import {
   expressionDone,
@@ -15,7 +15,7 @@ import { speech } from '@/services/speech'
 import { completionStored } from '@/services/completionStored'
 import { useMvpProgress } from '@/services/mvpProgress'
 
-const episode = getStepEpisode('D04')!
+const episode = getStepEpisode('D01')!
 const mission = episode.steps.find((s) => s.kind === 'expression_choice')!
 afterEach(() => vi.restoreAllMocks())
 
@@ -25,9 +25,9 @@ describe('expression practice and saved progress', () => {
     vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
       throw new DOMException('Full', 'QuotaExceededError')
     })
-    expect(() => useMvpProgress.getState().markCompleted('D04')).not.toThrow()
-    expect(useMvpProgress.getState().completedEpisodeIds).toEqual(['D04'])
-    expect(completionStored('D04')).toBe(false)
+    expect(() => useMvpProgress.getState().markCompleted('D01')).not.toThrow()
+    expect(useMvpProgress.getState().completedEpisodeIds).toEqual(['D01'])
+    expect(completionStored('D01')).toBe(false)
     expect(saveStepGame(episode, initialStepGame(episode))).toBe(false)
   })
   it('explains every choice and lets children continue without requiring direct self-expression', () => {
@@ -60,7 +60,7 @@ describe('expression practice and saved progress', () => {
   })
 
   it('silently drops incompatible saves, false completion and unknown choices, then starts over', () => {
-    const key = 'maumlink.steps.mvp-v1.D04'
+    const key = 'maumlink.steps.mvp-v1.D01'
     const state = initialStepGame(episode)
     saveStepGame({ ...episode, version: episode.version - 1 }, state)
     expect(inspectStepGame(episode)).toEqual({ kind: 'empty' })

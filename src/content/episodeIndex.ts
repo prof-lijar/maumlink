@@ -29,15 +29,14 @@ const Index = z
     packId: z.literal('mvp-v1'),
     schemaVersion: z.literal(1),
     domains: z.array(Domain).length(4),
-    episodes: z.array(Episode).length(15),
+    episodes: z.array(Episode).length(4),
   })
   .superRefine((index, ctx) => {
     if (new Set(index.domains.map((d) => d.id)).size !== 4)
       ctx.addIssue({ code: 'custom', message: 'Each domain must appear once' })
     if (new Set(index.episodes.map((e) => e.id)).size !== index.episodes.length)
       ctx.addIssue({ code: 'custom', message: 'Episode IDs must be unique' })
-    // Episode IDs are stable storage keys, so an episode keeps its ID when it moves to
-    // another domain (A03 now lives in C). Domains may hold different numbers of episodes.
+    // Episode IDs are stable storage keys. Each area holds its reviewed story.
     for (const id of DomainId.options) {
       if (!index.episodes.some((e) => e.domainId === id))
         ctx.addIssue({ code: 'custom', message: `Domain ${id} needs at least one episode` })
