@@ -34,8 +34,8 @@ describe('main flow: start → explorer → map → area → story', () => {
     const user = userEvent.setup()
     renderFlow()
     await user.click(screen.getByRole('button', { name: '시작하기' }))
-    expect(screen.getByRole('heading', { name: '나의 탐험가를 골라요' })).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: '소라' }))
+    expect(screen.getByRole('heading', { name: '나의 캐릭터를 선택해요!' })).toBeInTheDocument()
+    await user.click(screen.getByRole('radio', { name: '소라' }))
     await user.click(screen.getByRole('button', { name: '다음' }))
     expect(
       screen.getByRole('heading', { name: '안녕! 오늘은 어느 곳을 탐험할까요?' }),
