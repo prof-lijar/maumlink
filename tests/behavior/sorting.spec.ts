@@ -78,11 +78,13 @@ test('all 10 choice + sorting stories complete choice and sorting; partial reloa
         .click()
       if (index === 0) {
         await page.reload()
-        await expect(page.getByText('4장 중 1장을 나눴어요.', { exact: true })).toBeVisible()
+        await expect(
+          page.locator('main').getByText('4장 중 1장을 나눴어요.', { exact: true }),
+        ).toBeVisible()
       }
     }
     await page.getByRole('button', { name: '나눈 내용 확인하기' }).click()
-    await expect(page.getByText('모두 알맞게 나눴어요!')).toBeVisible()
+    await expect(page.locator('main').getByText('모두 알맞게 나눴어요!')).toBeVisible()
     await noOverflow(page)
     await page.getByRole('button', { name: '다음', exact: true }).click()
     await expect(page.getByRole('heading', { name: '행동을 나눴어요' })).toBeFocused()
@@ -91,8 +93,8 @@ test('all 10 choice + sorting stories complete choice and sorting; partial reloa
       page.getByRole('heading', { name: '잘했어요! 오늘도 새로운 방법을 배웠어요.' }),
     ).toBeVisible()
   }
-  await expect(page.getByText('완료한 이야기 10 / 15')).toBeVisible()
-  await expect(page.getByText('67%', { exact: true })).toBeVisible()
+  await expect(page.locator('main').getByText('완료한 이야기 10 / 15')).toBeVisible()
+  await expect(page.locator('main').getByText('67%', { exact: true })).toBeVisible()
   await page.getByRole('button', { name: '다시 연습하기' }).click()
   await expect
     .poll(() =>
@@ -132,7 +134,7 @@ for (const width of [320, 390, 768]) {
       await page.getByRole('button', { name: '이렇게 해요', exact: true }).click()
     }
     await page.getByRole('button', { name: '나눈 내용 확인하기' }).click()
-    await expect(page.getByText('이 카드를 다시 살펴봐요.')).toBeVisible()
+    await expect(page.locator('main').getByText('이 카드를 다시 살펴봐요.')).toBeVisible()
     const first = c02.sorting.cards[0]!
     await page.getByRole('button', { name: first.text, exact: true }).click()
     await page.getByRole('button', { name: '안돼요', exact: true }).click()
@@ -153,7 +155,7 @@ for (const width of [320, 390, 768]) {
   })
 }
 
-test('200 percent text remains operable, and old sessions are preserved until explicit restart', async ({
+test('200 percent text remains operable, and an old session restarts silently', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 320, height: 900 })
@@ -166,9 +168,11 @@ test('200 percent text remains operable, and old sessions are preserved until ex
   })
   await page.evaluate((value) => localStorage.setItem('maumlink.session.mvp-v1.C02', value), old)
   await page.goto('/episode/C02/play')
-  await expect(page.getByRole('heading', { name: '활동을 이어갈 수 없어요' })).toBeVisible()
-  expect(await page.evaluate(() => localStorage.getItem('maumlink.session.mvp-v1.C02'))).toBe(old)
-  await page.getByRole('button', { name: '처음부터 시작하기' }).click()
+  // No recovery notice: the question screen opens fresh and the stale save is replaced.
+  await expect(page.getByRole('heading', { name: c02.choice.prompt })).toBeVisible()
+  expect(await page.evaluate(() => localStorage.getItem('maumlink.session.mvp-v1.C02'))).not.toBe(
+    old,
+  )
   await page.getByRole('radio', { name: c02.choice.choices[1]!.text, exact: true }).click()
   await page.getByRole('button', { name: '선택 확인하기' }).click()
   await page.getByRole('button', { name: '친구와 대화하기로' }).click()

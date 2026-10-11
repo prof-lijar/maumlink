@@ -1,5 +1,6 @@
-import { createBrowserRouter, Navigate, useParams } from 'react-router'
+import { createBrowserRouter, Navigate } from 'react-router'
 import { AppShell } from './AppShell'
+import { ToEpisodePlay } from './ToEpisodePlay'
 import { Home } from '@/screens/Home'
 import { DomainEpisodes } from '@/screens/DomainEpisodes'
 import { BehaviorGame } from '@/screens/BehaviorGame'
@@ -17,8 +18,3 @@ export const router = createBrowserRouter([
     ],
   },
 ])
-
-function ToEpisodePlay() {
-  const { episodeId = '' } = useParams()
-  return <Navigate to={`/episode/${episodeId}/play`} replace />
-}

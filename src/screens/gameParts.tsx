@@ -3,6 +3,37 @@ import { useNavigate } from 'react-router'
 import { episodes } from '@/content/episodeIndex'
 import { devkitArt } from '@/design/devkitAssets'
 import { completionPercent, useMvpProgress } from '@/services/mvpProgress'
+import { useSettings } from '@/services/settings'
+import { speech } from '@/services/speech'
+import { useAutoRead } from '@/services/useSpeak'
+
+/** The completion line every story shares; read aloud together with the takeaway. */
+export const COMPLETION_CHEER = '잘했어요! 오늘도 새로운 방법을 배웠어요.'
+
+/**
+ * One tap mutes or unmutes narration for every screen (persisted in settings). Turning it on
+ * also counts as the browser's audio activation, so the next phrase plays at once.
+ */
+export function VoiceButton({ className }: { className?: string }) {
+  const enabled = useSettings((state) => state.voiceEnabled)
+  const setVoiceEnabled = useSettings((state) => state.setVoiceEnabled)
+  return (
+    <button
+      type="button"
+      className={className ?? 'garden-round-button garden-voice-button'}
+      aria-label={enabled ? '음성 끄기' : '음성 켜기'}
+      aria-pressed={enabled}
+      data-voice={enabled ? 'on' : 'off'}
+      onClick={() => {
+        const next = !useSettings.getState().voiceEnabled
+        setVoiceEnabled(next)
+        if (next) speech.unlock()
+      }}
+    >
+      <span aria-hidden="true">{enabled ? '🔊' : '🔇'}</span>
+    </button>
+  )
+}
 
 /** Shared pieces of the life-garden activity screens (choice + sorting, and step episodes). */
 export function SafetyPromise({ children }: { children: ReactNode }) {
@@ -40,13 +71,14 @@ export function EpisodeCompletion({
   const navigate = useNavigate()
   const completed = useMvpProgress((progress) => progress.completedEpisodeIds)
   const percent = completionPercent(completed.length)
+  useAutoRead(`${COMPLETION_CHEER} ${takeaway}`, `complete:${takeaway}`)
   return (
     <>
       <div className="garden-badge garden-badge--small">
         <img src={devkitArt.haruCelebrate} alt="기뻐하는 친구" />
       </div>
       <h1 ref={headingRef} tabIndex={-1} className="garden-complete-title">
-        잘했어요! 오늘도 새로운 방법을 배웠어요.
+        {COMPLETION_CHEER}
       </h1>
       <div className="garden-card garden-learned">
         <span className="garden-chip">마무리</span>

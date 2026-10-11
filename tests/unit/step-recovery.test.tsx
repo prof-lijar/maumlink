@@ -59,24 +59,26 @@ describe('expression practice and saved progress', () => {
     expect(StepEpisodeSchema.safeParse(changed).success).toBe(false)
   })
 
-  it('keeps incompatible saves intact and rejects false completion or unknown choices', () => {
+  it('silently drops incompatible saves, false completion and unknown choices, then starts over', () => {
+    const key = 'maumlink.steps.mvp-v1.D04'
     const state = initialStepGame(episode)
     saveStepGame({ ...episode, version: episode.version - 1 }, state)
-    const old = localStorage.getItem('maumlink.steps.mvp-v1.D04')
-    expect(inspectStepGame(episode).kind).toBe('invalid')
-    expect(localStorage.getItem('maumlink.steps.mvp-v1.D04')).toBe(old)
+    expect(inspectStepGame(episode)).toEqual({ kind: 'empty' })
+    expect(localStorage.getItem(key)).toBeNull()
     state.screen = episode.steps.length + 1
     saveStepGame(episode, state)
-    expect(inspectStepGame(episode).kind).toBe('invalid')
+    expect(inspectStepGame(episode)).toEqual({ kind: 'empty' })
+    expect(localStorage.getItem(key)).toBeNull()
     state.screen = 0
     const expression = state.steps.find((s) => s.kind === 'expression_choice')!
     expression.situationIndex = 99
     saveStepGame(episode, state)
-    expect(inspectStepGame(episode).kind).toBe('invalid')
+    expect(inspectStepGame(episode)).toEqual({ kind: 'empty' })
     expression.situationIndex = 0
     expression.picks[0] = 'missing'
     saveStepGame(episode, state)
-    expect(inspectStepGame(episode).kind).toBe('invalid')
+    expect(inspectStepGame(episode)).toEqual({ kind: 'empty' })
+    expect(localStorage.getItem(key)).toBeNull()
     expression.picks[0] = 'C'
     saveStepGame(episode, state)
     expect(inspectStepGame(episode)).toEqual({ kind: 'valid', state })

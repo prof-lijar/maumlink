@@ -18,6 +18,8 @@ interface Props {
   domain?: Domain
   text: string
   illustrationSrc?: string
+  /** Garden variant: a cartoon face/object shown in place of the letter badge. */
+  imageSrc?: string
   selected: boolean
   dimmed?: boolean
   onSelect: (id: OptionId) => void
@@ -34,6 +36,7 @@ export function ChoiceCard({
   domain,
   text,
   illustrationSrc,
+  imageSrc,
   selected,
   dimmed,
   onSelect,
@@ -95,7 +98,11 @@ export function ChoiceCard({
           onSelect(id)
         }}
       >
-        {garden ? (
+        {garden && imageSrc ? (
+          <span className="garden-choice__key garden-choice__key--image" aria-hidden="true">
+            <img src={imageSrc} alt="" width={400} height={400} decoding="async" />
+          </span>
+        ) : garden ? (
           <span className="garden-choice__key" aria-hidden="true">
             {id}
           </span>

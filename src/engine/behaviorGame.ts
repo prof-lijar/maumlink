@@ -238,10 +238,23 @@ const SavedSessionSchema = z.object({
   contentVersion: z.number().int(),
   state: GameStateSchema,
 })
-export type LoadResult =
-  { kind: 'empty' } | { kind: 'valid'; state: GameState } | { kind: 'invalid' }
+export type LoadResult = { kind: 'empty' } | { kind: 'valid'; state: GameState }
 
+/**
+ * Restores an unfinished session. A save from another content version, or one that no longer
+ * fits the episode, is dropped silently and the story starts over: the child never sees a
+ * recovery notice (2026-10-11 TODO). Completed-episode records live elsewhere and are kept.
+ */
 export function loadGame(episode: BehaviorEpisode): LoadResult {
+  const result = inspectGame(episode)
+  if (result.kind === 'invalid') {
+    clearGame(episode.id)
+    return { kind: 'empty' }
+  }
+  return result
+}
+
+function inspectGame(episode: BehaviorEpisode): LoadResult | { kind: 'invalid' } {
   try {
     const raw =
       localStorage.getItem(keyFor(episode.id)) ??

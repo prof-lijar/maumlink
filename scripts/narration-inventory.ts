@@ -1,13 +1,14 @@
 /** Export exact spoken Korean phrases for production; no API calls or credentials. */
 import { createHash } from 'node:crypto'
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
-import { EmotionsFile, Scenario, UiFile } from '../src/content/schema'
+import { BehaviorEpisodeSchema } from '../src/content/behaviorSchema.ts'
+import { UiFile } from '../src/content/schema.ts'
+import { StepEpisodeSchema } from '../src/content/stepSchema.ts'
 import { NARRATION_VOICES } from '../src/services/narration/voices'
 import { narrationKey } from '../src/services/recordedNarration'
 
 const readJson = (path: string): unknown => JSON.parse(readFileSync(path, 'utf8'))
 const ui = UiFile.parse(readJson('content/ui.json'))
-const emotions = EmotionsFile.parse(readJson('content/emotions.json')).emotions
 const entries = new Map<string, { id: string; text: string; sources: string[] }>()
 const add = (text: string | undefined, source: string) => {
   if (!text?.trim()) return
@@ -22,47 +23,111 @@ const add = (text: string | undefined, source: string) => {
     })
 }
 
-for (const key of [
-  'home.greeting',
-  'step3.explore',
-  'feeling.pickFirst',
-  'feedback.myChoice',
-  'wrapup.path',
-])
-  add(ui[key]!.ko, `ui.${key}`)
+for (const key of ['home.greeting', 'voice.sample']) add(ui[key]?.ko, `ui.${key}`)
 
-for (const emotion of emotions) {
-  add(emotion.word.ko, `emotions.${emotion.id}`)
-  for (const key of ['feeling.chose', 'feeling.notSureTwice'])
-    add(ui[key]!.ko.replaceAll('{emotion}', emotion.word.ko), `ui.${key}.${emotion.id}`)
-}
+/** Fixed lines the game screens read before content text (see BehaviorGame/StepEpisodeGame). */
+for (const [id, text] of Object.entries({
+  completion: '잘했어요! 오늘도 새로운 방법을 배웠어요.',
+  goodChoice: '잘했어요! 좋은 방법을 골랐어요.',
+  sorted: '잘했어요! 행동을 나눴어요.',
+  sortIntro: '행동을 나눠 봐요.',
+  retry: '다시 한 번 생각해 볼까요?',
+  situation: '상황을 살펴봐요',
+  practice: '소리 내어 따라 말해 보아요. 읽어 보기만 해도 괜찮아요.',
+}))
+  add(text, `screen.${id}`)
 
-for (const file of readdirSync('content/scenarios').filter((name) => name.endsWith('.json'))) {
-  const scenario = Scenario.parse(readJson(`content/scenarios/${file}`))
-  const put = (text: string | undefined, field: string) => add(text, `${scenario.id}.${field}`)
-  scenario.situation.story.forEach((line, i) => put(line.ko, `situation.story.${i}`))
-  put(scenario.situation.keySentence.ko, 'situation.keySentence')
-  put(scenario.feeling.question.ko, 'feeling.question')
-  put(scenario.feeling.hint.text.ko, 'feeling.hint')
-  put(scenario.step3.question.ko, 'step3.question')
-  if (scenario.step3.narratePrinciple !== false)
-    put(scenario.step3.principle?.ko, 'step3.principle')
-  put(scenario.step3.more?.ko, 'step3.more')
-  if (scenario.step3.type === 'multiple-choice') {
-    for (const option of scenario.step3.options) {
-      put(option.text.ko, `step3.options.${option.id}`)
-      put(option.ack?.ko, `step3.options.${option.id}.ack`)
-    }
+/** Every sentence a screen can read aloud, per episode (both formats). */
+for (const file of readdirSync('content/episodes').filter((name) => name.endsWith('.json'))) {
+  const raw = readJson(`content/episodes/${file}`) as { format?: string }
+  if (raw.format === 'steps') {
+    const episode = StepEpisodeSchema.parse(raw)
+    const put = (text: string | undefined, field: string) => add(text, `${episode.id}.${field}`)
+    episode.situation.sentences.forEach((line, i) => put(line, `situation.${i}`))
+    episode.steps.forEach((step, i) => {
+      const at = `steps.${i}`
+      if ('prompt' in step) put(step.prompt, `${at}.prompt`)
+      if ('options' in step)
+        for (const option of step.options) {
+          put(option.text, `${at}.options.${option.id}`)
+          if ('feedback' in option) put(option.feedback, `${at}.options.${option.id}.feedback`)
+        }
+      if ('closing' in step) put(step.closing, `${at}.closing`)
+      if ('title' in step) put(step.title, `${at}.title`)
+      if ('instruction' in step) put(step.instruction, `${at}.instruction`)
+      if ('hint' in step) put(step.hint, `${at}.hint`)
+      if ('correctFeedback' in step) put(step.correctFeedback, `${at}.correctFeedback`)
+      if ('retryFeedback' in step) put(step.retryFeedback, `${at}.retryFeedback`)
+      if ('message' in step) put(step.message, `${at}.message`)
+      if (step.kind === 'dialogue')
+        step.lines.forEach((line, j) => put(line.text, `${at}.lines.${j}`))
+      if (step.kind === 'note') step.lines.forEach((line, j) => put(line, `${at}.lines.${j}`))
+      if (step.kind === 'sequence')
+        for (const card of step.cards) put(card.text, `${at}.cards.${card.id}`)
+      if (step.kind === 'emotion_body_match') {
+        for (const emotion of step.emotions) put(emotion.text, `${at}.emotions.${emotion.id}`)
+        for (const body of step.bodies) put(body.text, `${at}.bodies.${body.id}`)
+      }
+      if (step.kind === 'conversation') {
+        put(step.intro, `${at}.intro`)
+        step.turns.forEach((turn, j) => {
+          put(turn.prompt, `${at}.turns.${j}.prompt`)
+          for (const line of turn.options) {
+            put(line.text, `${at}.turns.${j}.${line.id}`)
+            put(line.reply, `${at}.turns.${j}.${line.id}.reply`)
+            put(line.tip, `${at}.turns.${j}.${line.id}.tip`)
+          }
+        })
+      }
+      if (step.kind === 'expression_choice') {
+        step.situations.forEach((situation, j) => {
+          situation.story.forEach((line, k) => put(line, `${at}.situations.${j}.story.${k}`))
+          put(situation.question, `${at}.situations.${j}.question`)
+          put(situation.hint, `${at}.situations.${j}.hint`)
+          for (const choice of situation.choices) {
+            put(choice.text, `${at}.situations.${j}.${choice.id}`)
+            put(choice.feedback, `${at}.situations.${j}.${choice.id}.feedback`)
+          }
+        })
+        if (step.practice) {
+          put(step.practice.title, `${at}.practice.title`)
+          put(step.practice.sentence, `${at}.practice.sentence`)
+          put(step.practice.completionMessage, `${at}.practice.completionMessage`)
+        }
+      }
+    })
+    put(episode.takeaway, 'takeaway')
   } else {
-    for (const [feeling, entry] of Object.entries(scenario.step3.byFeeling))
-      put('text' in entry ? entry.text.ko : entry.ko, `step3.byFeeling.${feeling}`)
+    const episode = BehaviorEpisodeSchema.parse(raw)
+    const put = (text: string | undefined, field: string) => add(text, `${episode.id}.${field}`)
+    put(episode.situation.text, 'situation')
+    put(episode.choice.prompt, 'choice.prompt')
+    for (const choice of episode.choice.choices) {
+      put(choice.text, `choice.${choice.id}`)
+      put(choice.feedback, `choice.${choice.id}.feedback`)
+    }
+    put(episode.choice.hint, 'choice.hint')
+    put(episode.sorting.prompt, 'sorting.prompt')
+    for (const card of episode.sorting.cards) {
+      put(card.text, `sorting.${card.id}`)
+      put(card.feedback, `sorting.${card.id}.feedback`)
+    }
+    put(episode.sorting.hint, 'sorting.hint')
+    put(episode.sorting.feedback, 'sorting.feedback')
+    if (episode.conversation) {
+      put(episode.conversation.intro, 'conversation.intro')
+      episode.conversation.turns.forEach((turn, j) => {
+        put(turn.prompt, `conversation.turns.${j}.prompt`)
+        for (const line of turn.options) {
+          put(line.text, `conversation.turns.${j}.${line.id}`)
+          put(line.reply, `conversation.turns.${j}.${line.id}.reply`)
+          put(line.tip, `conversation.turns.${j}.${line.id}.tip`)
+        }
+      })
+      put(episode.conversation.closing, 'conversation.closing')
+    }
+    put(episode.takeaway, 'takeaway')
   }
-  put(scenario.action.question.ko, 'action.question')
-  for (const option of scenario.action.options) {
-    put(option.text.ko, `action.options.${option.id}`)
-    put(option.feedback.ko, `action.options.${option.id}.feedback`)
-  }
-  put(scenario.closing.ko, 'closing')
 }
 
 // One phrase list for every voice set: the same clip id names `<audioDir>/<id>.mp3` per voice.

@@ -12,8 +12,8 @@ export function StartGate() {
       <h1>마음마을 탐험대</h1>
       <p>여러 상황에서 어떻게 행동하면 좋을지 함께 연습해요.</p>
       <div className="explore-start__characters" aria-hidden="true">
-        <img src={devkitArt.haruFull} alt="" />
-        <img src={devkitArt.dog} alt="" />
+        <img src={devkitArt.haruFull} alt="" width={800} height={1200} />
+        <img src={devkitArt.dog} alt="" width={800} height={800} />
       </div>
       <button
         type="button"

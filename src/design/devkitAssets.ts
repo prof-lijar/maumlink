@@ -1,83 +1,130 @@
+/**
+ * Artwork paths. Every picture is a Codex-generated cartoon render from
+ * content-source/art/manifest.json, optimised by `pnpm art:build` into public/img/v3
+ * (sprites: <id>-400/-800.webp with alpha; scenes: <id>-800/-1600.webp + <id>.png).
+ * Nothing is fetched from outside the app bundle at runtime.
+ */
 import type { DomainId } from '@/content/episodeIndex'
+import type { AvatarId } from '@/services/profile'
 
-const base = '/devkit'
+const V3 = '/img/v3'
+const sprite = (id: string, width: 400 | 800 = 400) => `${V3}/${id}-${width}.webp`
+const scene = (id: string, width: 800 | 1600 = 800) => `${V3}/${id}-${width}.webp`
+
+/** Named pictures used by more than one screen. */
 export const devkitArt = {
-  village: `${base}/scenes/village_vertical.png`,
-  villageNarrow: `${base}/scenes/village_narrow.png`,
-  classroom: `${base}/scenes/classroom.png`,
-  haruFull: `${base}/characters/haru_full_body.png`,
-  haruAvatar: `${base}/characters/avatar_haru.png`,
-  haruWave: `${base}/characters/haru_wave.png`,
-  haruThinking: `${base}/characters/haru_thinking.png`,
-  haruCelebrate: `${base}/characters/haru_celebrate.png`,
-  dog: `${base}/characters/dog_guide.png`,
-  b02Intro: `${base}/mini_game_1/scene-intro.png`,
-  b02Success: `${base}/mini_game_1/scene-success.png`,
-  b02Retry: `${base}/mini_game_1/scene-retry.png`,
-  teacher: `${base}/mini_game_1/learning-teacher.png`,
+  village: scene('bg-village', 1600),
+  villageNarrow: scene('bg-village', 800),
+  classroom: scene('scene-B02'),
+  haruFull: sprite('char-haru', 800),
+  haruAvatar: sprite('char-haru'),
+  haruWave: sprite('char-haru'),
+  haruThinking: sprite('guide-think'),
+  haruCelebrate: sprite('celebrate', 800),
+  dog: sprite('guide-wave', 800),
+  guidePoint: sprite('guide-point'),
+  guideCheer: sprite('guide-cheer'),
+  b02Intro: scene('scene-B02'),
+  b02Success: sprite('celebrate', 800),
+  b02Retry: sprite('guide-think'),
+  teacher: sprite('teacher'),
 } as const
 
-export const avatarArt = {
-  sun: `${base}/characters/avatar_haru.png`,
-  sky: `${base}/characters/avatar_brown_hair_girl.png`,
-  leaf: `${base}/characters/avatar_pink_girl.png`,
-  peach: `${base}/characters/avatar_glasses_boy.png`,
-} as const
+/** The four companions the child can pick (하루 · 소라 · 미나 · 준), full body. */
+export const avatarArt: Record<AvatarId, string> = {
+  haru: sprite('char-haru'),
+  sora: sprite('char-sora'),
+  mina: sprite('char-mina'),
+  jun: sprite('char-jun'),
+}
+export const avatarArtLarge: Record<AvatarId, string> = {
+  haru: sprite('char-haru', 800),
+  sora: sprite('char-sora', 800),
+  mina: sprite('char-mina', 800),
+  jun: sprite('char-jun', 800),
+}
+export const avatarNames: Record<AvatarId, string> = {
+  haru: '하루',
+  sora: '소라',
+  mina: '미나',
+  jun: '준',
+}
 
-/** Fallback scene art per place (생활 정원 = playground, 학교 = classroom). */
+/** 친구와 대화하기: my face is the chosen companion; the friend is another companion. */
+export function conversationFaces(avatarId: AvatarId | null) {
+  const me: AvatarId = avatarId ?? 'haru'
+  const friend: AvatarId = me === 'sora' ? 'mina' : 'sora'
+  return { me: avatarArt[me], friend: avatarArt[friend] }
+}
+
+/** Landmark art per place (생활 정원 · 우리 집 · 학교 · 도움 쉼터). */
 export const placeArt: Record<DomainId, string> = {
-  A: `${base}/places/playground.svg`,
-  B: `${base}/places/home.svg`,
-  C: `${base}/places/classroom.svg`,
-  D: `${base}/places/rest.svg`,
+  A: sprite('place-playground'),
+  B: sprite('place-home'),
+  C: sprite('place-school'),
+  D: sprite('place-heart'),
 }
 
-export const episodeThumb: Record<string, string> = {
-  A01: `${base}/icons/question.svg`,
-  A02: `${base}/icons/check.svg`,
-  A03: `${base}/icons/pencil.svg`,
-  B01: `${base}/icons/backpack.svg`,
-  B02: `${base}/characters/avatar_haru.png`,
-  B03: `${base}/icons/book.svg`,
-  C01: `${base}/places/playground.svg`,
-  C02: `${base}/icons/pencil.svg`,
-  C03: `${base}/places/playground.svg`,
-  C04: `${base}/icons/check.svg`,
-  C05: `${base}/icons/pencil.svg`,
-  D01: `${base}/places/rest.svg`,
-  D02: `${base}/icons/heart.svg`,
-  D03: `${base}/places/classroom.svg`,
-  D04: `${base}/icons/heart.svg`,
+/** Home map: generated village background and the landmark for each place. */
+export const mapBackground = scene('bg-village', 1600)
+export const mapPlaces: Record<DomainId, { image: string; height: number; wide: boolean }> = {
+  A: { image: sprite('place-playground', 800), height: 140, wide: true },
+  B: { image: sprite('place-home', 800), height: 150, wide: false },
+  C: { image: sprite('place-school', 800), height: 150, wide: false },
+  D: { image: sprite('place-heart', 800), height: 160, wide: true },
 }
+
+const episodeIds = [
+  'A01',
+  'A02',
+  'A03',
+  'B01',
+  'B02',
+  'B03',
+  'C01',
+  'C02',
+  'C03',
+  'C04',
+  'C05',
+  'D01',
+  'D02',
+  'D03',
+  'D04',
+] as const
+
+/** Small same-style object pictures for the episode list and completion rows. */
+export const episodeThumb: Record<string, string> = Object.fromEntries(
+  episodeIds.map((id) => [id, sprite(`thumb-${id}`)]),
+)
+
+/** The scene picture (1536 × 1024 renders) shown above the situation text. */
+const sceneIds: Record<string, string> = {
+  C01: 'scene-social-playground',
+  C04: 'scene-self-presentation-teasing',
+  C05: 'scene-relation-pencil-prank',
+  D04: 'scene-mind-lunch-line',
+}
+export const sceneArt: Record<string, string> = Object.fromEntries(
+  episodeIds.map((id) => [id, scene(sceneIds[id] ?? `scene-${id}`)]),
+)
+export const sceneArtLarge: Record<string, string> = Object.fromEntries(
+  episodeIds.map((id) => [id, scene(sceneIds[id] ?? `scene-${id}`, 1600)]),
+)
+/** srcset so HiDPI phones get the 1600 px scene. */
+export const sceneSrcSet = (id: string) => `${sceneArt[id]} 800w, ${sceneArtLarge[id]} 1600w`
+
+/** Cartoon face card for a reviewed emotion id (angry, upset, …, not-sure). */
+export const faceArt = (emotionId: string) => sprite(`face-${emotionId}`)
 
 export const b02ChoiceArt: Record<string, string> = {
-  A: `${base}/mini_game_1/option-speak-now.png`,
-  B: `${base}/mini_game_1/option-raise-hand.png`,
-  C: `${base}/mini_game_1/option-call-out.png`,
+  A: sprite('b02-speak-now'),
+  B: sprite('b02-raise-hand'),
+  C: sprite('b02-talk-friend'),
 }
-
 export const b02SequenceArt: Record<string, string> = {
-  pause: `${base}/mini_game/think_first.png`,
-  raise: `${base}/mini_game/raise_hand.png`,
-  speak: `${base}/mini_game/speak_when_called.png`,
-}
-
-/** Home map (map handoff): background and transparent place art with its drawn height. */
-export const mapBackground = '/map/map-bg.webp'
-export const mapPlaces: Record<DomainId, { image: string; height: number; wide: boolean }> = {
-  A: { image: '/map/playground.webp', height: 140, wide: true },
-  B: { image: '/map/home.webp', height: 150, wide: false },
-  C: { image: '/map/classroom.webp', height: 150, wide: false },
-  D: { image: '/map/tree.webp', height: 160, wide: true },
-}
-
-/** Full situation illustrations (1024 × 572) shown on the question screen. */
-export const sceneArt: Record<string, string> = {
-  A02: '/scenes/a02-spill.webp',
-  A03: '/scenes/a03-origami.webp',
-  C02: '/scenes/c02-crayon.webp',
-  B02: devkitArt.b02Intro,
-  D04: '/img/generated/mind-lunch-line-800.webp',
+  pause: sprite('b02-pause'),
+  raise: sprite('b02-raise-hand'),
+  speak: sprite('b02-speak-turn'),
 }
 
 export interface EpisodeTile {
@@ -86,11 +133,14 @@ export interface EpisodeTile {
   glyph?: string
   image?: string
 }
-
-/** List tiles: the handoff glyphs for 생활 정원, devkit thumbnails elsewhere. */
-export const episodeTile = (id: string): EpisodeTile =>
-  ({
-    A01: { glyph: '?', background: '#E4F1FB', color: '#3E7CB8' },
-    A02: { glyph: '✓', background: '#E3F5EA', color: '#2E9E62' },
-    A03: { glyph: '✎', background: '#FFF0DC', color: '#E8742A' },
-  })[id] ?? { image: episodeThumb[id], background: '#FFF1E4' }
+const tileTint: Record<DomainId, string> = {
+  A: '#e3f5ea',
+  B: '#fff0dc',
+  C: '#e4f1fb',
+  D: '#fde8ef',
+}
+/** List tiles: the episode's thumbnail on a tint for its place. */
+export const episodeTile = (id: string): EpisodeTile => ({
+  image: episodeThumb[id],
+  background: tileTint[id[0] as DomainId] ?? '#fff1e4',
+})

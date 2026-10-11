@@ -15,7 +15,17 @@ const ReflectStep = z.object({
   label: z.string().min(1),
   prompt: z.string().min(1),
   /** Per-option feedback is optional when the source gives only the shared closing line. */
-  options: z.array(Option.extend({ feedback: z.string().min(1).optional() })).min(2),
+  options: z
+    .array(
+      Option.extend({
+        feedback: z.string().min(1).optional(),
+        /** Emotion id from the reviewed emotion set; shows the cartoon face card when present. */
+        emotionId: z.string().min(1).optional(),
+      }),
+    )
+    .min(2),
+  /** Optional 도움말 (the source document's key sentence). */
+  hint: z.string().min(1).optional(),
   closing: z.string().min(1),
 })
 /** Graded pick: wrong options explain the outcome and the child may choose again. */
@@ -32,20 +42,6 @@ const DialogueStep = z.object({
   label: z.string().min(1),
   lines: z.array(Line).min(1),
   message: z.string().min(1),
-})
-const PerspectiveSortStep = z.object({
-  kind: z.literal('perspective_sort'),
-  /** 상황별 미션: the child may skip it and still finish the episode. */
-  skippable: z.boolean().optional(),
-  label: z.string().min(1),
-  title: z.string().min(1),
-  instruction: z.string().min(1),
-  characters: z.array(z.object({ id: Id, name: z.string().min(1) })).length(2),
-  cards: z.array(z.object({ id: Id, text: z.string().min(1), characterId: Id })).min(2),
-  correctFeedback: z.string().min(1),
-  retryFeedback: z.string().min(1),
-  hint: z.string().min(1),
-  hintLines: z.array(Line).min(1),
 })
 const SequenceStep = z.object({
   kind: z.literal('sequence'),
@@ -134,7 +130,6 @@ export const EpisodeStepSchema = z.discriminatedUnion('kind', [
   ReflectStep,
   ChoiceStep,
   DialogueStep,
-  PerspectiveSortStep,
   SequenceStep,
   NoteStep,
   EmotionBodyMatchStep,
@@ -142,7 +137,6 @@ export const EpisodeStepSchema = z.discriminatedUnion('kind', [
   ConversationStep,
 ])
 export type EpisodeStep = z.infer<typeof EpisodeStepSchema>
-export type PerspectiveSortMissionData = z.infer<typeof PerspectiveSortStep>
 export type SequenceMissionData = z.infer<typeof SequenceStep>
 export type ConversationStepData = z.infer<typeof ConversationStep>
 export type EmotionBodyMissionData = z.infer<typeof EmotionBodyMatchStep>
@@ -156,7 +150,12 @@ export const StepEpisodeSchema = z
     domainId: z.enum(['A', 'B', 'C', 'D']),
     title: z.string().min(1),
     /** Shown one sentence per line on the first screen. */
-    situation: z.object({ sentences: z.array(z.string().min(1)).min(1), alt: z.string().min(1) }),
+    situation: z.object({
+      sentences: z.array(z.string().min(1)).min(1),
+      /** Short speech bubbles drawn over the scene picture (from the source document). */
+      bubbles: z.array(z.string().min(1)).optional(),
+      alt: z.string().min(1),
+    }),
     steps: z.array(EpisodeStepSchema).min(1),
     takeaway: z.string().min(1),
     safetyNote: z.string().min(1),
@@ -175,13 +174,6 @@ export const StepEpisodeSchema = z
         if (new Set(ids).size !== ids.length) issue('Option IDs must be unique')
         if (step.kind === 'choice' && step.acceptedIds.some((id) => !ids.includes(id)))
           issue('Accepted option is missing')
-      }
-      if (step.kind === 'perspective_sort') {
-        const people = step.characters.map((character) => character.id)
-        if (step.cards.some((card) => !people.includes(card.characterId)))
-          issue('Every card must belong to a listed character')
-        if (new Set(step.cards.map((card) => card.id)).size !== step.cards.length)
-          issue('Card IDs must be unique')
       }
       if (step.kind === 'conversation') conversationIssues(step).forEach(issue)
       if (

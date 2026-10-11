@@ -4,36 +4,35 @@ import type { EpisodeStep, StepEpisode } from '@/content/stepSchema'
 import { episodesFor, getEpisode } from '@/content/episodeIndex'
 import type { OptionId } from '@/content/schema'
 import { ChoiceCard } from '@/design/ChoiceCard'
-import { avatarArt, devkitArt, placeArt, sceneArt } from '@/design/devkitAssets'
+import { conversationFaces, faceArt, sceneArt, sceneSrcSet } from '@/design/devkitAssets'
 import {
   clearStepGame,
   completionScreen,
+  emotionBodyFeedback,
   initialStepGame,
   inspectStepGame,
   reduceChoice,
   reduceEmotionBody,
   reduceExpression,
-  reducePerspective,
   reduceSequence,
   saveStepGame,
   stepDone,
   type ChoiceEvent,
   type EmotionBodyEvent,
   type ExpressionEvent,
-  type PerspectiveEvent,
   type SequenceEvent,
   type StepGame,
 } from '@/engine/stepGame'
 import { reduceConversation, type ConversationEvent } from '@/engine/conversation'
 import { useMvpProgress } from '@/services/mvpProgress'
 import { useProfile } from '@/services/profile'
-import { Cta, EpisodeCompletion, SafetyPromise } from './gameParts'
+import { Cta, EpisodeCompletion, SafetyPromise, VoiceButton } from './gameParts'
+import { useAutoRead, useReadAloud } from '@/services/useSpeak'
 import { completionStored } from '@/services/completionStored'
 import { ConversationMission } from './missions/ConversationMission'
 import { DialogueLines } from './missions/DialogueLines'
 import { EmotionBodyMatchMission } from './missions/EmotionBodyMatchMission'
 import { ExpressionChoiceMission } from './missions/ExpressionChoiceMission'
-import { PerspectiveSortMission } from './missions/PerspectiveSortMission'
 import { SequenceOrderMission } from './missions/SequenceOrderMission'
 
 type StepEvent =
@@ -43,7 +42,6 @@ type StepEvent =
   | { type: 'restart' }
   | { type: 'reflect'; id: string }
   | { type: 'choice'; event: ChoiceEvent }
-  | { type: 'perspective'; event: PerspectiveEvent }
   | { type: 'sequence'; event: SequenceEvent }
   | { type: 'emotionBody'; event: EmotionBodyEvent }
   | { type: 'expression'; event: ExpressionEvent }
@@ -82,10 +80,6 @@ function reduceStepGame(game: StepGame, event: StepEvent, episode: StepEpisode):
       return step?.kind === 'choice' && state?.kind === 'choice'
         ? replace(reduceChoice(state, event.event, step))
         : game
-    case 'perspective':
-      return step?.kind === 'perspective_sort' && state?.kind === 'perspective_sort'
-        ? replace(reducePerspective(state, event.event, step))
-        : game
     case 'sequence':
       return step?.kind === 'sequence' && state?.kind === 'sequence'
         ? replace(reduceSequence(state, event.event, step))
@@ -111,7 +105,6 @@ export function StepEpisodeGame({ episode }: { episode: StepEpisode }) {
   const avatarId = useProfile((state) => state.avatarId)
   const markCompleted = useMvpProgress((progress) => progress.markCompleted)
   const [loaded] = useState(() => inspectStepGame(episode))
-  const [recoveryRequired, setRecoveryRequired] = useState(loaded.kind === 'invalid')
   const [game, dispatch] = useReducer(
     (current: StepGame, event: StepEvent) => reduceStepGame(current, event, episode),
     loaded.kind === 'valid' ? loaded.state : initialStepGame(episode),
@@ -126,53 +119,37 @@ export function StepEpisodeGame({ episode }: { episode: StepEpisode }) {
   const storyNo = String(
     episodesFor(episode.domainId).findIndex((item) => item.id === episode.id) + 1,
   ).padStart(2, '0')
-  const art = {
-    me: avatarArt[avatarId ?? 'sun'],
-    friend: avatarId === 'sky' ? avatarArt.leaf : avatarArt.sky,
-  }
+  const art = conversationFaces(avatarId)
   const labels = ['상황 보기', ...episode.steps.map((item) => item.label), '마무리']
 
   useEffect(() => {
     window.scrollTo({ top: 0 })
     headingRef.current?.focus({ preventScroll: true })
-  }, [game.screen, recoveryRequired])
+  }, [game.screen])
+  // localStorage is the external system here; the state only mirrors whether the write worked.
   useEffect(() => {
-    if (!recoveryRequired) setSaveFailed(!saveStepGame(episode, game))
-  }, [episode, game, recoveryRequired])
+    // oxlint-disable-next-line react/set-state-in-effect
+    setSaveFailed(!saveStepGame(episode, game))
+  }, [episode, game])
   useEffect(() => {
-    if (recoveryRequired || game.screen !== last) return
+    if (game.screen !== last) return
     markCompleted(episode.id)
+    // oxlint-disable-next-line react/set-state-in-effect
     setProgressSaved(completionStored(episode.id))
-  }, [game.screen, last, episode.id, markCompleted, recoveryRequired])
+  }, [game.screen, last, episode.id, markCompleted])
 
   const [talkBusy, setTalkBusy] = useState(false)
   const canNext = game.screen === 0 || (stepDone(game.steps[index], step) && !talkBusy)
 
-  if (recoveryRequired)
-    return (
-      <div className="garden-page">
-        <main className="garden-column garden-stack" style={{ paddingTop: 48 }}>
-          <div className="garden-card garden-learned">
-            <h1 ref={headingRef} tabIndex={-1} className="garden-complete-title">
-              활동을 이어갈 수 없어요
-            </h1>
-            <p>저장된 내용이 달라졌어요. 이 활동을 처음부터 다시 시작할 수 있어요.</p>
-          </div>
-          <Cta
-            onClick={() => {
-              clearStepGame(episode.id)
-              dispatch({ type: 'restart' })
-              setRecoveryRequired(false)
-            }}
-          >
-            처음부터 시작하기
-          </Cta>
-          <button type="button" className="garden-finish__again" onClick={() => navigate(listPath)}>
-            목록으로 돌아가기
-          </button>
-        </main>
-      </div>
-    )
+  // 음성 읽어주기: the situation, then each step's prompt or instruction as it opens; the
+  // conversation and completion screens read their own lines.
+  const narration =
+    game.screen === 0
+      ? { text: episode.situation.sentences.join(' '), key: 'situation' }
+      : game.screen < last && step
+        ? stepNarration(step, game.steps[index])
+        : { text: undefined, key: 'complete' }
+  useAutoRead(narration.text, `${episode.id}:${game.screen}:${narration.key}`)
 
   return (
     <div className="garden-page">
@@ -202,6 +179,7 @@ export function StepEpisodeGame({ episode }: { episode: StepEpisode }) {
             ))}
             <span className="sr-only">{labels[game.screen]}</span>
           </div>
+          <VoiceButton />
         </header>
         <div className="garden-subheader">
           <span className="garden-subheader__chip">
@@ -220,20 +198,23 @@ export function StepEpisodeGame({ episode }: { episode: StepEpisode }) {
           {game.screen === 0 && (
             <>
               <div className="garden-scene">
-                {sceneArt[episode.id] ? (
-                  <div className="garden-scene__frame">
-                    <img src={sceneArt[episode.id]} alt={episode.situation.alt} />
-                  </div>
-                ) : (
-                  <div
-                    className="garden-scene__frame garden-scene__frame--composed"
-                    role="img"
-                    aria-label={episode.situation.alt}
-                  >
-                    <img src={placeArt[episode.domainId]} alt="" />
-                    <img src={devkitArt.haruThinking} alt="" />
-                  </div>
-                )}
+                <div className="garden-scene__frame">
+                  <img
+                    src={sceneArt[episode.id]}
+                    srcSet={sceneSrcSet(episode.id)}
+                    sizes="(min-width: 600px) 560px, 100vw"
+                    alt={episode.situation.alt}
+                  />
+                  {episode.situation.bubbles && (
+                    <div className="garden-scene__bubbles" aria-hidden="true">
+                      {episode.situation.bubbles.map((bubble, i) => (
+                        <span key={i} style={{ animationDelay: `${0.6 + i * 0.4}s` }}>
+                          {bubble}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <div className="garden-card garden-guide garden-story">
                   {episode.situation.sentences.map((sentence, i) => (
                     <p key={i} style={{ animationDelay: `${i * 0.35}s` }}>
@@ -330,6 +311,7 @@ function StepBody({
 }) {
   const state = game.steps[index]
   const chip = <span className="garden-step-label">{step.label}</span>
+  const readAloud = useReadAloud()
 
   if (step.kind === 'reflect' && state?.kind === 'reflect') {
     const picked = step.options.find((option) => option.id === state.selectedId)
@@ -346,11 +328,21 @@ function StepBody({
               variant="garden"
               id={option.id as OptionId}
               text={option.text}
+              imageSrc={option.emotionId ? faceArt(option.emotionId) : undefined}
               selected={state.selectedId === option.id}
-              onSelect={(id) => dispatch({ type: 'reflect', id })}
+              onSelect={(id) => {
+                // The pick, its explanation and the shared closing line, in reading order.
+                readAloud([option.text, option.feedback, step.closing].filter(Boolean).join(' '))
+                dispatch({ type: 'reflect', id })
+              }}
             />
           ))}
         </div>
+        {!picked && step.hint && (
+          <p className="garden-reflect__hint">
+            <span className="garden-chip">도움말</span> {step.hint}
+          </p>
+        )}
         {picked && (
           <div role="status" className="garden-card garden-message garden-reflect">
             {picked.feedback && <p>{picked.feedback}</p>}
@@ -377,7 +369,10 @@ function StepBody({
               id={option.id as OptionId}
               text={option.text}
               selected={state.selectedId === option.id}
-              onSelect={(id) => dispatch({ type: 'choice', event: { type: 'select', id } })}
+              onSelect={(id) => {
+                readAloud(option.text)
+                dispatch({ type: 'choice', event: { type: 'select', id } })
+              }}
             />
           ))}
         </div>
@@ -448,23 +443,16 @@ function StepBody({
       </>
     )
 
-  if (step.kind === 'perspective_sort' && state?.kind === 'perspective_sort')
-    return (
-      <PerspectiveSortMission
-        mission={step}
-        state={state}
-        dispatch={(event) => dispatch({ type: 'perspective', event })}
-        headingRef={headingRef}
-        art={art}
-      />
-    )
-
   if (step.kind === 'sequence' && state?.kind === 'sequence')
     return (
       <SequenceOrderMission
         mission={step}
         state={state}
-        dispatch={(event) => dispatch({ type: 'sequence', event })}
+        dispatch={(event) => {
+          if (event.type === 'place')
+            readAloud(step.cards.find((card) => card.id === event.id)?.text)
+          dispatch({ type: 'sequence', event })
+        }}
         headingRef={headingRef}
       />
     )
@@ -474,7 +462,15 @@ function StepBody({
       <EmotionBodyMatchMission
         mission={step}
         state={state}
-        dispatch={(event) => dispatch({ type: 'emotionBody', event })}
+        dispatch={(event) => {
+          if (event.type === 'selectEmotion')
+            readAloud(step.emotions.find((item) => item.id === event.id)?.text)
+          else if (event.type === 'selectBody' && state.selectedEmotionId)
+            readAloud(
+              `${step.bodies.find((item) => item.id === event.id)?.text ?? ''} ${emotionBodyFeedback(step, state.selectedEmotionId, event.id)}`,
+            )
+          dispatch({ type: 'emotionBody', event })
+        }}
         headingRef={headingRef}
       />
     )
@@ -484,7 +480,13 @@ function StepBody({
       <ConversationMission
         talk={step}
         state={state}
-        dispatch={(event) => dispatch({ type: 'conversation', event })}
+        dispatch={(event) => {
+          if (event.type === 'say')
+            readAloud(
+              step.turns[state.turn]?.options.find((option) => option.id === event.id)?.text,
+            )
+          dispatch({ type: 'conversation', event })
+        }}
         headingRef={headingRef}
         art={art}
         onBusyChange={onTalkBusy}
@@ -496,11 +498,80 @@ function StepBody({
       <ExpressionChoiceMission
         mission={step}
         state={state}
-        dispatch={(event) => dispatch({ type: 'expression', event })}
+        dispatch={(event) => {
+          if (event.type === 'pick') {
+            const choice = step.situations[state.situationIndex]?.choices.find(
+              (item) => item.id === event.id,
+            )
+            readAloud(choice && `${choice.text} ${choice.feedback}`)
+          }
+          dispatch({ type: 'expression', event })
+        }}
         headingRef={headingRef}
         art={art}
       />
     )
 
   return null
+}
+
+/**
+ * What a step reads aloud when it opens, and again when its result changes (a confirmed or
+ * wrong answer, the next situation). Picks are read by the controls themselves.
+ */
+function stepNarration(
+  step: EpisodeStep,
+  state: StepGame['steps'][number] | undefined,
+): { text: string | undefined; key: string } {
+  switch (step.kind) {
+    case 'reflect':
+      return { text: step.prompt, key: 'reflect' }
+    case 'choice': {
+      const submitted =
+        state?.kind === 'choice'
+          ? step.options.find((option) => option.id === state.submittedId)
+          : undefined
+      if (submitted && state?.kind === 'choice')
+        return {
+          text: state.solved
+            ? submitted.feedback
+            : `다시 한 번 생각해 볼까요? ${submitted.feedback}`,
+          key: `choice:${submitted.id}:${state.solved}`,
+        }
+      return { text: step.prompt, key: 'choice' }
+    }
+    case 'dialogue':
+      return {
+        text: `${step.lines.map((line) => line.text).join(' ')} ${step.message}`,
+        key: 'dialogue',
+      }
+    case 'note':
+      return { text: `${step.title} ${step.lines.join(' ')}`, key: 'note' }
+    case 'sequence': {
+      const result = state?.kind === 'sequence' ? state.result : null
+      if (result === 'correct') return { text: step.correctFeedback, key: 'sequence:correct' }
+      if (result === 'wrong' && state?.kind === 'sequence')
+        return { text: step.retryFeedback, key: `sequence:wrong:${state.attempts}` }
+      return { text: `${step.title} ${step.instruction}`, key: 'sequence' }
+    }
+    case 'emotion_body_match':
+      return { text: `${step.title} ${step.instruction}`, key: 'match' }
+    case 'expression_choice': {
+      const index = state?.kind === 'expression_choice' ? state.situationIndex : 0
+      const situation = step.situations[index]
+      if (situation)
+        return {
+          text: `${step.title} ${situation.story.join(' ')} ${situation.question}`,
+          key: `expression:${index}`,
+        }
+      return {
+        text: step.practice
+          ? `${step.practice.title} 소리 내어 따라 말해 보아요. 읽어 보기만 해도 괜찮아요.`
+          : undefined,
+        key: 'expression:practice',
+      }
+    }
+    case 'conversation':
+      return { text: undefined, key: 'conversation' }
+  }
 }

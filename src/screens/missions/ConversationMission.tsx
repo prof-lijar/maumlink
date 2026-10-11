@@ -1,15 +1,11 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
 import type { ConversationData } from '@/content/conversation'
 import type { ConversationEvent, ConversationState } from '@/engine/conversation'
+import { useAutoRead } from '@/services/useSpeak'
 import type { SpeakerArt } from './DialogueLines'
+import { conversationTiming } from './conversationTiming'
 
 const isAction = (text: string) => text.startsWith('(') && text.endsWith(')')
-
-/**
- * How long the friend "types" before a reply appears. Tests set it to 0, which shows the
- * reply at once (see tests/setup.ts).
- */
-export const conversationTiming = { replyDelayMs: 1500 }
 
 /**
  * 친구와 대화하기: a chat panel (friend on the left, me on the right) above my choices. After
@@ -33,6 +29,8 @@ export function ConversationMission({
 }) {
   // Lines restored from a saved session are shown as already answered.
   const [answered, setAnswered] = useState(state.said.length)
+  // A reset clears the log at once (adjusting state during render avoids an extra effect pass).
+  if (state.said.length < answered) setAnswered(state.said.length)
   const typing = conversationTiming.replyDelayMs > 0 && answered < state.said.length
   const visible = typing ? state.said.length - 1 : state.said.length
   const done = state.turn >= talk.turns.length
@@ -46,10 +44,6 @@ export function ConversationMission({
 
   // A new line: wait, then reveal the friend's reply (a reset clears the log at once).
   useEffect(() => {
-    if (state.said.length < answered) {
-      setAnswered(state.said.length)
-      return
-    }
     if (!typing) return
     const timer = window.setTimeout(
       () => setAnswered(state.said.length),
@@ -64,6 +58,17 @@ export function ConversationMission({
     const target = typing ? logRef.current?.lastElementChild : choicesRef.current
     target?.scrollIntoView?.({ block: 'nearest', behavior: 'smooth' })
   }, [typing, state.said.length])
+
+  // 음성 읽어주기: the opening line with my first prompt, then each reply once it has
+  // "arrived", followed by the next prompt (or the closing line when the talk is done).
+  useAutoRead(
+    typing
+      ? undefined
+      : lastLine
+        ? `${lastLine.reply} ${done ? talk.closing : (turn?.prompt ?? '')}`.trim()
+        : `${talk.intro} ${turn?.prompt ?? ''}`.trim(),
+    `talk:${talk.title}:${state.said.length}:${state.turn}`,
+  )
 
   // The screen around the mission hides its 다음 button until the reply has appeared.
   useEffect(() => onBusyChange?.(typing), [typing, onBusyChange])

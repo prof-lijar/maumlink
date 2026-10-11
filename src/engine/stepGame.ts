@@ -9,75 +9,9 @@ import type {
   EmotionBodyMissionData,
   EpisodeStep,
   ExpressionChoiceMissionData,
-  PerspectiveSortMissionData,
   SequenceMissionData,
   StepEpisode,
 } from '@/content/stepSchema'
-
-/* ── mission: 나와 친구의 생각 구분하기 (perspective sort) ─────────────────── */
-
-export const PerspectiveStateSchema = z.object({
-  kind: z.literal('perspective_sort'),
-  selectedCardId: z.string().nullable(),
-  placements: z.record(z.string(), z.string()),
-  result: z.enum(['correct', 'wrong']).nullable(),
-  attempts: z.number().int().nonnegative(),
-  hintVisible: z.boolean(),
-})
-export type PerspectiveState = z.infer<typeof PerspectiveStateSchema>
-export type PerspectiveEvent =
-  | { type: 'selectCard'; id: string }
-  | { type: 'place'; characterId: string }
-  | { type: 'check' }
-  | { type: 'toggleHint' }
-  | { type: 'reset' }
-
-export const initialPerspective = (): PerspectiveState => ({
-  kind: 'perspective_sort',
-  selectedCardId: null,
-  placements: {},
-  result: null,
-  attempts: 0,
-  hintVisible: false,
-})
-
-export function reducePerspective(
-  state: PerspectiveState,
-  event: PerspectiveEvent,
-  mission: PerspectiveSortMissionData,
-): PerspectiveState {
-  if (event.type === 'toggleHint') return { ...state, hintVisible: !state.hintVisible }
-  if (event.type === 'reset') return { ...initialPerspective(), attempts: state.attempts }
-  if (state.result === 'correct') return state
-  switch (event.type) {
-    case 'selectCard':
-      if (!mission.cards.some((card) => card.id === event.id)) return state
-      return { ...state, selectedCardId: state.selectedCardId === event.id ? null : event.id }
-    case 'place': {
-      const id = state.selectedCardId
-      if (!id || !mission.characters.some((person) => person.id === event.characterId)) return state
-      return {
-        ...state,
-        placements: { ...state.placements, [id]: event.characterId },
-        selectedCardId: null,
-        result: null,
-      }
-    }
-    case 'check': {
-      if (!mission.cards.every((card) => state.placements[card.id])) return state
-      const correct = mission.cards.every((card) => state.placements[card.id] === card.characterId)
-      const attempts = state.attempts + 1
-      return {
-        ...state,
-        selectedCardId: null,
-        result: correct ? 'correct' : 'wrong',
-        attempts,
-        // After two misses the dialogue opens on its own (명세: 여러 번 실패하면 힌트).
-        hintVisible: correct ? state.hintVisible : state.hintVisible || attempts >= 2,
-      }
-    }
-  }
-}
 
 /* ── mission: 행동 순서 맞추기 (sequence) ──────────────────────────────────── */
 
@@ -317,7 +251,6 @@ export const StepStateSchema = z.discriminatedUnion('kind', [
   ReflectStateSchema,
   ChoiceStateSchema,
   PlainStateSchema,
-  PerspectiveStateSchema,
   SequenceStateSchema,
   EmotionBodyStateSchema,
   ExpressionStateSchema,
@@ -338,8 +271,6 @@ export function initialStepState(step: EpisodeStep, random = Math.random): StepS
         solved: false,
         hintVisible: false,
       }
-    case 'perspective_sort':
-      return initialPerspective()
     case 'sequence':
       return initialSequence(step, random)
     case 'emotion_body_match':
@@ -393,7 +324,6 @@ export function stepDone(state: StepState | undefined, step?: EpisodeStep): bool
       return state.solved
     case 'plain':
       return true
-    case 'perspective_sort':
     case 'sequence':
       return state.result === 'correct'
   }
@@ -464,17 +394,6 @@ function validStepState(state: StepState, step: EpisodeStep): boolean {
         step.acceptedOrders.some((order) => order.join('|') === state.placed.join('|')))
     )
   }
-  if (state.kind === 'perspective_sort' && step.kind === 'perspective_sort') {
-    return (
-      (state.selectedCardId === null || step.cards.some((c) => c.id === state.selectedCardId)) &&
-      Object.entries(state.placements).every(
-        ([id, person]) =>
-          step.cards.some((c) => c.id === id) && step.characters.some((c) => c.id === person),
-      ) &&
-      (state.result !== 'correct' ||
-        step.cards.every((c) => state.placements[c.id] === c.characterId))
-    )
-  }
   if (state.kind === 'conversation' && step.kind === 'conversation')
     return validConversation(state, step)
   if (state.kind === 'emotion_body_match' && step.kind === 'emotion_body_match') {
@@ -494,10 +413,23 @@ function validStepState(state: StepState, step: EpisodeStep): boolean {
   return false
 }
 
-export type LoadedStepGame = { kind: 'empty' | 'invalid' } | { kind: 'valid'; state: StepGame }
+export type LoadedStepGame = { kind: 'empty' } | { kind: 'valid'; state: StepGame }
 
-/** Preserve incompatible saves until the user explicitly starts over. */
+/**
+ * Restores an unfinished step session. A save from another content version, or one that no
+ * longer fits the steps, is dropped silently and the story starts over: the child never sees
+ * a recovery notice (2026-10-11 TODO). Completed-episode records are kept.
+ */
 export function inspectStepGame(episode: StepEpisode): LoadedStepGame {
+  const result = checkStepGame(episode)
+  if (result.kind === 'invalid') {
+    clearStepGame(episode.id)
+    return { kind: 'empty' }
+  }
+  return result
+}
+
+function checkStepGame(episode: StepEpisode): LoadedStepGame | { kind: 'invalid' } {
   try {
     const raw = localStorage.getItem(keyFor(episode.id))
     if (!raw) return { kind: 'empty' }

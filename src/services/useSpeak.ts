@@ -34,6 +34,21 @@ export function useAutoRead(text: string | undefined, key: string, audioUrl?: st
   }, [autoRead, text, key, locale, audioUrl])
 }
 
+/**
+ * Reads a child-visible phrase on request (an option the child just picked, a card placed).
+ * Manual, so it does not wait for the browser's activation gate; muted narration is a no-op.
+ */
+export function useReadAloud(): (text: string | undefined) => void {
+  const locale = useSettings((s) => s.locale)
+  return useCallback(
+    (text) => {
+      if (!text?.trim()) return
+      void speech.speak({ text, locale })
+    },
+    [locale],
+  )
+}
+
 export function useSpeaking(): boolean {
   return useSpeechStatus().phase === 'speaking'
 }

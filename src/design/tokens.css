@@ -3,7 +3,6 @@
    Large text and 64 px tap targets remain (PRD §6). */
 @import 'tailwindcss';
 @import './surfaces.css';
-@import './lesson-layout.css';
 
 /* Self-hosted subset built by `pnpm fonts` (scripts/build-fonts.py) — D14/D15 */
 @font-face {

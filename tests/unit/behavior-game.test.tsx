@@ -24,7 +24,7 @@ import { useSettings } from '@/services/settings'
 beforeEach(() => {
   localStorage.clear()
   useSettings.setState({ started: true, autoRead: false })
-  useProfile.setState({ avatarId: 'sun' })
+  useProfile.setState({ avatarId: 'haru' })
   useMvpProgress.setState({ completedEpisodeIds: [] })
 })
 
@@ -165,9 +165,9 @@ describe('choice + sorting data and engine (sample: C02)', () => {
     saveGame(legacy, state)
     expect(loadGame(legacy)).toEqual({ kind: 'valid', state })
     saveGame(legacy, { ...state, step: 'complete', sortOutcome: 'independent' })
-    expect(loadGame(legacy)).toEqual({ kind: 'invalid' })
+    expect(loadGame(legacy)).toEqual({ kind: 'empty' })
     saveGame(legacy, { ...state, placements: { missing: 'do' } })
-    expect(loadGame(legacy)).toEqual({ kind: 'invalid' })
+    expect(loadGame(legacy)).toEqual({ kind: 'empty' })
     const old = JSON.stringify({
       packId: 'mvp-v1',
       episodeId: 'C02',
@@ -175,8 +175,9 @@ describe('choice + sorting data and engine (sample: C02)', () => {
       state: { step: 'sequence', orderIds: ['pause'] },
     })
     localStorage.setItem('maumlink.session.mvp-v1.C02', old)
-    expect(loadGame(legacy)).toEqual({ kind: 'invalid' })
-    expect(localStorage.getItem('maumlink.session.mvp-v1.C02')).toBe(old)
+    // An old-version session is dropped silently; the story simply starts over.
+    expect(loadGame(legacy)).toEqual({ kind: 'empty' })
+    expect(localStorage.getItem('maumlink.session.mvp-v1.C02')).toBeNull()
     expect(useMvpProgress.getState().completedEpisodeIds).toEqual([])
   })
 
@@ -197,7 +198,7 @@ describe('choice + sorting data and engine (sample: C02)', () => {
       ).toBe(false)
   })
 
-  it('restores a versioned partial session and explains invalid saved content', () => {
+  it('restores a versioned partial session and silently drops saves it cannot use', () => {
     const state = reduceGame(initialGameState(), { type: 'selectChoice', id: 'B' }, legacy)
     expect(saveGame(legacy, state)).toBe(true)
     expect(loadGame(legacy)).toEqual({ kind: 'valid', state })
@@ -205,7 +206,8 @@ describe('choice + sorting data and engine (sample: C02)', () => {
       kind: 'empty',
     })
     localStorage.setItem('maumlink.session.mvp-v1.C02', '{bad json')
-    expect(loadGame(legacy)).toEqual({ kind: 'invalid' })
+    expect(loadGame(legacy)).toEqual({ kind: 'empty' })
+    expect(localStorage.getItem('maumlink.session.mvp-v1.C02')).toBeNull()
     localStorage.setItem(
       'maumlink.session.mvp-v1.C02',
       JSON.stringify({
@@ -215,7 +217,8 @@ describe('choice + sorting data and engine (sample: C02)', () => {
         state,
       }),
     )
-    expect(loadGame(legacy)).toEqual({ kind: 'invalid' })
+    expect(loadGame(legacy)).toEqual({ kind: 'empty' })
+    expect(localStorage.getItem('maumlink.session.mvp-v1.C02')).toBeNull()
   })
 
   it('keeps unfinished sessions for different episodes separate', () => {

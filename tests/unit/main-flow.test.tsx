@@ -35,7 +35,7 @@ describe('new main flow', () => {
     renderFlow()
     await user.click(screen.getByRole('button', { name: '시작하기' }))
     expect(screen.getByRole('heading', { name: '나의 탐험가를 골라요' })).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: '하늘 탐험가' }))
+    await user.click(screen.getByRole('button', { name: '소라' }))
     await user.click(screen.getByRole('button', { name: '다음' }))
     expect(
       screen.getByRole('heading', { name: '안녕! 오늘은 어느 곳을 탐험할까요?' }),
@@ -53,7 +53,7 @@ describe('new main flow', () => {
   it('lists A03 under the school with its scene and no guide dog', async () => {
     const user = userEvent.setup()
     useSettings.setState({ started: true })
-    useProfile.setState({ avatarId: 'sky' })
+    useProfile.setState({ avatarId: 'haru' })
     renderFlow()
     expect(
       screen.getByRole('button', { name: /^생활 정원, .*2개 중 0개 완료/ }),
@@ -67,14 +67,14 @@ describe('new main flow', () => {
     expect(screen.getByText('이야기 04 · 하던 일이 잘 안돼요')).toBeInTheDocument()
     expect(screen.getByRole('img', { name: /종이 접기/ })).toHaveAttribute(
       'src',
-      '/scenes/a03-origami.webp',
+      '/img/v3/scene-A03-800.webp',
     )
     expect(screen.queryByAltText('안내 강아지')).not.toBeInTheDocument()
   })
 
   it('shows the crayon scene for C02', async () => {
     useSettings.setState({ started: true })
-    useProfile.setState({ avatarId: 'sky' })
+    useProfile.setState({ avatarId: 'haru' })
     render(
       <MemoryRouter initialEntries={['/episode/C02/play']}>
         <Routes>
@@ -84,21 +84,21 @@ describe('new main flow', () => {
     )
     expect(screen.getByRole('img', { name: /빨간 색연필로 그림/ })).toHaveAttribute(
       'src',
-      '/scenes/c02-crayon.webp',
+      '/img/v3/scene-C02-800.webp',
     )
   })
 
   it('shows skill tags in the school list and opens the presentation story', async () => {
     const user = userEvent.setup()
     useSettings.setState({ started: true })
-    useProfile.setState({ avatarId: 'sky' })
+    useProfile.setState({ avatarId: 'haru' })
     renderFlow()
     await user.click(screen.getByRole('button', { name: /^학교,/ }))
-    for (const tag of ['차근차근 해보기', '내 마음 알아보기', '친구와 함께하기'])
+    for (const tag of ['자기 관리', '자기 인식', '관계 관리'])
       expect(screen.getByText(tag)).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /친구들이 내 발표를 놀렸어요/ }))
     expect(screen.getByText('이야기 05 · 친구들이 내 발표를 놀렸어요')).toBeInTheDocument()
-    expect(screen.getByText('마음이 속상하고 얼굴도 뜨거워지는 것 같아요.')).toBeInTheDocument()
+    expect(screen.getByText('내가 노력하여 만든 발표를 친구들이 놀리니 속상해')).toBeInTheDocument()
   })
 
   it('groups episodes by place after the 2026-10-10 reshuffle', () => {

@@ -1,9 +1,11 @@
-import type { CSSProperties } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { useNavigate } from 'react-router'
 import { domains, episodes, episodesFor } from '@/content/episodeIndex'
 import { avatarArt, devkitArt, mapBackground, mapPlaces } from '@/design/devkitAssets'
 import { StartGate } from './StartGate'
 import { AvatarSelect } from './AvatarSelect'
+import { SettingsSheet } from './SettingsSheet'
+import { VoiceButton } from './gameParts'
 import { useMvpProgress, completionPercent } from '@/services/mvpProgress'
 import { useProfile } from '@/services/profile'
 import { useSettings } from '@/services/settings'
@@ -25,6 +27,7 @@ function ExploreMap() {
   const count = completed.length
   const total = episodes.length
   const percent = completionPercent(count)
+  const [settingsOpen, setSettingsOpen] = useState(false)
 
   return (
     <div className="explore-map-page">
@@ -34,6 +37,17 @@ function ExploreMap() {
             <img src={avatarId ? avatarArt[avatarId] : devkitArt.haruAvatar} alt="" />
           </span>
           <h1>{greeting}</h1>
+          <div className="explore-tools">
+            <VoiceButton className="explore-icon-button explore-tool" />
+            <button
+              type="button"
+              className="explore-icon-button explore-tool"
+              aria-label="어른 설정"
+              onClick={() => setSettingsOpen(true)}
+            >
+              <span aria-hidden="true">⚙</span>
+            </button>
+          </div>
         </div>
         <div
           className="explore-card explore-progress"
@@ -96,6 +110,7 @@ function ExploreMap() {
           })}
         </section>
       </main>
+      <SettingsSheet open={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </div>
   )
 }

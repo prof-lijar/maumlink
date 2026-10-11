@@ -3,13 +3,13 @@ import { Navigate, useNavigate, useParams } from 'react-router'
 import { getBehaviorEpisode, getStepEpisode, type BehaviorEpisode } from '@/content/behaviorEpisode'
 import { episodesFor, getEpisode } from '@/content/episodeIndex'
 import { BehaviorSorting, SortingReview } from './BehaviorSorting'
-import { Cta, EpisodeCompletion, SafetyPromise } from './gameParts'
+import { Cta, EpisodeCompletion, SafetyPromise, VoiceButton } from './gameParts'
 import { completionStored } from '@/services/completionStored'
 import { conversationDone, initialConversation } from '@/engine/conversation'
 import { ConversationMission } from './missions/ConversationMission'
 import { StepEpisodeGame } from './StepEpisodeGame'
 import { ChoiceCard } from '@/design/ChoiceCard'
-import { avatarArt, devkitArt, placeArt, sceneArt } from '@/design/devkitAssets'
+import { conversationFaces, devkitArt, sceneArt, sceneSrcSet } from '@/design/devkitAssets'
 import {
   clearGame,
   initialGameState,
@@ -21,6 +21,7 @@ import {
 import { useMvpProgress } from '@/services/mvpProgress'
 import { useProfile } from '@/services/profile'
 import { useSettings } from '@/services/settings'
+import { useAutoRead, useReadAloud } from '@/services/useSpeak'
 import type { OptionId } from '@/content/schema'
 
 /** Top padding per screen, from the handoff layouts. */
@@ -92,7 +93,6 @@ function BehaviorGameInner({ episode }: { episode: BehaviorEpisode }) {
       reduceGame(current, event, episode),
     loaded.kind === 'valid' ? loaded.state : initialGameState(),
   )
-  const [recoveryRequired, setRecoveryRequired] = useState(loaded.kind === 'invalid')
   const [saveFailed, setSaveFailed] = useState(false)
   const [progressSaved, setProgressSaved] = useState(true)
   const markCompleted = useMvpProgress((progress) => progress.markCompleted)
@@ -109,44 +109,29 @@ function BehaviorGameInner({ episode }: { episode: BehaviorEpisode }) {
   const avatarId = useProfile((profile) => profile.avatarId)
   const [talkBusy, setTalkBusy] = useState(false)
   const skillTag = getEpisode(episode.id)?.skillTag
+  const readAloud = useReadAloud()
 
   // Each screen starts at the top with its heading focused (handoff: 화면 전환 시 스크롤 맨 위로).
   useEffect(() => {
-    if (recoveryRequired) return
     window.scrollTo({ top: 0 })
     headingRef.current?.focus({ preventScroll: true })
-  }, [state.step, recoveryRequired])
+  }, [state.step])
+  // localStorage is the external system here; the state only mirrors whether the write worked.
   useEffect(() => {
-    if (!recoveryRequired) setSaveFailed(!saveGame(episode, state))
-  }, [episode, state, recoveryRequired])
+    // oxlint-disable-next-line react/set-state-in-effect
+    setSaveFailed(!saveGame(episode, state))
+  }, [episode, state])
   useEffect(() => {
     if (state.step !== 'complete' || !state.choiceOutcome || !state.sortOutcome) return
     markCompleted(episode.id)
+    // oxlint-disable-next-line react/set-state-in-effect
     setProgressSaved(completionStored(episode.id))
   }, [state.step, state.choiceOutcome, state.sortOutcome, episode.id, markCompleted])
 
-  if (recoveryRequired)
-    return (
-      <div className="garden-page">
-        <main className="garden-column garden-stack" style={{ paddingTop: 48 }}>
-          <div className="garden-card garden-learned">
-            <h1 className="garden-complete-title">활동을 이어갈 수 없어요</h1>
-            <p>저장된 내용이 달라졌어요. 이 활동을 처음부터 다시 시작할 수 있어요.</p>
-          </div>
-          <Cta
-            onClick={() => {
-              clearGame(episode.id)
-              setRecoveryRequired(false)
-            }}
-          >
-            처음부터 시작하기
-          </Cta>
-          <button type="button" className="garden-finish__again" onClick={() => navigate(listPath)}>
-            목록으로 돌아가기
-          </button>
-        </main>
-      </div>
-    )
+  // 음성 읽어주기: each screen reads its main text once; the conversation and completion
+  // screens read their own lines (ConversationMission, EpisodeCompletion).
+  const narration = screenNarration(episode, state, selectedChoice?.feedback)
+  useAutoRead(narration.text, `${episode.id}:${narration.key}`)
 
   return (
     <div className="garden-page">
@@ -161,6 +146,7 @@ function BehaviorGameInner({ episode }: { episode: BehaviorEpisode }) {
             ←
           </button>
           <ActivityStepper step={state.step} talk={Boolean(episode.conversation)} />
+          <VoiceButton />
         </header>
         <div className="garden-subheader">
           <span className="garden-subheader__chip">
@@ -182,20 +168,14 @@ function BehaviorGameInner({ episode }: { episode: BehaviorEpisode }) {
           {state.step === 'choice' && (
             <>
               <div className="garden-scene">
-                {sceneArt[episode.id] ? (
-                  <div className="garden-scene__frame">
-                    <img src={sceneArt[episode.id]} alt={episode.situation.alt} />
-                  </div>
-                ) : (
-                  <div
-                    className="garden-scene__frame garden-scene__frame--composed"
-                    role="img"
-                    aria-label={episode.situation.alt}
-                  >
-                    <img src={placeArt[episode.domainId]} alt="" />
-                    <img src={devkitArt.haruThinking} alt="" />
-                  </div>
-                )}
+                <div className="garden-scene__frame">
+                  <img
+                    src={sceneArt[episode.id]}
+                    srcSet={sceneSrcSet(episode.id)}
+                    sizes="(min-width: 600px) 560px, 100vw"
+                    alt={episode.situation.alt}
+                  />
+                </div>
                 <div className="garden-card garden-guide">
                   <p>{episode.situation.text}</p>
                 </div>
@@ -211,7 +191,10 @@ function BehaviorGameInner({ episode }: { episode: BehaviorEpisode }) {
                     id={choice.id as OptionId}
                     text={choice.text}
                     selected={state.selectedChoiceId === choice.id}
-                    onSelect={(id) => dispatch({ type: 'selectChoice', id })}
+                    onSelect={(id) => {
+                      readAloud(choice.text)
+                      dispatch({ type: 'selectChoice', id })
+                    }}
                   />
                 ))}
               </div>
@@ -290,14 +273,17 @@ function BehaviorGameInner({ episode }: { episode: BehaviorEpisode }) {
               <ConversationMission
                 talk={episode.conversation}
                 state={state.conversation ?? initialConversation()}
-                dispatch={(event) =>
+                dispatch={(event) => {
+                  if (event.type === 'say')
+                    readAloud(
+                      episode.conversation?.turns[state.conversation?.turn ?? 0]?.options.find(
+                        (option) => option.id === event.id,
+                      )?.text,
+                    )
                   dispatch(event.type === 'say' ? event : { type: 'resetConversation' })
-                }
-                headingRef={headingRef}
-                art={{
-                  me: avatarArt[avatarId ?? 'sun'],
-                  friend: avatarId === 'sky' ? avatarArt.leaf : avatarArt.sky,
                 }}
+                headingRef={headingRef}
+                art={conversationFaces(avatarId)}
                 onBusyChange={setTalkBusy}
               />
               {talkBusy ? null : state.conversation &&
@@ -328,7 +314,11 @@ function BehaviorGameInner({ episode }: { episode: BehaviorEpisode }) {
               <BehaviorSorting
                 episode={episode}
                 state={state}
-                dispatch={dispatch}
+                dispatch={(event) => {
+                  if (event.type === 'selectCard' || event.type === 'dropCard')
+                    readAloud(episode.sorting.cards.find((card) => card.id === event.id)?.text)
+                  dispatch(event)
+                }}
                 headingRef={headingRef}
               />
               <button
@@ -387,4 +377,38 @@ function BehaviorGameInner({ episode }: { episode: BehaviorEpisode }) {
       </div>
     </div>
   )
+}
+
+/**
+ * What each screen reads aloud when it opens (Korean, in the order the child sees it). The
+ * key changes with the screen and with a wrong answer, so a retry explanation is read too.
+ */
+function screenNarration(
+  episode: BehaviorEpisode,
+  state: GameState,
+  selectedFeedback: string | undefined,
+): { text: string | undefined; key: string } {
+  switch (state.step) {
+    case 'choice':
+      return state.choiceWrong && selectedFeedback
+        ? {
+            text: `다시 한 번 생각해 볼까요? ${selectedFeedback}`,
+            key: `choice-retry:${state.choiceAttempts}`,
+          }
+        : { text: `${episode.situation.text} ${episode.choice.prompt}`, key: 'choice' }
+    case 'choiceFeedback':
+      return {
+        text: `잘했어요! 좋은 방법을 골랐어요. ${selectedFeedback ?? ''}`.trim(),
+        key: 'choiceFeedback',
+      }
+    case 'sorting':
+      return { text: `행동을 나눠 봐요. ${episode.sorting.prompt}`, key: 'sorting' }
+    case 'sortingFeedback':
+      return {
+        text: `잘했어요! 행동을 나눴어요. ${episode.sorting.feedback}`,
+        key: 'sortingFeedback',
+      }
+    default:
+      return { text: undefined, key: state.step }
+  }
 }

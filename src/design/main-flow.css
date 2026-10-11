@@ -1,7 +1,6 @@
 .explore-start,
 .explore-avatar-page,
-.explore-map-page,
-.explore-intro-page {
+.explore-map-page {
   min-height: 100dvh;
   color: #28394f;
   font-family: var(--font-sans);
@@ -127,13 +126,13 @@
   box-shadow: 0 8px 20px #57749455;
   font-size: 95px;
 }
-.explore-avatar-preview[data-avatar='sky'] {
+.explore-avatar-preview[data-avatar='sora'] {
   background: #c5e8ff;
 }
-.explore-avatar-preview[data-avatar='leaf'] {
+.explore-avatar-preview[data-avatar='mina'] {
   background: #d8efc6;
 }
-.explore-avatar-preview[data-avatar='peach'] {
+.explore-avatar-preview[data-avatar='jun'] {
   background: #ffdaca;
 }
 .explore-avatar-options {
@@ -199,6 +198,31 @@
   line-height: 1.35;
   letter-spacing: -0.4px;
 }
+.explore-tools {
+  display: flex;
+  flex: none;
+  gap: 8px;
+}
+.explore-tool {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 3px 0 #cfe0ea;
+  color: #13314a;
+  font-size: 19px;
+  cursor: pointer;
+}
+.explore-tool:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #cfe0ea;
+}
+.explore-tool[data-voice='off'] {
+  color: #6b7a88;
+}
 .explore-greeting__avatar {
   width: 64px;
   height: 64px;
@@ -213,6 +237,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: top;
 }
 .explore-progress {
   margin-bottom: 14px;
@@ -354,86 +379,6 @@
   font-weight: 800;
 }
 
-.explore-intro-page {
-  background: linear-gradient(#a8defa, #eef7ff 48%, #fff0d8);
-}
-.explore-intro-page[data-domain='A'] {
-  background: linear-gradient(#b7e8fa, #f8f0d9);
-}
-.explore-intro-page[data-domain='B'] {
-  background: linear-gradient(#ffc683, #fff0dc);
-}
-.explore-intro-page[data-domain='C'] {
-  background: linear-gradient(#9edafa, #ecf7e2);
-}
-.explore-intro-page[data-domain='D'] {
-  background: linear-gradient(#b7ebd9, #f3f8e3);
-}
-.explore-subheader {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  max-width: 960px;
-  margin: auto;
-  padding: 18px 22px;
-  font-size: var(--fs-body);
-  font-weight: 800;
-}
-.explore-subheader > :last-child:not(:nth-child(2)) {
-  margin-left: auto;
-}
-.explore-intro-main {
-  max-width: 880px;
-  margin: 0 auto;
-  padding: 10px 22px 48px;
-}
-.explore-intro-card h1 {
-  font-size: clamp(28px, 4vw, 42px);
-  font-weight: 900;
-}
-.explore-intro-main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-.explore-scene-art {
-  display: grid;
-  place-items: center;
-  width: min(100%, 560px);
-  min-height: 230px;
-  border: 5px solid #fff;
-  border-radius: 38px;
-  background:
-    radial-gradient(circle at 50% 80%, #8bc589 0 30%, transparent 30.5%),
-    linear-gradient(#9cd8f9 65%, #d9eeb6 65%);
-  box-shadow: 0 8px 22px #466b8240;
-}
-.explore-scene-art span {
-  font-size: clamp(80px, 12vw, 140px);
-}
-.explore-intro-card {
-  width: min(100%, 680px);
-  padding: 26px 30px;
-  border: 3px solid #fff;
-  border-radius: 30px;
-  background: #fffef9;
-  box-shadow: 0 7px 0 #edd8b9;
-}
-.explore-intro-card__scene {
-  margin-top: 18px;
-  font-size: var(--fs-body);
-  line-height: 1.65;
-  white-space: pre-line;
-}
-.explore-intro-card__goal {
-  margin-top: 16px;
-  padding: 12px 16px;
-  border-radius: 16px;
-  background: #e4f4ff;
-  font-size: var(--fs-body);
-  font-weight: 700;
-}
 .explore-stage-note {
   max-width: 45ch;
   color: #40576d;
@@ -456,7 +401,7 @@
 
 /* Behavior activities share the existing card and speech-bubble components. */
 
-/* User-provided Ma-eum Ma-eul devkit artwork. Labels and completion remain live DOM. */
+/* Codex-generated village artwork (public/img/v3). Labels and completion remain live DOM. */
 .explore-start {
   position: relative;
   max-width: 560px;
@@ -464,7 +409,7 @@
   padding-top: clamp(42px, 9vh, 90px);
   background:
     linear-gradient(#9fe0ff55, #ffffff00 38%, #fff6e399 100%),
-    url('/devkit/scenes/village_vertical.png') center / cover;
+    url('/img/v3/bg-village-1600.webp') center / cover;
 }
 .explore-start__sky,
 .explore-start__mark {
@@ -501,8 +446,8 @@
   object-fit: contain;
 }
 .explore-start__characters img:last-child {
-  width: 37%;
-  max-height: 190px;
+  width: 34%;
+  max-height: 170px;
   object-fit: contain;
 }
 .explore-start .explore-primary {
@@ -512,44 +457,17 @@
   overflow: hidden;
 }
 .explore-avatar-preview img {
-  width: 90%;
-  height: 90%;
-  object-fit: contain;
+  width: 78%;
+  height: 100%;
+  margin-top: 14%;
+  object-fit: cover;
+  object-position: top;
 }
 .explore-avatar-options button img {
   width: 100%;
-  height: 62px;
-  object-fit: contain;
-}
-.explore-scene-art {
-  position: relative;
-  overflow: hidden;
-  background:
-    linear-gradient(#9ddafb55, #ffffff00),
-    url('/devkit/scenes/village_narrow.png') center / cover;
-}
-.explore-scene-art__story {
-  width: 100%;
-  height: 100%;
-  min-height: 230px;
+  height: 72px;
   object-fit: cover;
-  object-position: center 39%;
-}
-.explore-scene-art__place {
-  position: absolute;
-  right: 2%;
-  bottom: 0;
-  width: 58%;
-  height: 86%;
-  object-fit: contain;
-}
-.explore-scene-art__character {
-  position: absolute;
-  left: 8%;
-  bottom: 0;
-  height: 76%;
-  max-width: 37%;
-  object-fit: contain;
+  object-position: 50% 14%;
 }
 @media (max-width: 640px) {
   .explore-start {

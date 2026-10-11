@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/vitest'
 import { afterEach, vi } from 'vitest'
 import { cleanup } from '@testing-library/react'
-import { conversationTiming } from '@/screens/missions/ConversationMission'
+import { conversationTiming } from '@/screens/missions/conversationTiming'
 
 // Friend replies appear at once in unit tests (the app waits ~1.5 s with a typing bubble).
 conversationTiming.replyDelayMs = 0

@@ -6,8 +6,49 @@ import { speech } from '@/services/speech'
 import { speechStatusKey, useSpeechStatus } from '@/services/useSpeechStatus'
 import { useSpeak } from '@/services/useSpeak'
 import { SecondaryButton } from '@/design/Button'
-import { SpeakerIcon } from '@/design/icons'
-import { CharacterPicker } from './CharacterPick'
+import { CheckIcon, SpeakerIcon } from '@/design/icons'
+import { avatarArt, avatarNames } from '@/design/devkitAssets'
+import { avatarIds, useProfile } from '@/services/profile'
+
+const avatarOptions = avatarIds.map((id) => ({ id, label: avatarNames[id] }))
+
+/** Lets an adult change the explorer avatar chosen on first run (stored in the profile). */
+function AvatarPicker() {
+  const avatarId = useProfile((state) => state.avatarId)
+  const chooseAvatar = useProfile((state) => state.chooseAvatar)
+  return (
+    <div
+      role="radiogroup"
+      aria-label="탐험가 바꾸기"
+      className="character-grid character-grid--compact"
+    >
+      {avatarOptions.map((avatar) => {
+        const on = avatar.id === avatarId
+        return (
+          <button
+            key={avatar.id}
+            type="button"
+            role="radio"
+            aria-checked={on}
+            className="character-option tap"
+            onClick={() => {
+              sound.play('tick')
+              chooseAvatar(avatar.id)
+            }}
+          >
+            <img src={avatarArt[avatar.id]} alt="" width={400} height={600} />
+            <span>{avatar.label}</span>
+            {on && (
+              <span className="character-check" aria-hidden="true">
+                <CheckIcon size={18} />
+              </span>
+            )}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
 
 function Segmented<T extends string>({
   label,
@@ -129,8 +170,8 @@ export function SettingsSheet({ open, onClose }: { open: boolean; onClose: () =>
           onChange={(v) => s.setAutoRead(v === 'on')}
         />
         <div className="settings-row">
-          <span className="text-body font-bold text-ink">{t('character.change')}</span>
-          <CharacterPicker compact />
+          <span className="text-body font-bold text-ink">탐험가 바꾸기</span>
+          <AvatarPicker />
         </div>
       </div>
     </Sheet>

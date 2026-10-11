@@ -1,17 +1,10 @@
 import { useState } from 'react'
-import { avatarArt, devkitArt } from '@/design/devkitAssets'
-import { useProfile, type AvatarId } from '@/services/profile'
-
-const avatars: { id: AvatarId; label: string }[] = [
-  { id: 'sun', label: '노랑 탐험가' },
-  { id: 'sky', label: '하늘 탐험가' },
-  { id: 'leaf', label: '초록 탐험가' },
-  { id: 'peach', label: '복숭아 탐험가' },
-]
+import { avatarArt, avatarArtLarge, avatarNames } from '@/design/devkitAssets'
+import { avatarIds, useProfile, type AvatarId } from '@/services/profile'
 
 export function AvatarSelect() {
   const chooseAvatar = useProfile((state) => state.chooseAvatar)
-  const [selected, setSelected] = useState<AvatarId>('sun')
+  const [selected, setSelected] = useState<AvatarId>('haru')
   return (
     <main className="explore-avatar-page">
       <section className="explore-avatar-panel" aria-labelledby="avatar-title">
@@ -21,19 +14,19 @@ export function AvatarSelect() {
         <h1 id="avatar-title">나의 탐험가를 골라요</h1>
         <p>마음에 드는 캐릭터를 고르세요. 이름은 적지 않아도 돼요.</p>
         <div className="explore-avatar-preview" data-avatar={selected} aria-hidden="true">
-          <img src={selected === 'sun' ? devkitArt.haruFull : avatarArt[selected]} alt="" />
+          <img src={avatarArtLarge[selected]} alt="" width={800} height={1200} />
         </div>
         <div className="explore-avatar-options" role="group" aria-label="탐험가 선택">
-          {avatars.map((avatar) => (
+          {avatarIds.map((id) => (
             <button
-              key={avatar.id}
+              key={id}
               type="button"
-              data-avatar={avatar.id}
-              aria-pressed={selected === avatar.id}
-              onClick={() => setSelected(avatar.id)}
+              data-avatar={id}
+              aria-pressed={selected === id}
+              onClick={() => setSelected(id)}
             >
-              <img src={avatarArt[avatar.id]} alt="" />
-              <span>{avatar.label}</span>
+              <img src={avatarArt[id]} alt="" width={400} height={600} />
+              <span>{avatarNames[id]}</span>
             </button>
           ))}
         </div>
