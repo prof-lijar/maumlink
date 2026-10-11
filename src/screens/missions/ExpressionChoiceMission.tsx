@@ -51,7 +51,9 @@ export function ExpressionChoiceMission({
         </div>
         <div className="garden-practice">
           <div className="garden-dialogue__line" data-speaker="me">
-            <img src={art.me} alt="" />
+            <span className="garden-face">
+              <img src={art.me} alt="" />
+            </span>
             <p>
               <span className="sr-only">나: </span>
               {practice.sentence}

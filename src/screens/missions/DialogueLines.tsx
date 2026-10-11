@@ -15,7 +15,9 @@ export function DialogueLines({
     <ol className="garden-dialogue" aria-label="대화">
       {lines.map((line, index) => (
         <li key={index} className="garden-dialogue__line" data-speaker={line.speaker}>
-          <img src={line.speaker === 'me' ? art.me : art.friend} alt="" />
+          <span className="garden-face">
+            <img src={line.speaker === 'me' ? art.me : art.friend} alt="" />
+          </span>
           <p>
             <span className="sr-only">{line.speaker === 'me' ? '나: ' : '친구: '}</span>
             {line.text}

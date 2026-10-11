@@ -81,7 +81,9 @@ export function ConversationMission({
       data-speaker={speaker}
       data-action={isAction(text) || undefined}
     >
-      <img src={speaker === 'me' ? art.me : art.friend} alt="" />
+      <span className="garden-face">
+        <img src={speaker === 'me' ? art.me : art.friend} alt="" />
+      </span>
       <p>
         <span className="sr-only">{speaker === 'me' ? '나: ' : `${talk.partner}: `}</span>
         {text}
@@ -123,7 +125,9 @@ export function ConversationMission({
                     className="garden-dialogue__line garden-chat__typing"
                     data-speaker="friend"
                   >
-                    <img src={art.friend} alt="" />
+                    <span className="garden-face">
+                      <img src={art.friend} alt="" />
+                    </span>
                     <p>
                       <span className="sr-only">{talk.partner}가 답을 입력하고 있어요</span>
                       <span className="garden-chat__dots" aria-hidden="true">
