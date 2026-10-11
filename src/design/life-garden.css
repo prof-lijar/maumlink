@@ -582,7 +582,7 @@
 
 .garden-scene {
   position: relative;
-  padding-bottom: 64px;
+  padding-bottom: 0;
 }
 .garden-scene__frame {
   aspect-ratio: 1024 / 572;
@@ -611,22 +611,11 @@
   object-fit: contain;
 }
 .garden-scene .garden-guide {
-  position: absolute;
-  right: 10px;
-  bottom: 0;
-  left: 10px;
+  position: relative;
+  margin: -14px 10px 0;
   box-shadow:
     0 4px 0 var(--garden-card-shadow),
     0 10px 20px rgba(120, 90, 60, 0.1);
-}
-/* A long situation sentence (or large text) cannot fit a fixed 64 px overlap. */
-:root[data-text='large'] .garden-scene {
-  padding-bottom: 0;
-}
-:root[data-text='large'] .garden-scene .garden-guide {
-  position: relative;
-  inset: auto;
-  margin: -48px 10px 0;
 }
 
 .garden-choices {
