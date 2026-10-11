@@ -285,8 +285,7 @@
   padding: 0 10px 20px;
   overflow: hidden;
   border: 5px solid #fff;
-  border-inline: none;
-  border-radius: 0;
+  border-radius: 28px;
   background:
     linear-gradient(#ffffff59, #ffffff59),
     var(--map-bg) center / cover no-repeat,
