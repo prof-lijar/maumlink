@@ -281,10 +281,12 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 18px 10px;
+  margin-inline: -16px;
   padding: 0 10px 20px;
   overflow: hidden;
   border: 5px solid #fff;
-  border-radius: 28px;
+  border-inline: none;
+  border-radius: 0;
   background:
     linear-gradient(#ffffff59, #ffffff59),
     var(--map-bg) center / cover no-repeat,
