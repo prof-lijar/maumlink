@@ -345,9 +345,7 @@
   max-width: 560px;
   margin-inline: auto;
   padding-top: clamp(42px, 9vh, 90px);
-  background:
-    linear-gradient(#9fe0ff55, #ffffff00 38%, #fff6e399 100%),
-    url('/img/v3/bg-village-1600.webp') center / cover;
+  background: url('/img/v3/bg-village-1600.webp') center / cover #cfeefc;
 }
 .explore-start__sky,
 .explore-start__mark {
@@ -382,11 +380,38 @@
   width: 62%;
   max-height: 290px;
   object-fit: contain;
+  transform-origin: 50% 100%;
+  animation: start-bob 2.4s ease-in-out infinite;
 }
 .explore-start__characters img:last-child {
   width: 34%;
   max-height: 170px;
   object-fit: contain;
+  transform-origin: 50% 100%;
+  animation: start-hop 1.6s ease-in-out infinite 0.4s;
+}
+/* Gentle idle motion: the companion sways and the puppy hops. Disabled by the global
+   reduced-motion rule in tokens.css. */
+@keyframes start-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1.5deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(1.5deg);
+  }
+}
+@keyframes start-hop {
+  0%,
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+  30% {
+    transform: translateY(-14px) scale(0.97, 1.04);
+  }
+  60% {
+    transform: translateY(0) scale(1.03, 0.96);
+  }
 }
 .explore-start .explore-primary {
   width: min(100%, 330px);
