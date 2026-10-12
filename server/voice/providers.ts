@@ -163,7 +163,13 @@ export async function generateReply(
     body: JSON.stringify({
       system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
       contents: [{ role: 'user', parts: [{ text: lines.join('\n') }] }],
-      generationConfig: { temperature: 0.6, maxOutputTokens: 200 },
+      // No thinking: a two-sentence reply does not need it, and it saves ~0.5 s per turn
+      // (measured 2.2 s → 1.7 s on gemini-2.5-flash with a better-formed reply).
+      generationConfig: {
+        temperature: 0.6,
+        maxOutputTokens: 200,
+        thinkingConfig: { thinkingBudget: 0 },
+      },
       safetySettings: [
         'HARM_CATEGORY_HARASSMENT',
         'HARM_CATEGORY_HATE_SPEECH',

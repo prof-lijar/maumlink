@@ -171,6 +171,7 @@ describe('voice router', () => {
     expect(calls[0]!.url).toContain('/models/gemini-2.5-flash:generateContent')
     const sent = JSON.parse(String(calls[0]!.init.body))
     expect(sent.system_instruction.parts[0].text).toBe(SYSTEM_PROMPT)
+    expect(sent.generationConfig.thinkingConfig).toEqual({ thinkingBudget: 0 })
     const user = sent.contents[0].parts[0].text as string
     expect(user).toContain('이야기 제목: 친구들과 함께 놀고 싶어요')
     expect(user).toContain('화면 보기: 속상해요 / 괜찮아요')
