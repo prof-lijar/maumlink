@@ -248,26 +248,3 @@ export function KidBackIcon({ size = 26 }: { size?: number }) {
     </svg>
   )
 }
-
-/** Microphone for 말로 이야기하기: a chunky capsule on a stand. */
-export function KidMicIcon({ size = 26 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-      <rect x="11" y="3.5" width="10" height="16" rx="5" fill="#fff" {...kidStroke} />
-      <path
-        d="M7.5 14.5a8.5 8.5 0 0 0 17 0"
-        fill="none"
-        stroke="#3b2f27"
-        strokeWidth={2.4}
-        strokeLinecap="round"
-      />
-      <path
-        d="M16 23v5M11.5 28.5h9"
-        fill="none"
-        stroke="#3b2f27"
-        strokeWidth={2.4}
-        strokeLinecap="round"
-      />
-    </svg>
-  )
-}

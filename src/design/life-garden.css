@@ -1881,9 +1881,10 @@
   font-size: calc(15px * var(--gs));
   font-weight: 800;
 }
-.garden-voice-talk__open svg {
-  width: 24px;
-  height: 24px;
+.garden-voice-talk__open img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
 }
 .garden-voice-talk__open:active {
   transform: translateY(2px);
@@ -1911,6 +1912,12 @@
   color: var(--garden-ink-mid);
   font-size: calc(13px * var(--gs));
   font-weight: 800;
+}
+.garden-mic img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 0 rgba(59, 47, 39, 0.18));
 }
 .garden-mic {
   --level: 0;
@@ -1954,7 +1961,7 @@
   transform: translateY(3px);
   box-shadow: 0 2px 0 #e87a2e;
 }
-.garden-voice-talk[data-phase='thinking'] .garden-mic svg {
+.garden-voice-talk[data-phase='thinking'] .garden-mic img {
   animation: garden-mic-think 1s ease-in-out infinite;
 }
 .garden-voice-talk__status {
@@ -2016,7 +2023,7 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .garden-mic[data-recording='true']::before,
-  .garden-voice-talk[data-phase='thinking'] .garden-mic svg {
+  .garden-voice-talk[data-phase='thinking'] .garden-mic img {
     animation: none;
   }
 }

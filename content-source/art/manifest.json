@@ -412,6 +412,16 @@
         "characters-ref.png"
       ],
       "prompt": "Head-and-shoulders portrait of the boy from the attached reference (short brown hair, yellow hoodie), centred, looking at the viewer, showing the feeling OKAY / 괜찮아요 (calm and fine): relaxed eyebrows, soft gentle smile with mouth closed, eyes calm, one hand giving a small relaxed thumbs-up near the shoulder. Clear and readable for a child."
+    },
+    {
+      "id": "icon-mic",
+      "group": "icons",
+      "size": "square",
+      "transparent": true,
+      "refs": [
+        "characters-ref.png"
+      ],
+      "prompt": "A cute chunky handheld microphone, standing upright and slightly tilted, with a round soft-orange mesh head with a glossy highlight, a cream-white handle with a small sunny-yellow ring, and three tiny mint-green sound sparkles beside the head. A single simple object drawn as a chunky, glossy sticker icon in the same cartoon style as the attached reference: bold dark-brown outlines, bright pastel colours, soft shading, slight 3D feel, centred and filling most of the canvas. No people, no faces, no text, no background."
     }
   ]
 }

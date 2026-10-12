@@ -15,6 +15,8 @@ const scene = (id: string, width: 800 | 1600 = 800) => `${V3}/${id}-${width}.web
 export const devkitArt = {
   village: scene('bg-village', 1600),
   villageNarrow: scene('bg-village', 800),
+  /** Chunky sticker microphone for 말로 이야기하기 (Codex render, same style as the faces). */
+  mic: sprite('icon-mic'),
   haruFull: sprite('char-haru', 800),
   haruAvatar: sprite('char-haru'),
   haruWave: sprite('char-haru'),

@@ -4,7 +4,7 @@
  * it on and the server has keys (useVoiceAvailable).
  */
 import { useState } from 'react'
-import { KidMicIcon } from '@/design/icons'
+import { devkitArt } from '@/design/devkitAssets'
 import { sound } from '@/services/sound'
 import { VOICE_ERRORS, VOICE_OPEN_LABEL, VOICE_STATUS } from './copy'
 import { useVoiceAvailable } from './useVoiceAvailable'
@@ -51,7 +51,7 @@ export function VoiceTalkPanel({
           setOpen(true)
         }}
       >
-        <KidMicIcon />
+        <img src={devkitArt.mic} alt="" width={400} height={400} decoding="async" />
         {VOICE_OPEN_LABEL}
       </button>
     )
@@ -92,7 +92,7 @@ export function VoiceTalkPanel({
         onClick={toggle}
         style={{ '--level': state.level } as React.CSSProperties}
       >
-        <KidMicIcon size={40} />
+        <img src={devkitArt.mic} alt="" width={400} height={400} decoding="async" />
       </button>
       <p role="status" className="garden-voice-talk__status">
         {state.phase === 'error' && state.error
