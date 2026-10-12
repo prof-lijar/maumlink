@@ -80,7 +80,7 @@ for (const [width, height] of [
     )
     await checkScreen(page)
     await page.getByRole('button', { name: '“고마워! 나는 뭐 하면 돼?”' }).click()
-    await expect(page.locator('main').getByText(/내 마음은 말로 표현할 수 있어요/)).toBeVisible()
+    await expect(page.locator('main').getByText(/나와 친구의 생각은 다를 수 있어요/)).toBeVisible()
     await next(page)
     await page.getByRole('radio', { name: /아직 알 수 없어요/ }).click()
     await page.getByRole('button', { name: '선택 확인하기' }).click()

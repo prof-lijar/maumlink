@@ -465,10 +465,12 @@ function checkStepGame(episode: StepEpisode): LoadedStepGame | { kind: 'invalid'
       saved.data.state.steps.some(
         (state, index) => !validStepState(state, episode.steps[index]!),
       ) ||
-      saved.data.state.steps.some(
-        (state, index) =>
-          index < saved.data.state.screen - 1 && !stepDone(state, episode.steps[index]),
-      )
+      saved.data.state.steps.some((state, index) => {
+        const step = episode.steps[index]
+        // Past steps must be done, unless the mission could be (and was) skipped.
+        const skippable = Boolean(step && 'skippable' in step && step.skippable)
+        return index < saved.data.state.screen - 1 && !stepDone(state, step) && !skippable
+      })
     )
       return { kind: 'invalid' }
     return { kind: 'valid', state: saved.data.state }

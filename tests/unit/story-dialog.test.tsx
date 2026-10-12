@@ -100,4 +100,18 @@ describe('story list asks before resuming or replaying', () => {
     saveStepGame(finished, initialStepGame(finished))
     expect(stepGameStatus(finished)).toBe('fresh')
   })
+
+  it('a save past a skipped mission is still valid (the story does not restart)', () => {
+    // B01: reflect, reflect, choice, conversation (skippable), choice. Screen 5 = last choice.
+    const game = initialStepGame(story)
+    const steps = game.steps.map((state, index) => {
+      if (state.kind === 'reflect') return { ...state, selectedId: 'annoyed' }
+      if (state.kind === 'choice' && index === 2)
+        return { ...state, selectedId: 'B', submittedId: 'B', solved: true }
+      return state
+    })
+    saveStepGame(story, { ...game, screen: 5, steps })
+    expect(stepGameStatus(story)).toBe('in_progress')
+    expect(loadStepGame(story)?.screen).toBe(5)
+  })
 })
