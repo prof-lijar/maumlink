@@ -252,6 +252,9 @@ describe('자기 인식·마음건강관리: emotion–body match, expression ch
 
   it('D01: feelings, both 말하기 and 도움 요청 accepted, two linked situations, practice without audio', async () => {
     const user = userEvent.setup()
+    // Every phrase has a recorded clip now (2026-10-13) and jsdom never fires 'playing', so
+    // stub the read: otherwise the first card read stays 'loading' and disables 문장 듣기.
+    const speak = vi.spyOn(speech, 'speak').mockResolvedValue(undefined)
     play('D01')
     expect(screen.getByText('내 마음을 표현하고 도움을 요청해요')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /다음/ }))
@@ -281,8 +284,6 @@ describe('자기 인식·마음건강관리: emotion–body match, expression ch
     expect(screen.getByRole('heading', { name: '이렇게 말해보아요!' })).toBeInTheDocument()
     expect(screen.getByText(/친구가 계속 새치기해서 힘들어요. 도와주세요./)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /다시 듣기/ })).toBeDisabled()
-    // The sentence has a recorded clip (2026-10-13); jsdom cannot play it, so stub the read.
-    const speak = vi.spyOn(speech, 'speak').mockResolvedValue(undefined)
     await user.click(screen.getByRole('button', { name: /문장 듣기/ }))
     expect(speak).toHaveBeenCalledWith(
       expect.objectContaining({ text: expect.stringContaining('친구가 계속 새치기해서 힘들어요') }),
