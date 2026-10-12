@@ -160,7 +160,7 @@ pnpm art:build                                # raw/ → public/img/v3 (400/800 
 - 키는 서버에만 있습니다. 브라우저는 같은 출처의 `/api/voice/*`만 부르고, 서버는 녹음이나 글을 저장하지 않습니다.
 - 서버 코드는 `server/voice/`(제공자 호출 + 라우터)이고, Vercel 함수 `api/voice/[action].ts`와 Vite 개발 서버 미들웨어(`scripts/voice-dev-server.ts`)가 같은 라우터를 씁니다. 엔드포인트: `health`, `transcribe`, `respond`, `speak`, `turn`(한 번에 처리).
 - 화면 쪽은 `src/voice/`에 재사용 부품으로 있습니다: `VoiceTalk`(버튼 + 패널), `useVoiceTurn`(녹음 → 전송 → 재생 상태), `useVoiceAvailable`(설정 + 서버 상태), `recorder.ts`/`wav.ts`(PCM 녹음), `voiceApi.ts`(호출).
-- 글로 바꾸기는 Google의 `gemini-3.5-transcribe`(Interactions API, 녹음 파일용)를 씁니다. 실시간 `gemini-3.5-transcribe-live`는 WebSocket 스트리밍이라 말하는 동안 글자를 띄우려면 별도 작업이 필요합니다. `VOICE_STT_PROVIDER=elevenlabs`로 ElevenLabs Scribe와 비교할 수 있습니다(무보존 `ELEVENLABS_ZERO_RETENTION=1`은 엔터프라이즈·체험 플랜 전용). 읽기가 실패하면 대답 글은 그대로 보이고 브라우저 음성이 읽습니다. 인터넷이 없거나 서버에 키가 없으면 버튼은 보이되 아이에게 "지금은 대답을 들을 수 없어요"라고 알리고, 보기 고르기는 그대로 됩니다.
+- 글로 바꾸기는 Google의 `gemini-3.5-transcribe`(Interactions API, 녹음 파일용)를 씁니다. 키는 `GOOGLE_STT_API_KEY`(비우면 `GOOGLE_AI_API_KEY` 재사용), 모델은 `GOOGLE_STT_MODEL`입니다. 실시간 `gemini-3.5-transcribe-live`는 WebSocket 스트리밍이라 말하는 동안 글자를 띄우려면 별도 작업이 필요합니다. `VOICE_STT_PROVIDER=elevenlabs`로 ElevenLabs Scribe와 비교할 수 있습니다(무보존 `ELEVENLABS_ZERO_RETENTION=1`은 엔터프라이즈·체험 플랜 전용). 읽기가 실패하면 대답 글은 그대로 보이고 브라우저 음성이 읽습니다. 인터넷이 없거나 서버에 키가 없으면 버튼은 보이되 아이에게 "지금은 대답을 들을 수 없어요"라고 알리고, 보기 고르기는 그대로 됩니다.
 - 사용할 키: `.env.dev.example`을 `.env.dev`로 복사해 채웁니다(`pnpm dev`·`pnpm preview`가 읽음). Vercel에서는 같은 이름을 프로젝트 환경 변수로 넣습니다. Android 빌드는 `.env.native`에 `VITE_VOICE_API_BASE=https://<배포 주소>/api/voice`를 둡니다.
 - 대답 규칙(초3 느린학습자, 두 문장 이내, 감정 수용, 개인정보 질문 금지, 위험 신호 시 어른에게 알리기)은 `server/voice/providers.ts`의 `SYSTEM_PROMPT`에 있고, 아이에게 보이는 문구는 `src/voice/copy.ts`에 있습니다(교육자 검토 전 초안).
 

@@ -10,6 +10,8 @@ export interface VoiceEnv {
   googleAiModel: string
   /** Which speech-to-text to use: Gemini 3.5 Transcribe (default) or ElevenLabs Scribe. */
   sttProvider: SttProvider
+  /** Key for Gemini 3.5 Transcribe; falls back to the AI key when GOOGLE_STT_API_KEY is empty. */
+  googleSttKey?: string
   googleSttModel: string
   /** Gemini transcription mode: verbatim keeps the child's exact words; smart tidies them. */
   googleSttMode: 'verbatim' | 'smart'
@@ -46,7 +48,7 @@ const clean = (value: string | undefined) => {
 
 /** Whether the configured speech-to-text provider has its key. */
 export const sttConfigured = (env: VoiceEnv) =>
-  env.sttProvider === 'google' ? Boolean(env.googleAiKey) : Boolean(env.elevenLabsKey)
+  env.sttProvider === 'google' ? Boolean(env.googleSttKey) : Boolean(env.elevenLabsKey)
 
 export function readVoiceEnv(source: Record<string, string | undefined> = process.env): VoiceEnv {
   return {
@@ -54,6 +56,10 @@ export function readVoiceEnv(source: Record<string, string | undefined> = proces
     googleAiModel: clean(source.GOOGLE_AI_MODEL) ?? DEFAULT_AI_MODEL,
     sttProvider:
       clean(source.VOICE_STT_PROVIDER)?.toLowerCase() === 'elevenlabs' ? 'elevenlabs' : 'google',
+    googleSttKey:
+      clean(source.GOOGLE_STT_API_KEY) ??
+      clean(source.GOOGLE_AI_API_KEY) ??
+      clean(source.GOOGLE_API_KEY),
     googleSttModel: clean(source.GOOGLE_STT_MODEL) ?? DEFAULT_GOOGLE_STT_MODEL,
     googleSttMode: clean(source.GOOGLE_STT_MODE)?.toLowerCase() === 'smart' ? 'smart' : 'verbatim',
     elevenLabsKey: clean(source.ELEVENLABS_API_KEY),

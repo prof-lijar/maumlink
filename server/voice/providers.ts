@@ -54,10 +54,10 @@ export async function transcribeWithGemini(
   wavBase64: string,
   fetcher: typeof fetch = fetch,
 ): Promise<Transcription> {
-  if (!env.googleAiKey) throw new ProviderError('stt', 503, 'Google AI key is not configured')
+  if (!env.googleSttKey) throw new ProviderError('stt', 503, 'Google STT key is not configured')
   const response = await fetcher('https://generativelanguage.googleapis.com/v1beta/interactions', {
     method: 'POST',
-    headers: { 'content-type': 'application/json', 'x-goog-api-key': env.googleAiKey },
+    headers: { 'content-type': 'application/json', 'x-goog-api-key': env.googleSttKey },
     body: JSON.stringify({
       model: env.googleSttModel,
       input: [{ type: 'audio', data: wavBase64, mime_type: 'audio/wav' }],

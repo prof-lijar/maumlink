@@ -7,6 +7,7 @@ import { handleVoiceRequest, voiceAction } from '../../server/voice/router'
 const env: VoiceEnv = {
   ...readVoiceEnv({}),
   googleAiKey: 'ai-key',
+  googleSttKey: 'stt-key',
   elevenLabsKey: 'eleven-key',
 }
 const ORIGIN = 'http://localhost:4173'
@@ -66,7 +67,7 @@ describe('voice router', () => {
 
   it('health reports which providers have keys and never the keys themselves', async () => {
     const response = await handleVoiceRequest(request('health'), {
-      env: { ...env, googleAiKey: undefined },
+      env: { ...env, googleAiKey: undefined, googleSttKey: undefined },
     })
     const body = await response.json()
     expect(body).toEqual({
@@ -131,8 +132,8 @@ describe('voice router', () => {
       language_codes: ['ko-KR'],
       mode: { type: 'verbatim' },
     })
-    expect((calls[0]!.init.headers as Record<string, string>)['x-goog-api-key']).toBe('ai-key')
-    expect(calls[0]!.url).not.toContain('ai-key')
+    expect((calls[0]!.init.headers as Record<string, string>)['x-goog-api-key']).toBe('stt-key')
+    expect(calls[0]!.url).not.toContain('stt-key')
   })
 
   it('transcribe can use ElevenLabs Scribe instead when VOICE_STT_PROVIDER=elevenlabs', async () => {
@@ -264,6 +265,8 @@ describe('voice router', () => {
       VOICE_ALLOWED_ORIGINS: 'https://a.example, https://b.example',
     })
     expect(read.googleAiKey).toBe('g')
+    expect(read.googleSttKey).toBe('g')
+    expect(readVoiceEnv({ GOOGLE_AI_API_KEY: 'a', GOOGLE_STT_API_KEY: 's' }).googleSttKey).toBe('s')
     expect(read.elevenLabsKey).toBe('e')
     expect(read.elevenLabsModelId).toBe('eleven_v4')
     expect(read.elevenLabsSttModel).toBe('scribe_v2')
