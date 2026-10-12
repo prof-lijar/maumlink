@@ -231,10 +231,14 @@ for (const choice of ['A', 'C']) {
     await page.getByRole('button', { name: '말하기 연습하기' }).click()
     await expect(page.locator('.garden-practice__listener img')).toBeVisible()
     if (choice === 'A') {
+      // No synthesis in this browser, but the sentence has a recorded clip: it plays (the replay
+      // button waits for it) and the "no sound on this device" note never shows.
       await page.getByRole('button', { name: '문장 듣기', exact: true }).click()
+      await expect(page.getByRole('button', { name: /다시 듣기/ })).toBeDisabled()
       await expect(
         page.locator('main').getByText(/이 기기에서는 소리를 들을 수 없어요/),
-      ).toBeVisible()
+      ).toHaveCount(0)
+      await expect(page.getByRole('button', { name: /다시 듣기/ })).toBeEnabled({ timeout: 20_000 })
     }
     await page.reload()
     await expect(page.getByRole('heading', { name: '이렇게 말해보아요!' })).toBeFocused()

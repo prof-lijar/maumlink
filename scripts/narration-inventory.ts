@@ -5,6 +5,7 @@ import { UiFile } from '../src/content/schema.ts'
 import { StepEpisodeSchema } from '../src/content/stepSchema.ts'
 import { NARRATION_VOICES } from '../src/services/narration/voices'
 import { narrationKey } from '../src/services/recordedNarration'
+import { STORY_DIALOG_COPY } from '../src/screens/storyDialogCopy'
 
 const readJson = (path: string): unknown => JSON.parse(readFileSync(path, 'utf8'))
 const ui = UiFile.parse(readJson('content/ui.json'))
@@ -35,6 +36,10 @@ for (const [id, text] of Object.entries({
   practice: '소리 내어 따라 말해 보아요. 읽어 보기만 해도 괜찮아요.',
 }))
   add(text, `screen.${id}`)
+
+/** The story-list question before resuming or replaying (StoryDialog reads title + body). */
+for (const [mode, copy] of Object.entries(STORY_DIALOG_COPY))
+  add(`${copy.title} ${copy.body}`, `storyDialog.${mode}`)
 
 /** Every sentence a screen can read aloud, per episode (both formats). */
 for (const file of readdirSync('content/episodes').filter((name) => name.endsWith('.json'))) {

@@ -28,7 +28,8 @@
     "narration:import": "node --import tsx scripts/narration-import.ts",
     "narration:generate:clova": "node --import tsx scripts/narration-generate-clova.ts",
     "art:generate": "node --import tsx scripts/gen-art-codex.ts",
-    "art:build": "node --import tsx scripts/build-art.ts"
+    "art:build": "node --import tsx scripts/build-art.ts",
+    "narration:generate:elevenlabs": "node --import tsx scripts/narration-generate-elevenlabs.ts"
   },
   "dependencies": {
     "@capacitor/android": "8.5.3",

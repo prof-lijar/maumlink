@@ -29,7 +29,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -42,7 +42,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -55,7 +55,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -68,7 +68,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -81,7 +81,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -94,7 +94,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -107,7 +107,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -120,7 +120,33 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "e5b3f573ab0a",
+      "text": "이어서 할까요? 이 이야기는 아직 하는 중이에요.",
+      "sources": [
+        "storyDialog.in_progress"
+      ],
+      "recorded": {
+        "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "c4aa953ed2c7",
+      "text": "다시 해볼까요? 이 이야기는 이미 완료했어요.",
+      "sources": [
+        "storyDialog.completed"
+      ],
+      "recorded": {
+        "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
       }
     },
     {
@@ -292,7 +318,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -305,7 +331,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -345,7 +371,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -372,7 +398,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -399,7 +425,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -426,7 +452,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -439,7 +465,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -452,7 +478,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -465,7 +491,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -478,7 +504,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -716,7 +742,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -794,7 +820,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -924,7 +950,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -938,7 +964,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -951,7 +977,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -964,7 +990,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -977,7 +1003,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -990,7 +1016,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1003,7 +1029,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1016,7 +1042,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1029,7 +1055,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1042,7 +1068,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1055,7 +1081,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1068,7 +1094,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1081,7 +1107,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1094,7 +1120,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1107,7 +1133,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1120,7 +1146,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1133,7 +1159,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1146,7 +1172,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1159,7 +1185,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1172,7 +1198,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1185,7 +1211,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1198,7 +1224,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1211,7 +1237,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1224,7 +1250,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1237,7 +1263,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1250,7 +1276,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1263,7 +1289,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1276,7 +1302,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1394,7 +1420,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1602,7 +1628,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1615,7 +1641,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1628,7 +1654,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1641,7 +1667,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1654,7 +1680,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1667,7 +1693,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1680,7 +1706,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1693,7 +1719,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1706,7 +1732,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1719,7 +1745,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1732,7 +1758,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1745,7 +1771,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1758,7 +1784,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1771,7 +1797,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1784,7 +1810,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1797,7 +1823,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1810,7 +1836,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1823,7 +1849,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1836,7 +1862,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1849,7 +1875,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1862,7 +1888,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1875,7 +1901,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1888,7 +1914,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1901,7 +1927,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1914,7 +1940,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1927,7 +1953,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1940,7 +1966,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1953,7 +1979,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1966,7 +1992,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1979,7 +2005,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -1992,7 +2018,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2005,7 +2031,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2018,7 +2044,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2031,7 +2057,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2136,7 +2162,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2227,7 +2253,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2357,7 +2383,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2370,7 +2396,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2383,7 +2409,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2397,7 +2423,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2410,7 +2436,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2423,7 +2449,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2436,7 +2462,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2449,7 +2475,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2462,7 +2488,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2475,7 +2501,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2488,7 +2514,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2501,7 +2527,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2514,7 +2540,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2527,7 +2553,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2540,7 +2566,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2553,7 +2579,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2566,7 +2592,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2579,7 +2605,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2592,7 +2618,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2605,7 +2631,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2618,7 +2644,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2631,7 +2657,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2644,7 +2670,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2657,7 +2683,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2670,7 +2696,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2696,7 +2722,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2709,7 +2735,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2722,7 +2748,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2736,7 +2762,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2749,7 +2775,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2763,7 +2789,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2776,7 +2802,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2789,7 +2815,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2802,7 +2828,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2815,7 +2841,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2828,7 +2854,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2841,7 +2867,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2854,7 +2880,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2867,7 +2893,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2880,7 +2906,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2893,7 +2919,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2906,7 +2932,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2919,7 +2945,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2932,7 +2958,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2945,7 +2971,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2958,7 +2984,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2971,7 +2997,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2984,7 +3010,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -2997,7 +3023,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -3010,7 +3036,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -3023,7 +3049,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -3036,7 +3062,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -3049,7 +3075,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -3062,7 +3088,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -3075,7 +3101,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     },
     {
@@ -3089,7 +3115,7 @@
         "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
-        "lulu-lolipop": false
+        "lulu-lolipop": true
       }
     }
   ]

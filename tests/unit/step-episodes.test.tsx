@@ -1,11 +1,12 @@
 import { MemoryRouter, Route, Routes } from 'react-router'
-import { render, screen, waitFor } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { EpisodePlay } from '@/screens/EpisodePlay'
 import { getStepEpisode, stepEpisodes } from '@/content/episodes'
 import type { SequenceMissionData } from '@/content/stepSchema'
 import { initialSequence, loadStepGame, reduceSequence, shuffleCards } from '@/engine/stepGame'
+import { speech } from '@/services/speech'
 import { useMvpProgress } from '@/services/mvpProgress'
 import { useProfile } from '@/services/profile'
 import { useSettings } from '@/services/settings'
@@ -281,6 +282,11 @@ describe('자기 인식·마음건강관리: emotion–body match, expression ch
     expect(screen.getByText(/친구가 계속 새치기해서 힘들어요. 도와주세요./)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /다시 듣기/ })).toBeDisabled()
     await user.click(screen.getByRole('button', { name: /문장 듣기/ }))
+    // The sentence has a recorded clip (2026-10-13): while it plays the replay button waits,
+    // and no "no sound on this device" note appears.
+    expect(screen.getByRole('button', { name: /다시 듣기/ })).toBeDisabled()
+    expect(screen.queryByText(/이 기기에서는 소리를 들을 수 없어요/)).not.toBeInTheDocument()
+    act(() => speech.cancel())
     expect(screen.getByRole('button', { name: /다시 듣기/ })).toBeEnabled()
     expect(screen.queryByRole('button', { name: /마무리하기/ })).not.toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /연습했어요/ }))

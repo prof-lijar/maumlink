@@ -3,26 +3,9 @@ import { createPortal } from 'react-dom'
 import { episodeThumb } from '@/design/devkitAssets'
 import { useAutoRead } from '@/services/useSpeak'
 import { Cta } from './gameParts'
+import { STORY_DIALOG_COPY as COPY, type StoryDialogMode } from './storyDialogCopy'
 
-export type StoryDialogMode = 'in_progress' | 'completed'
-
-const COPY: Record<
-  StoryDialogMode,
-  { title: string; body: string; primary: string; secondary: string }
-> = {
-  in_progress: {
-    title: '이어서 할까요?',
-    body: '이 이야기는 아직 하는 중이에요.',
-    primary: '이어서 하기',
-    secondary: '처음부터 다시 하기',
-  },
-  completed: {
-    title: '다시 해볼까요?',
-    body: '이 이야기는 이미 완료했어요.',
-    primary: '처음부터 다시 하기',
-    secondary: '아니요',
-  },
-}
+export type { StoryDialogMode } from './storyDialogCopy'
 
 /**
  * Asked on the story list before a half-done story resumes (이어서 / 처음부터) or a finished one
