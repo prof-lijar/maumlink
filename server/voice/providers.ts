@@ -23,19 +23,74 @@ const readError = async (response: Response) => {
   }
 }
 
-/* ── ElevenLabs speech-to-text (Scribe) ──────────────────────────────── */
+/* ── Speech-to-text ───────────────────────────────────────────────────── */
 
 export interface Transcription {
   transcript: string
   confidence: number
 }
 
+const tidy = (text: string) => text.replace(/\s+/g, ' ').trim()
+
+/** Routes to the configured provider (Gemini 3.5 Transcribe by default, ElevenLabs Scribe). */
+export function transcribeWav(
+  env: VoiceEnv,
+  wavBase64: string,
+  sampleRateHertz: number,
+  fetcher: typeof fetch = fetch,
+): Promise<Transcription> {
+  return env.sttProvider === 'elevenlabs'
+    ? transcribeWithScribe(env, wavBase64, sampleRateHertz, fetcher)
+    : transcribeWithGemini(env, wavBase64, fetcher)
+}
+
 /**
- * Transcribes a base64 WAV with Scribe. Audio-event tags are off so the child only sees their
- * own words. Zero-retention mode (`enable_logging=false`) is opt-in because ElevenLabs rejects it
- * outside enterprise/trial plans ("Only users from the enterprise or trial tier can use ZRM").
+ * Gemini 3.5 Transcribe through the Interactions API with the WAV inline (well under the
+ * 20 MB limit). Korean is pinned so a short, quiet utterance is not guessed as another
+ * language; verbatim mode keeps the child's own words.
  */
-export async function transcribeWav(
+export async function transcribeWithGemini(
+  env: VoiceEnv,
+  wavBase64: string,
+  fetcher: typeof fetch = fetch,
+): Promise<Transcription> {
+  if (!env.googleAiKey) throw new ProviderError('stt', 503, 'Google AI key is not configured')
+  const response = await fetcher('https://generativelanguage.googleapis.com/v1beta/interactions', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-goog-api-key': env.googleAiKey },
+    body: JSON.stringify({
+      model: env.googleSttModel,
+      input: [{ type: 'audio', data: wavBase64, mime_type: 'audio/wav' }],
+      generation_config: {
+        transcription_config: {
+          language_codes: ['ko-KR'],
+          mode: env.googleSttMode === 'smart' ? 'smart' : { type: 'verbatim' },
+        },
+      },
+    }),
+  })
+  if (!response.ok) throw new ProviderError('stt', response.status, await readError(response))
+  const data = (await response.json()) as {
+    output_text?: string
+    steps?: Array<{ type?: string; content?: Array<{ type?: string; text?: string }> }>
+    outputs?: Array<{ type?: string; content?: Array<{ type?: string; text?: string }> }>
+  }
+  const text =
+    data.output_text ??
+    [...(data.steps ?? []), ...(data.outputs ?? [])]
+      .flatMap((step) => step.content ?? [])
+      .filter((part) => part.type === 'text' && part.text)
+      .map((part) => part.text)
+      .join(' ')
+  return { transcript: tidy(text), confidence: 1 }
+}
+
+/**
+ * ElevenLabs Scribe, kept as an alternative (`VOICE_STT_PROVIDER=elevenlabs`). Audio-event
+ * tags are off so the child only sees their own words. Zero-retention mode
+ * (`enable_logging=false`) is opt-in because ElevenLabs rejects it outside enterprise/trial plans.
+ */
+export async function transcribeWithScribe(
   env: VoiceEnv,
   wavBase64: string,
   _sampleRateHertz: number,
@@ -60,10 +115,7 @@ export async function transcribeWav(
   })
   if (!response.ok) throw new ProviderError('stt', response.status, await readError(response))
   const data = (await response.json()) as { text?: string; language_probability?: number }
-  return {
-    transcript: (data.text ?? '').replace(/\s+/g, ' ').trim(),
-    confidence: data.language_probability ?? 0,
-  }
+  return { transcript: tidy(data.text ?? ''), confidence: data.language_probability ?? 0 }
 }
 
 /* ── Google AI (Gemini) ───────────────────────────────────────────────────── */

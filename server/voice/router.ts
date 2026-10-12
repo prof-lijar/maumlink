@@ -4,14 +4,14 @@
  * (scripts/voice-dev-server.ts) and in unit tests.
  *
  *   GET  /api/voice/health      → which providers are configured
- *   POST /api/voice/transcribe  { audio, sampleRate }            → { transcript, confidence }  (ElevenLabs Scribe)
+ *   POST /api/voice/transcribe  { audio, sampleRate }            → { transcript, confidence }  (Gemini 3.5 Transcribe)
  *   POST /api/voice/respond     { text, context }                → { reply }
  *   POST /api/voice/speak       { text }                         → audio/mpeg  (ElevenLabs TTS)
  *   POST /api/voice/turn        { audio, sampleRate, context }   → { transcript, reply, audio?, error? }
  *
  * `audio` is a base64 16-bit mono PCM WAV (src/voice/wav.ts). Nothing is stored server-side.
  */
-import { readVoiceEnv, type VoiceEnv } from './env'
+import { readVoiceEnv, sttConfigured, type VoiceEnv } from './env'
 import {
   generateReply,
   ProviderError,
@@ -104,10 +104,12 @@ export async function handleVoiceRequest(
     if (action === 'health') {
       return json(
         {
-          stt: Boolean(env.elevenLabsKey),
+          stt: sttConfigured(env),
           ai: Boolean(env.googleAiKey),
           tts: Boolean(env.elevenLabsKey),
           model: env.googleAiModel,
+          sttProvider: env.sttProvider,
+          sttModel: env.sttProvider === 'google' ? env.googleSttModel : env.elevenLabsSttModel,
           voiceId: env.elevenLabsVoiceId,
         },
         200,

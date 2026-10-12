@@ -24,6 +24,15 @@ function providers(overrides: Partial<Record<'stt' | 'ai' | 'tts', Response>> = 
   const fetcher = vi.fn(async (url: string | URL | Request, init?: RequestInit) => {
     const href = String(url)
     calls.push({ url: href, init: init ?? {} })
+    if (href.includes('/v1beta/interactions'))
+      return (
+        overrides.stt ??
+        Response.json({
+          id: 'interactions/x',
+          status: 'completed',
+          steps: [{ type: 'model_output', content: [{ type: 'text', text: ' 속상했어요 ' }] }],
+        })
+      )
     if (href.includes('api.elevenlabs.io/v1/speech-to-text'))
       return (
         overrides.stt ??
@@ -61,9 +70,11 @@ describe('voice router', () => {
     })
     const body = await response.json()
     expect(body).toEqual({
-      stt: true,
+      stt: false,
       ai: false,
       tts: true,
+      sttProvider: 'google',
+      sttModel: 'gemini-3.5-transcribe',
       model: 'gemini-2.5-flash',
       voiceId: env.elevenLabsVoiceId,
     })
@@ -104,20 +115,38 @@ describe('voice router', () => {
     ).toBe(413)
   })
 
-  it('transcribe posts the WAV to Scribe as Korean with logging off', async () => {
+  it('transcribe sends the WAV inline to Gemini 3.5 Transcribe pinned to Korean', async () => {
     const wav = Buffer.from('RIFFtest').toString('base64')
     const { fetcher, calls } = providers()
     const response = await handleVoiceRequest(
       request('transcribe', { audio: wav, sampleRate: 16000 }),
       { env, fetcher },
     )
+    expect(await response.json()).toEqual({ transcript: '속상했어요', confidence: 1 })
+    expect(calls[0]!.url).toBe('https://generativelanguage.googleapis.com/v1beta/interactions')
+    const sent = JSON.parse(String(calls[0]!.init.body))
+    expect(sent.model).toBe('gemini-3.5-transcribe')
+    expect(sent.input).toEqual([{ type: 'audio', data: wav, mime_type: 'audio/wav' }])
+    expect(sent.generation_config.transcription_config).toEqual({
+      language_codes: ['ko-KR'],
+      mode: { type: 'verbatim' },
+    })
+    expect((calls[0]!.init.headers as Record<string, string>)['x-goog-api-key']).toBe('ai-key')
+    expect(calls[0]!.url).not.toContain('ai-key')
+  })
+
+  it('transcribe can use ElevenLabs Scribe instead when VOICE_STT_PROVIDER=elevenlabs', async () => {
+    const wav = Buffer.from('RIFFtest').toString('base64')
+    const { fetcher, calls } = providers()
+    const response = await handleVoiceRequest(
+      request('transcribe', { audio: wav, sampleRate: 16000 }),
+      { env: { ...env, sttProvider: 'elevenlabs' }, fetcher },
+    )
     expect(await response.json()).toEqual({ transcript: '속상했어요', confidence: 0.9 })
     expect(calls[0]!.url).toBe('https://api.elevenlabs.io/v1/speech-to-text')
     const form = calls[0]!.init.body as FormData
-    expect(form).toBeInstanceOf(FormData)
     expect(form.get('model_id')).toBe('scribe_v2')
     expect(form.get('language_code')).toBe('ko')
-    expect(form.get('tag_audio_events')).toBe('false')
     const file = form.get('file') as File
     expect(file.type).toBe('audio/wav')
     expect(Buffer.from(await file.arrayBuffer()).toString('base64')).toBe(wav)
@@ -168,7 +197,7 @@ describe('voice router', () => {
     )
     expect(await full.json()).toEqual({
       transcript: '속상했어요',
-      confidence: 0.9,
+      confidence: 1,
       reply: '그렇게 느낄 수 있어요. 보기에서 골라 볼까요?',
       audio: Buffer.from([1, 2, 3]).toString('base64'),
     })
@@ -193,7 +222,7 @@ describe('voice router', () => {
     expect(heardOnly.status).toBe(200)
     expect(await heardOnly.json()).toEqual({
       transcript: '속상했어요',
-      confidence: 0.9,
+      confidence: 1,
       reply: '',
       error: 'credits depleted',
       provider: 'ai',
@@ -238,6 +267,12 @@ describe('voice router', () => {
     expect(read.elevenLabsKey).toBe('e')
     expect(read.elevenLabsModelId).toBe('eleven_v4')
     expect(read.elevenLabsSttModel).toBe('scribe_v2')
+    expect(read.sttProvider).toBe('google')
+    expect(read.googleSttModel).toBe('gemini-3.5-transcribe')
+    expect(read.googleSttMode).toBe('verbatim')
+    expect(
+      readVoiceEnv({ VOICE_STT_PROVIDER: 'ElevenLabs', GOOGLE_STT_MODE: 'smart' }),
+    ).toMatchObject({ sttProvider: 'elevenlabs', googleSttMode: 'smart' })
     expect(read.elevenLabsZeroRetention).toBe(false)
     expect(readVoiceEnv({ ELEVENLABS_ZERO_RETENTION: 'true' }).elevenLabsZeroRetention).toBe(true)
     expect(read.allowedOrigins).toEqual(
