@@ -19,12 +19,21 @@ export interface VoiceTurnState {
   error?: VoiceErrorCode
   /** 0–1 microphone level while recording, for the indicator. */
   level: number
+  /** True when the reply was read aloud (narration on and audio or synthesis available). */
+  played: boolean
 }
 
-const initial: VoiceTurnState = { phase: 'idle', transcript: '', reply: '', level: 0 }
+const initial: VoiceTurnState = {
+  phase: 'idle',
+  transcript: '',
+  reply: '',
+  level: 0,
+  played: false,
+}
 
 export function useVoiceTurn(context: VoiceContext) {
   const locale = useSettings((s) => s.locale)
+  const narration = useSettings((s) => s.voiceEnabled)
   const [state, setState] = useState<VoiceTurnState>(initial)
   const recorder = useRef<Recorder | null>(null)
   /** Pending microphone start, so a stop tapped before the mic is ready still ends the turn. */
@@ -46,9 +55,10 @@ export function useVoiceTurn(context: VoiceContext) {
     async (reply: string) => {
       setState((s) => ({ ...s, phase: 'speaking' }))
       await speech.speak({ text: reply, locale, audioUrl: audioUrl.current })
-      setState((s) => (s.phase === 'speaking' ? { ...s, phase: 'done' } : s))
+      const played = narration && speech.getStatus().phase !== 'error'
+      setState((s) => (s.phase === 'speaking' ? { ...s, phase: 'done', played } : s))
     },
-    [locale],
+    [locale, narration],
   )
 
   const stop = useCallback(async () => {

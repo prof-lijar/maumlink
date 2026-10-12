@@ -18,6 +18,8 @@ interface VoiceTalkProps {
   className?: string
   /** Called once per turn with what the child said, so the screen can count it as an answer. */
   onHeard?: (transcript: string) => void
+  /** Called once per turn when the reply has been played (or shown, when narration is off). */
+  onDone?: (info: { played: boolean; reply: string }) => void
 }
 
 export function VoiceTalk(props: VoiceTalkProps) {
@@ -26,16 +28,26 @@ export function VoiceTalk(props: VoiceTalkProps) {
   return <VoiceTalkPanel {...props} />
 }
 
-export function VoiceTalkPanel({ context, face, className, onHeard }: VoiceTalkProps) {
+export function VoiceTalkPanel({ context, face, className, onHeard, onDone }: VoiceTalkProps) {
   const [open, setOpen] = useState(false)
   const { state, start, stop, replay, reset } = useVoiceTurn(context)
   const heard = useRef(onHeard)
+  const done = useRef(onDone)
   useEffect(() => {
     heard.current = onHeard
-  }, [onHeard])
+    done.current = onDone
+  }, [onHeard, onDone])
   useEffect(() => {
     if (state.transcript) heard.current?.(state.transcript)
   }, [state.transcript])
+  // Fires once when a turn reaches 'done' (not on 다시 듣기, which goes through 'speaking' again
+  // but has no new transcript).
+  const reported = useRef('')
+  useEffect(() => {
+    if (state.phase !== 'done' || reported.current === state.transcript) return
+    reported.current = state.transcript
+    done.current?.({ played: state.played, reply: state.reply })
+  }, [state.phase, state.played, state.reply, state.transcript])
   const recording = state.phase === 'recording'
   const busy =
     state.phase === 'starting' || state.phase === 'thinking' || state.phase === 'speaking'

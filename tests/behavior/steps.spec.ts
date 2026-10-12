@@ -344,11 +344,14 @@ test('말로 이야기하기: on by default, can be switched off, records and sh
     prompt: '이 상황에서 나는 어떤 기분이 들까요?',
   })
   await checkScreen(page)
-  // What the child said counts as the answer: 다음 appears without picking a card,
-  // and a card can still be picked on top of it.
+  // What the child said counts as the answer, and the story moves on by itself (narration is
+  // off here, so after the reading pause). The next step starts with a fresh, collapsed mic.
   await expect(page.getByRole('button', { name: '다음', exact: true })).toBeVisible()
-  await page.getByRole('radio').first().click()
-  await expect(page.getByRole('button', { name: '다음', exact: true })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '왜 그런 기분이 들었을까요?' })).toBeVisible({
+    timeout: 8_000,
+  })
+  await expect(page.getByRole('button', { name: '말로 이야기해 볼래요' })).toBeVisible()
+  await expect(page.locator('main').getByText('친구가 안 불러서 속상했어요')).toHaveCount(0)
 })
 
 test('incompatible step save restarts silently; earlier completion stays', async ({ page }) => {

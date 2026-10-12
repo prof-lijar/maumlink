@@ -62,8 +62,16 @@ describe('말로 이야기하기', () => {
   it('records, shows what was heard and the reply, and offers to try again', async () => {
     useSettings.setState({ voiceInput: true })
     const onHeard = vi.fn()
+    const onDone = vi.fn()
     const user = userEvent.setup()
-    render(<VoiceTalk context={context} face="/img/v3/char-sora-400.webp" onHeard={onHeard} />)
+    render(
+      <VoiceTalk
+        context={context}
+        face="/img/v3/char-sora-400.webp"
+        onHeard={onHeard}
+        onDone={onDone}
+      />,
+    )
     await user.click(await screen.findByRole('button', { name: '말로 이야기해 볼래요' }))
     expect(screen.getByRole('status')).toHaveTextContent('마이크를 누르고 내 마음을 말해 보아요.')
     await user.click(screen.getByRole('button', { name: '말하기 시작' }))
@@ -79,6 +87,12 @@ describe('말로 이야기하기', () => {
     expect(await screen.findByRole('button', { name: '다시 말하기' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: '다시 듣기' })).toBeInTheDocument()
     expect(screen.getByRole('status')).toHaveTextContent('잘 들었어요!')
+    // jsdom has no speech synthesis, so the reply was shown, not heard.
+    expect(onDone).toHaveBeenCalledTimes(1)
+    expect(onDone).toHaveBeenCalledWith({ played: false, reply: '그렇게 느낄 수 있어요.' })
+    await user.click(screen.getByRole('button', { name: '다시 듣기' }))
+    await screen.findByText('잘 들었어요!', { exact: false })
+    expect(onDone).toHaveBeenCalledTimes(1)
     await user.click(screen.getByRole('button', { name: '닫기' }))
     expect(screen.getByRole('button', { name: '말로 이야기해 볼래요' })).toBeInTheDocument()
   })
