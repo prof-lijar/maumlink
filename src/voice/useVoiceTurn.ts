@@ -71,7 +71,8 @@ export function useVoiceTurn(context: VoiceContext) {
     } catch (error) {
       if (controller.signal.aborted) return
       const code: VoiceErrorCode = error instanceof VoiceError ? error.code : 'server'
-      setState((s) => ({ ...s, phase: 'error', error: code }))
+      const heard = error instanceof VoiceError ? error.transcript : undefined
+      setState((s) => ({ ...s, phase: 'error', error: code, transcript: heard ?? s.transcript }))
     }
   }, [play])
 

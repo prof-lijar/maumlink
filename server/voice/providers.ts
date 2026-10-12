@@ -31,8 +31,9 @@ export interface Transcription {
 }
 
 /**
- * Transcribes a base64 WAV with Scribe. `enable_logging=false` asks for zero-retention
- * processing, and audio-event tags are off so the child only sees their own words.
+ * Transcribes a base64 WAV with Scribe. Audio-event tags are off so the child only sees their
+ * own words. Zero-retention mode (`enable_logging=false`) is opt-in because ElevenLabs rejects it
+ * outside enterprise/trial plans ("Only users from the enterprise or trial tier can use ZRM").
  */
 export async function transcribeWav(
   env: VoiceEnv,
@@ -51,14 +52,12 @@ export async function transcribeWav(
     new Blob([Buffer.from(wavBase64, 'base64')], { type: 'audio/wav' }),
     'speech.wav',
   )
-  const response = await fetcher(
-    'https://api.elevenlabs.io/v1/speech-to-text?enable_logging=false',
-    {
-      method: 'POST',
-      headers: { 'xi-api-key': env.elevenLabsKey },
-      body: form,
-    },
-  )
+  const url = `https://api.elevenlabs.io/v1/speech-to-text${env.elevenLabsZeroRetention ? '?enable_logging=false' : ''}`
+  const response = await fetcher(url, {
+    method: 'POST',
+    headers: { 'xi-api-key': env.elevenLabsKey },
+    body: form,
+  })
   if (!response.ok) throw new ProviderError('stt', response.status, await readError(response))
   const data = (await response.json()) as { text?: string; language_probability?: number }
   return {

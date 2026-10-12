@@ -7,7 +7,7 @@
  *   POST /api/voice/transcribe  { audio, sampleRate }            → { transcript, confidence }  (ElevenLabs Scribe)
  *   POST /api/voice/respond     { text, context }                → { reply }
  *   POST /api/voice/speak       { text }                         → audio/mpeg  (ElevenLabs TTS)
- *   POST /api/voice/turn        { audio, sampleRate, context }   → { transcript, reply, audio? }
+ *   POST /api/voice/turn        { audio, sampleRate, context }   → { transcript, reply, audio?, error? }
  *
  * `audio` is a base64 16-bit mono PCM WAV (src/voice/wav.ts). Nothing is stored server-side.
  */
@@ -146,7 +146,25 @@ export async function handleVoiceRequest(
     const { audio, sampleRate } = asAudio(body)
     const heard = await transcribeWav(env, audio, sampleRate, fetcher)
     if (!heard.transcript) return json({ transcript: '', reply: '' }, 200, cors)
-    const reply = await generateReply(env, heard.transcript, asContext(body.context), fetcher)
+    // The child's words are worth showing even when the reply cannot be written (no AI key,
+    // quota, outage): answer 200 with the transcript and name the failed provider.
+    let reply: string
+    try {
+      reply = await generateReply(env, heard.transcript, asContext(body.context), fetcher)
+    } catch (error) {
+      const detail = error instanceof ProviderError ? error.message : 'reply failed'
+      return json(
+        {
+          transcript: heard.transcript,
+          confidence: heard.confidence,
+          reply: '',
+          error: detail,
+          provider: 'ai',
+        },
+        200,
+        cors,
+      )
+    }
     let speech: string | undefined
     if (reply && env.elevenLabsKey) {
       try {

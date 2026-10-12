@@ -18,7 +18,7 @@ interface SettingsState {
   sound: boolean
   autoRead: boolean
   voiceEnabled: boolean
-  /** 말로 이야기하기: send the child's voice to the speech/AI services (adult opt-in, off by default). */
+  /** 말로 이야기하기: the mic option on picking screens (on by default; an adult can switch it off). */
   voiceInput: boolean
   started: boolean
   avatar: Avatar
@@ -44,7 +44,7 @@ export const StoredSettings = z
     sound: z.boolean().catch(true),
     autoRead: z.boolean().catch(true),
     voiceEnabled: z.boolean().catch(true),
-    voiceInput: z.boolean().catch(false),
+    voiceInput: z.boolean().catch(true),
     started: z.boolean().catch(false),
     avatar: z.enum(AVATARS).catch('haru'),
   })
@@ -53,7 +53,7 @@ export const StoredSettings = z
     sound: true,
     autoRead: true,
     voiceEnabled: true,
-    voiceInput: false,
+    voiceInput: true,
     started: false,
     avatar: 'haru',
   })
@@ -65,7 +65,7 @@ export const useSettings = create<SettingsState>()(
       sound: true,
       autoRead: true,
       voiceEnabled: true,
-      voiceInput: false,
+      voiceInput: true,
       started: false,
       avatar: 'haru',
       locale: devLocaleFromUrl(),

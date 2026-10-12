@@ -16,9 +16,12 @@ export type VoiceErrorCode =
 
 export class VoiceError extends Error {
   code: VoiceErrorCode
-  constructor(code: VoiceErrorCode, message?: string) {
+  /** What was heard before the failure, so the panel can still show the child's words. */
+  transcript?: string
+  constructor(code: VoiceErrorCode, message?: string, transcript?: string) {
     super(message ?? code)
     this.code = code
+    this.transcript = transcript
   }
 }
 

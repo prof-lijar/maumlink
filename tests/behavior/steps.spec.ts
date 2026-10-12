@@ -293,16 +293,21 @@ test('the story list asks before resuming a half-done story or replaying a finis
   await expect(page.getByRole('heading', { name: '상황을 살펴봐요' })).toBeFocused()
 })
 
-test('말로 이야기하기: hidden by default, records and shows the reply once an adult turns it on', async ({
+test('말로 이야기하기: on by default, can be switched off, records and shows the reply', async ({
   page,
 }) => {
   await page.goto('/episode/B01/play')
   await next(page)
-  // Default: off, so no microphone button even when the server has keys.
+  // On by default; an adult can switch it off in settings.
+  await expect(page.getByRole('button', { name: '말로 이야기해 볼래요' })).toBeVisible()
+  await page.evaluate(() => {
+    const key = 'maumlink.settings.v1'
+    const saved = JSON.parse(localStorage.getItem(key) ?? '{"state":{},"version":0}')
+    saved.state.voiceInput = false
+    localStorage.setItem(key, JSON.stringify(saved))
+  })
+  await page.reload()
   await expect(page.getByRole('button', { name: '말로 이야기해 볼래요' })).toHaveCount(0)
-  await page.route('**/api/voice/health', (route) =>
-    route.fulfill({ json: { stt: true, ai: true, tts: false } }),
-  )
   const turns: Array<{ audio: string; sampleRate: number; context: Record<string, unknown> }> = []
   await page.route('**/api/voice/turn', (route) => {
     turns.push(route.request().postDataJSON())

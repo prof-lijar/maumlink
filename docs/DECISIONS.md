@@ -385,7 +385,7 @@ Format: date · decision · why · PRD reference.
 
 ## 2026-10-12 — 9-5: 말로 이야기하기(음성 입력)는 선택 기능, 키는 서버에만
 
-- **결정:** 아이가 원하면 보기를 고르는 대신 마이크로 말할 수 있게 합니다(감정·이유·행동 고르기 화면). ElevenLabs Scribe(글로 바꾸기) → Gemini → ElevenLabs TTS(녹음 음성과 같은 voice id·모델 Eleven v4) 순서이며(2026-10-12 사용자 요청으로 Google STT 대신 ElevenLabs 한 키로 통일), 세 제공자는 서버(`server/voice`, Vercel 함수 `api/voice/[action].ts`)에서만 부릅니다. 어른 설정의 「말로 이야기하기」가 기본 꺼짐이고, 서버 `health`가 STT·AI 키를 보고할 때만 버튼이 보입니다.
+- **결정:** 아이가 원하면 보기를 고르는 대신 마이크로 말할 수 있게 합니다(감정·이유·행동 고르기 화면). ElevenLabs Scribe(글로 바꾸기) → Gemini → ElevenLabs TTS(녹음 음성과 같은 voice id·모델 Eleven v4) 순서이며(2026-10-12 사용자 요청으로 Google STT 대신 ElevenLabs 한 키로 통일), 세 제공자는 서버(`server/voice`, Vercel 함수 `api/voice/[action].ts`)에서만 부릅니다. 어른 설정의 「말로 이야기하기」는 기본 켜짐(2026-10-12 사용자 결정 "it should be default")이며 끌 수 있고, 마이크 API가 있는 기기에서는 서버 키와 관계없이 버튼이 보입니다(키가 없으면 아이에게 알림).
 - **이유:** 로컬 우선·무계정 원칙을 지키면서 음성 표현을 더하려면, 외부 전송은 어른의 선택이어야 하고 키는 앱 번들에 들어가면 안 됩니다. 녹음은 Web Audio로 PCM을 받아 16 kHz WAV로 보내 브라우저·WebView 간 코덱 차이를 없앴습니다.
 - **구현 메모:** `pnpm dev`/`preview`는 `.env.dev`를 읽는 Vite 미들웨어로 같은 라우터를 띄웁니다. TTS 실패 시 글은 그대로 두고 브라우저 음성으로 읽습니다. Android는 `RECORD_AUDIO` 권한을 추가했습니다. "앱은 실행 중에 음성 서비스를 호출하지 않는다"는 기존 원칙은 녹음 내레이션에만 해당하고, 이 기능은 켠 경우에만 호출합니다.
 

@@ -11,7 +11,6 @@ const runVoiceTurn = vi.fn(async () => ({
   transcript: '친구가 안 불러서 속상했어요',
   reply: '그렇게 느낄 수 있어요.',
 }))
-const voiceHealth = vi.fn(async () => ({ stt: true, ai: true, tts: false }))
 
 vi.mock('@/voice/recorder', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/voice/recorder')>()),
@@ -20,7 +19,6 @@ vi.mock('@/voice/recorder', async (importOriginal) => ({
 }))
 vi.mock('@/voice/voiceApi', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/voice/voiceApi')>()),
-  voiceHealth: () => voiceHealth(),
   runVoiceTurn: (...args: unknown[]) => runVoiceTurn(...(args as [])),
 }))
 
@@ -33,27 +31,30 @@ const context = {
 
 beforeEach(() => {
   vi.clearAllMocks()
-  useSettings.setState({ voiceInput: false })
+  useSettings.setState({ voiceInput: true })
 })
 
 describe('말로 이야기하기', () => {
-  it('stays hidden until an adult switches it on and the server has keys', async () => {
+  it('shows by default and hides when an adult switches it off', () => {
+    useSettings.setState({ voiceInput: true })
     const { rerender } = render(<VoiceTalk context={context} />)
-    expect(screen.queryByRole('button')).not.toBeInTheDocument()
-    act(() => useSettings.setState({ voiceInput: true }))
+    expect(screen.getByRole('button', { name: '말로 이야기해 볼래요' })).toBeInTheDocument()
+    act(() => useSettings.setState({ voiceInput: false }))
     rerender(<VoiceTalk context={context} />)
-    expect(await screen.findByRole('button', { name: '말로 이야기해 볼래요' })).toBeInTheDocument()
-    expect(voiceHealth).toHaveBeenCalled()
+    expect(screen.queryByRole('button')).not.toBeInTheDocument()
   })
 
-  it('stays hidden when the server lacks speech or AI keys', async () => {
-    voiceHealth.mockResolvedValueOnce({ stt: true, ai: false, tts: true })
+  it('still shows when the server has no keys yet; the turn then explains', async () => {
     useSettings.setState({ voiceInput: true })
+    runVoiceTurn.mockRejectedValueOnce(new VoiceError('server', 'ai: quota', '속상했어요'))
+    const user = userEvent.setup()
     render(<VoiceTalk context={context} />)
-    await act(async () => {
-      await Promise.resolve()
-    })
-    expect(screen.queryByRole('button')).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: '말로 이야기해 볼래요' }))
+    await user.click(screen.getByRole('button', { name: '말하기 시작' }))
+    await user.click(await screen.findByRole('button', { name: '말하기 끝내기' }))
+    expect(await screen.findByText(/지금은 대답을 들을 수 없어요/)).toBeInTheDocument()
+    // The child's own words are still shown.
+    expect(screen.getByText('속상했어요')).toBeInTheDocument()
   })
 
   it('records, shows what was heard and the reply, and offers to try again', async () => {

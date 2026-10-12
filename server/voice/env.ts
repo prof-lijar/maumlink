@@ -11,6 +11,8 @@ export interface VoiceEnv {
   elevenLabsVoiceId: string
   elevenLabsModelId: string
   elevenLabsSttModel: string
+  /** Ask Scribe for zero-retention processing; ElevenLabs allows it only on enterprise/trial tiers. */
+  elevenLabsZeroRetention: boolean
   /** Origins allowed to call the API besides same-origin (the Capacitor WebView, local dev). */
   allowedOrigins: string[]
 }
@@ -41,6 +43,9 @@ export function readVoiceEnv(source: Record<string, string | undefined> = proces
     elevenLabsVoiceId: clean(source.ELEVENLABS_VOICE_ID) ?? DEFAULT_VOICE_ID,
     elevenLabsModelId: clean(source.ELEVENLABS_MODEL_ID) ?? DEFAULT_TTS_MODEL,
     elevenLabsSttModel: clean(source.ELEVENLABS_STT_MODEL) ?? DEFAULT_STT_MODEL,
+    elevenLabsZeroRetention: ['1', 'true', 'yes'].includes(
+      (clean(source.ELEVENLABS_ZERO_RETENTION) ?? '').toLowerCase(),
+    ),
     allowedOrigins: [
       ...DEFAULT_ORIGINS,
       ...(clean(source.VOICE_ALLOWED_ORIGINS)

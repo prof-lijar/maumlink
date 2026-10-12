@@ -101,13 +101,17 @@ export async function runVoiceTurn(
   context: VoiceContext,
   signal?: AbortSignal,
 ): Promise<VoiceTurnResult> {
-  const data = await post<{ transcript?: string; reply?: string; audio?: string }>(
-    'turn',
-    { audio: recording.audio, sampleRate: recording.sampleRate, context },
-    signal,
-  )
+  const data = await post<{
+    transcript?: string
+    reply?: string
+    audio?: string
+    error?: string
+    provider?: string
+  }>('turn', { audio: recording.audio, sampleRate: recording.sampleRate, context }, signal)
   const transcript = data.transcript?.trim() ?? ''
   if (!transcript) throw new VoiceError('nothing-heard')
+  if (data.error)
+    throw new VoiceError('server', `${data.provider ?? 'turn'}: ${data.error}`, transcript)
   return {
     transcript,
     reply: data.reply?.trim() ?? '',

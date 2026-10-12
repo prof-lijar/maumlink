@@ -112,7 +112,7 @@ describe('voice router', () => {
       { env, fetcher },
     )
     expect(await response.json()).toEqual({ transcript: '속상했어요', confidence: 0.9 })
-    expect(calls[0]!.url).toBe('https://api.elevenlabs.io/v1/speech-to-text?enable_logging=false')
+    expect(calls[0]!.url).toBe('https://api.elevenlabs.io/v1/speech-to-text')
     const form = calls[0]!.init.body as FormData
     expect(form).toBeInstanceOf(FormData)
     expect(form.get('model_id')).toBe('scribe_v2')
@@ -183,6 +183,21 @@ describe('voice router', () => {
     const textBody = await textOnly.json()
     expect(textBody).toMatchObject({ transcript: '속상했어요', reply: expect.any(String) })
     expect(textBody.audio).toBeUndefined()
+    const noAi = providers({
+      ai: Response.json({ error: { message: 'credits depleted' } }, { status: 429 }),
+    })
+    const heardOnly = await handleVoiceRequest(request('turn', { audio: 'UklGR' }), {
+      env,
+      fetcher: noAi.fetcher,
+    })
+    expect(heardOnly.status).toBe(200)
+    expect(await heardOnly.json()).toEqual({
+      transcript: '속상했어요',
+      confidence: 0.9,
+      reply: '',
+      error: 'credits depleted',
+      provider: 'ai',
+    })
     const silent = providers({ stt: Response.json({ text: '' }) })
     const nothing = await handleVoiceRequest(request('turn', { audio: 'UklGR' }), {
       env,
@@ -223,6 +238,8 @@ describe('voice router', () => {
     expect(read.elevenLabsKey).toBe('e')
     expect(read.elevenLabsModelId).toBe('eleven_v4')
     expect(read.elevenLabsSttModel).toBe('scribe_v2')
+    expect(read.elevenLabsZeroRetention).toBe(false)
+    expect(readVoiceEnv({ ELEVENLABS_ZERO_RETENTION: 'true' }).elevenLabsZeroRetention).toBe(true)
     expect(read.allowedOrigins).toEqual(
       expect.arrayContaining(['https://a.example', 'https://b.example', 'https://localhost']),
     )
