@@ -33,6 +33,7 @@ import {
 } from '@/engine/stepGame'
 import { reduceConversation, type ConversationEvent } from '@/engine/conversation'
 import { useMvpProgress } from '@/services/mvpProgress'
+import { VoiceTalk, type VoiceContext } from '@/voice'
 import { useProfile } from '@/services/profile'
 import { Cta, EpisodeCompletion, SafetyPromise, VoiceButton } from './gameParts'
 import { useAutoRead, useReadAloud } from '@/services/useSpeak'
@@ -264,6 +265,10 @@ export function StepEpisodeGame({ episode }: { episode: StepEpisode }) {
               headingRef={headingRef}
               art={art}
               onTalkBusy={setTalkBusy}
+              voiceContext={{
+                story: episode.title,
+                situation: episode.situation.sentences.join(' '),
+              }}
             />
           )}
 
@@ -326,6 +331,7 @@ function StepBody({
   headingRef,
   art,
   onTalkBusy,
+  voiceContext,
 }: {
   step: EpisodeStep
   game: StepGame
@@ -334,10 +340,23 @@ function StepBody({
   headingRef: RefObject<HTMLHeadingElement | null>
   art: { me: string; friend: string }
   onTalkBusy: (busy: boolean) => void
+  /** Story title and situation for the optional 말로 이야기하기 reply (VoiceTalk). */
+  voiceContext: VoiceContext
 }) {
   const state = game.steps[index]
   const chip = <span className="garden-step-label">{step.label}</span>
   const readAloud = useReadAloud()
+  const voiceTalk =
+    step.kind === 'reflect' || step.kind === 'choice' ? (
+      <VoiceTalk
+        context={{
+          ...voiceContext,
+          prompt: step.prompt,
+          options: step.options.map((option) => option.text),
+        }}
+        face={art.friend}
+      />
+    ) : null
 
   if (step.kind === 'reflect' && state?.kind === 'reflect') {
     const picked = step.options.find((option) => option.id === state.selectedId)
@@ -364,6 +383,7 @@ function StepBody({
             />
           ))}
         </div>
+        {voiceTalk}
         {!picked && step.hint && (
           <p className="garden-reflect__hint">
             <span className="garden-chip">도움말</span> {step.hint}
@@ -402,6 +422,7 @@ function StepBody({
             />
           ))}
         </div>
+        {voiceTalk}
         {submitted && !state.solved && (
           <p role="status" className="garden-alert">
             다시 한 번 생각해 볼까요?

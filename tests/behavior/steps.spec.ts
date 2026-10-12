@@ -293,6 +293,57 @@ test('the story list asks before resuming a half-done story or replaying a finis
   await expect(page.getByRole('heading', { name: '상황을 살펴봐요' })).toBeFocused()
 })
 
+test('말로 이야기하기: hidden by default, records and shows the reply once an adult turns it on', async ({
+  page,
+}) => {
+  await page.goto('/episode/B01/play')
+  await next(page)
+  // Default: off, so no microphone button even when the server has keys.
+  await expect(page.getByRole('button', { name: '말로 이야기해 볼래요' })).toHaveCount(0)
+  await page.route('**/api/voice/health', (route) =>
+    route.fulfill({ json: { stt: true, ai: true, tts: false } }),
+  )
+  const turns: Array<{ audio: string; sampleRate: number; context: Record<string, unknown> }> = []
+  await page.route('**/api/voice/turn', (route) => {
+    turns.push(route.request().postDataJSON())
+    return route.fulfill({
+      json: {
+        transcript: '친구가 안 불러서 속상했어요',
+        reply: '그렇게 느낄 수 있어요. 보기에서 골라 볼까요?',
+      },
+    })
+  })
+  await page.evaluate(() => {
+    const key = 'maumlink.settings.v1'
+    const saved = JSON.parse(localStorage.getItem(key) ?? '{"state":{},"version":0}')
+    saved.state.voiceInput = true
+    localStorage.setItem(key, JSON.stringify(saved))
+  })
+  await page.reload()
+  await page.getByRole('button', { name: '말로 이야기해 볼래요' }).click()
+  await page.getByRole('button', { name: '말하기 시작' }).click()
+  // The fake device can take a few seconds to open on a cold browser.
+  await expect(page.locator('main').getByText(/듣고 있어요/)).toBeVisible({ timeout: 15_000 })
+  await page.waitForTimeout(700)
+  await page.getByRole('button', { name: '말하기 끝내기' }).click()
+  await expect(page.locator('main').getByText('친구가 안 불러서 속상했어요')).toBeVisible()
+  await expect(page.locator('main').getByText(/그렇게 느낄 수 있어요\. 보기에서/)).toBeVisible()
+  await expect(page.getByRole('button', { name: '다시 말하기' })).toBeVisible()
+  expect(turns).toHaveLength(1)
+  // A real 16 kHz WAV went up (base64 of "RIFF"), with the screen's context for the reply.
+  expect(turns[0]!.audio.startsWith('UklGR')).toBe(true)
+  expect(turns[0]!.audio.length).toBeGreaterThan(10_000)
+  expect(turns[0]!.sampleRate).toBe(16000)
+  expect(turns[0]!.context).toMatchObject({
+    story: '친구들과 함께 놀고 싶어요',
+    prompt: '이 상황에서 나는 어떤 기분이 들까요?',
+  })
+  await checkScreen(page)
+  // The voice panel never replaces the pick: the step still completes by choosing a card.
+  await page.getByRole('radio').first().click()
+  await expect(page.getByRole('button', { name: '다음' })).toBeVisible()
+})
+
 test('incompatible step save restarts silently; earlier completion stays', async ({ page }) => {
   await page.goto('/episode/D01/play')
   const old = await page.evaluate(() => {

@@ -169,6 +169,20 @@ export function SettingsSheet({ open, onClose }: { open: boolean; onClose: () =>
           ]}
           onChange={(v) => s.setAutoRead(v === 'on')}
         />
+        <Segmented
+          label="말로 이야기하기"
+          value={s.voiceInput ? 'on' : 'off'}
+          options={[
+            { value: 'on', label: t('settings.on') },
+            { value: 'off', label: t('settings.off') },
+          ]}
+          onChange={(v) => s.setVoiceInput(v === 'on')}
+        />
+        <p className="settings-note text-caption text-ink-soft">
+          켜면 이야기 화면에 마이크 버튼이 생겨요. 아이가 말한 목소리는 인터넷 음성 서비스(Google)로
+          보내 글로 바꾸고, AI가 짧게 대답한 뒤 같은 목소리로 읽어 줘요. 기기나 서버에 녹음을 남기지
+          않아요. 인터넷이 없으면 버튼이 보이지 않아요.
+        </p>
         <div className="settings-row">
           <span className="text-body font-bold text-ink">탐험가 바꾸기</span>
           <AvatarPicker />

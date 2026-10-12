@@ -38,3 +38,8 @@ content-source/art/raw
 # local package store and raw design archives (extracted copies live in handoff/)
 .pnpm-store/
 *.zip
+
+# voice API keys for local development (see .env.dev.example)
+.env.dev
+.env
+.env.*.local

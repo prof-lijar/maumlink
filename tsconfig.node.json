@@ -27,6 +27,8 @@
     "vitest.config.ts",
     "playwright.config.ts",
     "scripts",
+    "server",
+    "api",
     "tests/behavior"
   ]
 }

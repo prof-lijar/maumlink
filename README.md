@@ -149,9 +149,26 @@ pnpm art:build                                # raw/ → public/img/v3 (400/800 
 
 새 문장을 녹음하려면 `pnpm narration:inventory`로 `content-source/narration/inventory.json`을 갱신하고, 빠진 문장을 음성 서비스 웹에서 그대로 생성해 `<clip id>.mp3`로 저장한 뒤 `pnpm narration:import <폴더> --voice lulu-lolipop`을 실행합니다. 자세한 방법은 [docs/README-v1.md](./docs/README-v1.md)에 있습니다.
 
+## 말로 이야기하기 (선택 기능)
+
+아이가 보기를 고르는 대신 **마이크로 말해 볼 수 있는** 선택 기능입니다. 기본은 꺼져 있고, 어른 설정(톱니 버튼)에서 **말로 이야기하기**를 켜면 감정·이유·행동 고르기 화면에 「말로 이야기해 볼래요」 버튼이 생깁니다. 말하기는 언제나 선택이며, 이야기를 마치는 데 필요하지 않습니다.
+
+```
+마이크 녹음(16 kHz WAV) → Google Speech-to-Text(ko-KR) → Google AI(Gemini) 짧은 대답 → ElevenLabs(녹음 음성과 같은 목소리)로 읽기
+```
+
+- 키는 서버에만 있습니다. 브라우저는 같은 출처의 `/api/voice/*`만 부르고, 서버는 녹음이나 글을 저장하지 않습니다.
+- 서버 코드는 `server/voice/`(제공자 호출 + 라우터)이고, Vercel 함수 `api/voice/[action].ts`와 Vite 개발 서버 미들웨어(`scripts/voice-dev-server.ts`)가 같은 라우터를 씁니다. 엔드포인트: `health`, `transcribe`, `respond`, `speak`, `turn`(한 번에 처리).
+- 화면 쪽은 `src/voice/`에 재사용 부품으로 있습니다: `VoiceTalk`(버튼 + 패널), `useVoiceTurn`(녹음 → 전송 → 재생 상태), `useVoiceAvailable`(설정 + 서버 상태), `recorder.ts`/`wav.ts`(PCM 녹음), `voiceApi.ts`(호출).
+- ElevenLabs 키가 없거나 실패하면 대답 글은 그대로 보이고 브라우저 음성이 읽습니다. 인터넷이 없거나 키가 없으면 버튼이 보이지 않습니다.
+- 사용할 키: `.env.dev.example`을 `.env.dev`로 복사해 채웁니다(`pnpm dev`·`pnpm preview`가 읽음). Vercel에서는 같은 이름을 프로젝트 환경 변수로 넣습니다. Android 빌드는 `.env.native`에 `VITE_VOICE_API_BASE=https://<배포 주소>/api/voice`를 둡니다.
+- 대답 규칙(초3 느린학습자, 두 문장 이내, 감정 수용, 개인정보 질문 금지, 위험 신호 시 어른에게 알리기)은 `server/voice/providers.ts`의 `SYSTEM_PROMPT`에 있고, 아이에게 보이는 문구는 `src/voice/copy.ts`에 있습니다(교육자 검토 전 초안).
+
 ## 저장과 개인정보
 
 이름이나 개인정보를 받지 않습니다. 탐험가 선택, 설정, 완료 기록, 하다 만 진행은 그 기기의 브라우저 저장소에만 남습니다.
+
+**말로 이야기하기**를 켠 경우에만 아이가 마이크로 말한 소리가 Google(글로 바꾸기, AI 대답)과 ElevenLabs(읽어 주기)로 전송됩니다. 전송은 그 순간뿐이며 서버·기기에 녹음과 대화를 남기지 않습니다. 이 기능은 어른이 설정에서 켜야 하며 기본은 꺼짐입니다.
 
 | 저장 내용 | 키 |
 | --- | --- |
@@ -179,3 +196,4 @@ pnpm art:build                                # raw/ → public/img/v3 (400/800 
 - [ ] **교육자 검토:** 원문 외 문구(단계 구성, "잘 모르겠어요", 친구 대답, 안전 약속)는 `review.state: "draft"`입니다. 검토 결과를 `content/episodes/*.json`에 반영하고 `version`과 `review.state`를 갱신합니다.
 - [ ] **새 문장 녹음:** `pnpm narration:inventory` 목록의 미녹음 문장을 아동 목소리로 생성해 가져옵니다. Android WebView는 녹음 없이는 음성이 나오지 않습니다.
 - [ ] 그림 사용권 확인, 실제 기기에서 스크린리더·오프라인·태블릿 검증, 아동 관찰
+- [ ] **말로 이야기하기:** `.env.dev`/Vercel에 키를 넣고 실제 키로 STT·Gemini·ElevenLabs 응답을 확인합니다(ElevenLabs 무료 플랜은 라이브러리 목소리 API 사용이 막힐 수 있음). `src/voice/copy.ts`의 문구와 `SYSTEM_PROMPT`를 교육자가 검토합니다.

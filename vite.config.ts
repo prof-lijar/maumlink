@@ -6,8 +6,11 @@ import { defineConfig, type Plugin } from 'vite'
 import { validateBehaviorContent } from './scripts/validate-behavior-content.ts'
 import { formatReport, validateAll } from './scripts/validate-core.ts'
 import { NARRATION_VOICES, resolveNarrationVoice } from './src/services/narration/voices.ts'
+import { loadVoiceEnv, voiceDevServer } from './scripts/voice-dev-server.ts'
 
 const root = fileURLToPath(new URL('.', import.meta.url))
+// Voice API keys and VITE_VOICE_API_BASE for local work come from .env.dev (see .env.dev.example).
+loadVoiceEnv(root)
 const narrationVoice = resolveNarrationVoice(process.env.VITE_NARRATION_VOICE)
 /** Inactive voice sets stay in public/ but are not precached (FR-PWA-02 covers only the shipped voice). */
 const inactiveNarrationGlobs = Object.values(NARRATION_VOICES)
@@ -37,6 +40,7 @@ function contentValidation(): Plugin {
 export default defineConfig(({ mode }) => ({
   plugins: [
     contentValidation(),
+    voiceDevServer(root),
     react(),
     tailwindcss(),
     VitePWA({

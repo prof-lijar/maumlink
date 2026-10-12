@@ -7,26 +7,33 @@ import { conversationTiming } from '@/screens/missions/conversationTiming'
 conversationTiming.replyDelayMs = 0
 
 // jsdom does not implement media playback; behave like a browser that accepts play().
-Object.defineProperty(HTMLMediaElement.prototype, 'play', {
-  configurable: true,
-  writable: true,
-  value: vi.fn().mockResolvedValue(undefined),
-})
-Object.defineProperty(HTMLMediaElement.prototype, 'pause', {
-  configurable: true,
-  writable: true,
-  value: vi.fn(),
-})
-Object.defineProperty(HTMLMediaElement.prototype, 'load', {
-  configurable: true,
-  writable: true,
-  value: vi.fn(),
-})
+// (Server-side tests run in the node environment and have no DOM at all.)
+const dom = typeof HTMLMediaElement !== 'undefined'
+if (dom)
+  Object.defineProperty(HTMLMediaElement.prototype, 'play', {
+    configurable: true,
+    writable: true,
+    value: vi.fn().mockResolvedValue(undefined),
+  })
+if (dom)
+  Object.defineProperty(HTMLMediaElement.prototype, 'pause', {
+    configurable: true,
+    writable: true,
+    value: vi.fn(),
+  })
+if (dom)
+  Object.defineProperty(HTMLMediaElement.prototype, 'load', {
+    configurable: true,
+    writable: true,
+    value: vi.fn(),
+  })
 // jsdom has no layout; screens reset scroll on step changes.
-Object.defineProperty(window, 'scrollTo', { configurable: true, writable: true, value: vi.fn() })
+if (dom)
+  Object.defineProperty(window, 'scrollTo', { configurable: true, writable: true, value: vi.fn() })
 
 afterEach(() => {
   cleanup()
+  if (!dom) return
   window.localStorage.clear()
   window.sessionStorage.clear()
 })

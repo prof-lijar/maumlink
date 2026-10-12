@@ -16,6 +16,11 @@ export default defineConfig({
   use: {
     ...devices['Desktop Chrome'],
     channel: 'chrome',
+    // A fake microphone so 말로 이야기하기 can be exercised without a device or a prompt.
+    launchOptions: {
+      args: ['--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream'],
+    },
+    permissions: ['microphone'],
     baseURL: 'http://localhost:4173',
     locale: 'ko-KR',
     reducedMotion: 'reduce',

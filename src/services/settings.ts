@@ -18,6 +18,8 @@ interface SettingsState {
   sound: boolean
   autoRead: boolean
   voiceEnabled: boolean
+  /** 말로 이야기하기: send the child's voice to the speech/AI services (adult opt-in, off by default). */
+  voiceInput: boolean
   started: boolean
   avatar: Avatar
   locale: Locale
@@ -25,6 +27,7 @@ interface SettingsState {
   setSound: (v: boolean) => void
   setAutoRead: (v: boolean) => void
   setVoiceEnabled: (v: boolean) => void
+  setVoiceInput: (v: boolean) => void
   setStarted: () => void
   setAvatar: (v: Avatar) => void
   setLocale: (v: Locale) => void
@@ -41,6 +44,7 @@ export const StoredSettings = z
     sound: z.boolean().catch(true),
     autoRead: z.boolean().catch(true),
     voiceEnabled: z.boolean().catch(true),
+    voiceInput: z.boolean().catch(false),
     started: z.boolean().catch(false),
     avatar: z.enum(AVATARS).catch('haru'),
   })
@@ -49,6 +53,7 @@ export const StoredSettings = z
     sound: true,
     autoRead: true,
     voiceEnabled: true,
+    voiceInput: false,
     started: false,
     avatar: 'haru',
   })
@@ -60,6 +65,7 @@ export const useSettings = create<SettingsState>()(
       sound: true,
       autoRead: true,
       voiceEnabled: true,
+      voiceInput: false,
       started: false,
       avatar: 'haru',
       locale: devLocaleFromUrl(),
@@ -67,6 +73,7 @@ export const useSettings = create<SettingsState>()(
       setSound: (sound) => set({ sound }),
       setAutoRead: (autoRead) => set({ autoRead }),
       setVoiceEnabled: (voiceEnabled) => set({ voiceEnabled }),
+      setVoiceInput: (voiceInput) => set({ voiceInput }),
       setStarted: () => set({ started: true }),
       setAvatar: (avatar) => set({ avatar }),
       setLocale: (locale) => set({ locale }),
@@ -78,6 +85,7 @@ export const useSettings = create<SettingsState>()(
         sound: s.sound,
         autoRead: s.autoRead,
         voiceEnabled: s.voiceEnabled,
+        voiceInput: s.voiceInput,
         started: s.started,
         avatar: s.avatar,
       }),
