@@ -4,9 +4,9 @@
  * (scripts/voice-dev-server.ts) and in unit tests.
  *
  *   GET  /api/voice/health      → which providers are configured
- *   POST /api/voice/transcribe  { audio, sampleRate }            → { transcript, confidence }
+ *   POST /api/voice/transcribe  { audio, sampleRate }            → { transcript, confidence }  (ElevenLabs Scribe)
  *   POST /api/voice/respond     { text, context }                → { reply }
- *   POST /api/voice/speak       { text }                         → audio/mpeg
+ *   POST /api/voice/speak       { text }                         → audio/mpeg  (ElevenLabs TTS)
  *   POST /api/voice/turn        { audio, sampleRate, context }   → { transcript, reply, audio? }
  *
  * `audio` is a base64 16-bit mono PCM WAV (src/voice/wav.ts). Nothing is stored server-side.
@@ -104,7 +104,7 @@ export async function handleVoiceRequest(
     if (action === 'health') {
       return json(
         {
-          stt: Boolean(env.googleSttKey),
+          stt: Boolean(env.elevenLabsKey),
           ai: Boolean(env.googleAiKey),
           tts: Boolean(env.elevenLabsKey),
           model: env.googleAiModel,

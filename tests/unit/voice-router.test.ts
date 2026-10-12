@@ -6,9 +6,8 @@ import { handleVoiceRequest, voiceAction } from '../../server/voice/router'
 
 const env: VoiceEnv = {
   ...readVoiceEnv({}),
-  googleSttKey: 'stt-key',
   googleAiKey: 'ai-key',
-  elevenLabsKey: 'tts-key',
+  elevenLabsKey: 'eleven-key',
 }
 const ORIGIN = 'http://localhost:4173'
 const request = (action: string, body?: unknown, init: RequestInit = {}) =>
@@ -25,12 +24,10 @@ function providers(overrides: Partial<Record<'stt' | 'ai' | 'tts', Response>> = 
   const fetcher = vi.fn(async (url: string | URL | Request, init?: RequestInit) => {
     const href = String(url)
     calls.push({ url: href, init: init ?? {} })
-    if (href.includes('speech.googleapis.com'))
+    if (href.includes('api.elevenlabs.io/v1/speech-to-text'))
       return (
         overrides.stt ??
-        Response.json({
-          results: [{ alternatives: [{ transcript: '속상했어요 ', confidence: 0.9 }] }],
-        })
+        Response.json({ text: ' 속상했어요 ', language_code: 'ko', language_probability: 0.9 })
       )
     if (href.includes('generativelanguage.googleapis.com'))
       return (
@@ -60,13 +57,13 @@ describe('voice router', () => {
 
   it('health reports which providers have keys and never the keys themselves', async () => {
     const response = await handleVoiceRequest(request('health'), {
-      env: { ...env, elevenLabsKey: undefined },
+      env: { ...env, googleAiKey: undefined },
     })
     const body = await response.json()
     expect(body).toEqual({
       stt: true,
-      ai: true,
-      tts: false,
+      ai: false,
+      tts: true,
       model: 'gemini-2.5-flash',
       voiceId: env.elevenLabsVoiceId,
     })
@@ -107,24 +104,24 @@ describe('voice router', () => {
     ).toBe(413)
   })
 
-  it('transcribe sends LINEAR16 Korean config with the key in a header', async () => {
+  it('transcribe posts the WAV to Scribe as Korean with logging off', async () => {
+    const wav = Buffer.from('RIFFtest').toString('base64')
     const { fetcher, calls } = providers()
     const response = await handleVoiceRequest(
-      request('transcribe', { audio: 'UklGR', sampleRate: 16000 }),
-      {
-        env,
-        fetcher,
-      },
+      request('transcribe', { audio: wav, sampleRate: 16000 }),
+      { env, fetcher },
     )
     expect(await response.json()).toEqual({ transcript: '속상했어요', confidence: 0.9 })
-    const sent = JSON.parse(String(calls[0]!.init.body))
-    expect(sent.config).toMatchObject({
-      encoding: 'LINEAR16',
-      sampleRateHertz: 16000,
-      languageCode: 'ko-KR',
-    })
-    expect((calls[0]!.init.headers as Record<string, string>)['x-goog-api-key']).toBe('stt-key')
-    expect(calls[0]!.url).not.toContain('stt-key')
+    expect(calls[0]!.url).toBe('https://api.elevenlabs.io/v1/speech-to-text?enable_logging=false')
+    const form = calls[0]!.init.body as FormData
+    expect(form).toBeInstanceOf(FormData)
+    expect(form.get('model_id')).toBe('scribe_v2')
+    expect(form.get('language_code')).toBe('ko')
+    expect(form.get('tag_audio_events')).toBe('false')
+    const file = form.get('file') as File
+    expect(file.type).toBe('audio/wav')
+    expect(Buffer.from(await file.arrayBuffer()).toString('base64')).toBe(wav)
+    expect((calls[0]!.init.headers as Record<string, string>)['xi-api-key']).toBe('eleven-key')
   })
 
   it('respond asks Gemini with the companion rules and the screen context', async () => {
@@ -156,8 +153,8 @@ describe('voice router', () => {
     expect(response.headers.get('content-type')).toBe('audio/mpeg')
     expect(new Uint8Array(await response.arrayBuffer())).toEqual(new Uint8Array([1, 2, 3]))
     expect(calls[0]!.url).toContain(`/v1/text-to-speech/${env.elevenLabsVoiceId}`)
-    expect((calls[0]!.init.headers as Record<string, string>)['xi-api-key']).toBe('tts-key')
-    expect(JSON.parse(String(calls[0]!.init.body)).model_id).toBe('eleven_multilingual_v2')
+    expect((calls[0]!.init.headers as Record<string, string>)['xi-api-key']).toBe('eleven-key')
+    expect(JSON.parse(String(calls[0]!.init.body)).model_id).toBe('eleven_v4')
   })
 
   it('turn chains the three providers and keeps the text when speech fails', async () => {
@@ -186,7 +183,7 @@ describe('voice router', () => {
     const textBody = await textOnly.json()
     expect(textBody).toMatchObject({ transcript: '속상했어요', reply: expect.any(String) })
     expect(textBody.audio).toBeUndefined()
-    const silent = providers({ stt: Response.json({}) })
+    const silent = providers({ stt: Response.json({ text: '' }) })
     const nothing = await handleVoiceRequest(request('turn', { audio: 'UklGR' }), {
       env,
       fetcher: silent.fetcher,
@@ -222,9 +219,10 @@ describe('voice router', () => {
       ELEVENLABS_API_KEY: ' e ',
       VOICE_ALLOWED_ORIGINS: 'https://a.example, https://b.example',
     })
-    expect(read.googleSttKey).toBe('g')
     expect(read.googleAiKey).toBe('g')
     expect(read.elevenLabsKey).toBe('e')
+    expect(read.elevenLabsModelId).toBe('eleven_v4')
+    expect(read.elevenLabsSttModel).toBe('scribe_v2')
     expect(read.allowedOrigins).toEqual(
       expect.arrayContaining(['https://a.example', 'https://b.example', 'https://localhost']),
     )

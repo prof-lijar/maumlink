@@ -23,40 +23,48 @@ const readError = async (response: Response) => {
   }
 }
 
-/* ── Google Cloud Speech-to-Text (v1, synchronous recognize) ─────────────── */
+/* ── ElevenLabs speech-to-text (Scribe) ──────────────────────────────── */
 
 export interface Transcription {
   transcript: string
   confidence: number
 }
 
+/**
+ * Transcribes a base64 WAV with Scribe. `enable_logging=false` asks for zero-retention
+ * processing, and audio-event tags are off so the child only sees their own words.
+ */
 export async function transcribeWav(
   env: VoiceEnv,
   wavBase64: string,
-  sampleRateHertz: number,
+  _sampleRateHertz: number,
   fetcher: typeof fetch = fetch,
 ): Promise<Transcription> {
-  if (!env.googleSttKey) throw new ProviderError('stt', 503, 'Google STT key is not configured')
-  const response = await fetcher('https://speech.googleapis.com/v1/speech:recognize', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', 'x-goog-api-key': env.googleSttKey },
-    body: JSON.stringify({
-      config: {
-        encoding: 'LINEAR16',
-        sampleRateHertz,
-        languageCode: 'ko-KR',
-        enableAutomaticPunctuation: true,
-        model: 'latest_short',
-      },
-      audio: { content: wavBase64 },
-    }),
-  })
+  if (!env.elevenLabsKey) throw new ProviderError('stt', 503, 'ElevenLabs key is not configured')
+  const form = new FormData()
+  form.set('model_id', env.elevenLabsSttModel)
+  form.set('language_code', 'ko')
+  form.set('tag_audio_events', 'false')
+  form.set('timestamps_granularity', 'none')
+  form.set(
+    'file',
+    new Blob([Buffer.from(wavBase64, 'base64')], { type: 'audio/wav' }),
+    'speech.wav',
+  )
+  const response = await fetcher(
+    'https://api.elevenlabs.io/v1/speech-to-text?enable_logging=false',
+    {
+      method: 'POST',
+      headers: { 'xi-api-key': env.elevenLabsKey },
+      body: form,
+    },
+  )
   if (!response.ok) throw new ProviderError('stt', response.status, await readError(response))
-  const data = (await response.json()) as {
-    results?: Array<{ alternatives?: Array<{ transcript?: string; confidence?: number }> }>
+  const data = (await response.json()) as { text?: string; language_probability?: number }
+  return {
+    transcript: (data.text ?? '').replace(/\s+/g, ' ').trim(),
+    confidence: data.language_probability ?? 0,
   }
-  const best = data.results?.flatMap((r) => r.alternatives ?? [])[0]
-  return { transcript: best?.transcript?.trim() ?? '', confidence: best?.confidence ?? 0 }
 }
 
 /* ── Google AI (Gemini) ───────────────────────────────────────────────────── */
