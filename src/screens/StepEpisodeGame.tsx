@@ -24,6 +24,7 @@ import {
   reduceExpression,
   reduceSequence,
   saveStepGame,
+  spokenTurns,
   stepDone,
   type ChoiceEvent,
   type EmotionBodyEvent,
@@ -33,7 +34,7 @@ import {
 } from '@/engine/stepGame'
 import { reduceConversation, type ConversationEvent } from '@/engine/conversation'
 import { useMvpProgress } from '@/services/mvpProgress'
-import { VoiceTalk, type VoiceContext } from '@/voice'
+import { requestWrapup, VoiceTalk, type VoiceContext } from '@/voice'
 import { useProfile } from '@/services/profile'
 import { Cta, EpisodeCompletion, SafetyPromise, VoiceButton } from './gameParts'
 import { useAutoRead, useReadAloud } from '@/services/useSpeak'
@@ -55,6 +56,8 @@ type StepEvent =
   | { type: 'reflect'; id: string }
   /** The child answered by voice (말로 이야기하기); reflect and choice steps accept it. */
   | { type: 'spoken'; text: string }
+  /** The personal wrap-up came back from the server. */
+  | { type: 'wrapup'; text: string }
   | { type: 'choice'; event: ChoiceEvent }
   | { type: 'sequence'; event: SequenceEvent }
   | { type: 'emotionBody'; event: EmotionBodyEvent }
@@ -98,6 +101,8 @@ function reduceStepGame(game: StepGame, event: StepEvent, episode: StepEpisode):
       return (state?.kind === 'reflect' || state?.kind === 'choice') && event.text.trim()
         ? replace({ ...state, spoken: event.text.trim() })
         : game
+    case 'wrapup':
+      return { ...game, wrapup: event.text }
     case 'sequence':
       return step?.kind === 'sequence' && state?.kind === 'sequence'
         ? replace(reduceSequence(state, event.event, step))
@@ -158,6 +163,41 @@ export function StepEpisodeGame({ episode }: { episode: StepEpisode }) {
 
   const [talkBusy, setTalkBusy] = useState(false)
   const canNext = game.screen === 0 || (stepDone(game.steps[index], step) && !talkBusy)
+
+  // 마무리: when the child spoke during the story, ask for a personal wrap-up once (kept in the
+  // saved game) and hold its audio only for this visit. Nothing spoken → the fixed takeaway.
+  const spoken = game.screen === last ? spokenTurns(episode, game) : []
+  const wantsWrapup = spoken.length > 0
+  const [wrapAudio, setWrapAudio] = useState<string | undefined>(undefined)
+  const [wrapLoading, setWrapLoading] = useState(false)
+  useEffect(() => {
+    if (!wantsWrapup || game.wrapup) return
+    const controller = new AbortController()
+    // oxlint-disable-next-line react/set-state-in-effect
+    setWrapLoading(true)
+    requestWrapup(
+      {
+        story: episode.title,
+        situation: episode.situation.sentences.join(' '),
+        takeaway: episode.takeaway,
+        turns: spokenTurns(episode, game),
+      },
+      controller.signal,
+    )
+      .then((result) => {
+        if (controller.signal.aborted) return
+        setWrapAudio(result.audioUrl)
+        dispatch({ type: 'wrapup', text: result.text })
+      })
+      .catch(() => undefined)
+      .finally(() => {
+        if (!controller.signal.aborted) setWrapLoading(false)
+      })
+    return () => controller.abort()
+    // The spoken turns cannot change on the completion screen; only its arrival matters.
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
+  }, [wantsWrapup, game.wrapup, episode])
+  useEffect(() => () => (wrapAudio ? URL.revokeObjectURL(wrapAudio) : undefined), [wrapAudio])
 
   // 음성 읽어주기: the situation, then each step's prompt or instruction as it opens; the
   // conversation and completion screens read their own lines.
@@ -316,7 +356,10 @@ export function StepEpisodeGame({ episode }: { episode: StepEpisode }) {
 
           {game.screen === last && (
             <EpisodeCompletion
-              takeaway={episode.takeaway}
+              takeaway={game.wrapup ?? episode.takeaway}
+              takeawayAudioUrl={game.wrapup ? wrapAudio : undefined}
+              loading={wrapLoading && !game.wrapup}
+              personal={Boolean(game.wrapup)}
               listPath={listPath}
               progressSaved={progressSaved}
               headingRef={headingRef}

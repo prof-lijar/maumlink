@@ -80,7 +80,7 @@ for (const [width, height] of [
     )
     await checkScreen(page)
     await page.getByRole('button', { name: '“고마워! 나는 뭐 하면 돼?”' }).click()
-    await expect(page.locator('main').getByText(/나와 친구의 생각은 다를 수 있어요/)).toBeVisible()
+    await expect(page.locator('main').getByText(/내 마음은 말로 표현할 수 있어요/)).toBeVisible()
     await next(page)
     await page.getByRole('radio', { name: /아직 알 수 없어요/ }).click()
     await page.getByRole('button', { name: '선택 확인하기' }).click()
@@ -309,6 +309,16 @@ test('말로 이야기하기: on by default, can be switched off, records and sh
   await page.reload()
   await expect(page.getByRole('button', { name: '말로 이야기해 볼래요' })).toHaveCount(0)
   const turns: Array<{ audio: string; sampleRate: number; context: Record<string, unknown> }> = []
+  const wrapups: Array<{ takeaway: string; turns: Array<{ prompt?: string; said: string }> }> = []
+  await page.route('**/api/voice/wrapup', (route) => {
+    const body = route.request().postDataJSON()
+    wrapups.push(body)
+    return route.fulfill({
+      json: {
+        text: `오늘 '친구가 안 불러서 속상했어요'라고 말해 주었어요. 마음을 말로 꺼낸 것이 멋져요. ${body.takeaway}`,
+      },
+    })
+  })
   await page.route('**/api/voice/turn', (route) => {
     turns.push(route.request().postDataJSON())
     return route.fulfill({
@@ -352,6 +362,31 @@ test('말로 이야기하기: on by default, can be switched off, records and sh
   })
   await expect(page.getByRole('button', { name: '말로 이야기해 볼래요' })).toBeVisible()
   await expect(page.locator('main').getByText('친구가 안 불러서 속상했어요')).toHaveCount(0)
+  // Finish the story with cards; the wrap-up is written from what was said.
+  await page.getByRole('radio', { name: /거절할까 봐/ }).click()
+  await next(page)
+  await page.getByRole('radio', { name: /나도 같이 놀아도 돼\?”라고 물어봐요/ }).click()
+  await page.getByRole('button', { name: '선택 확인하기' }).click()
+  await next(page)
+  await page.getByRole('button', { name: '이 미션 건너뛰기' }).click()
+  await page.getByRole('radio').nth(1).click()
+  await page.getByRole('button', { name: '선택 확인하기' }).click()
+  await page.getByRole('button', { name: '마무리하기' }).click()
+  await expect(page.locator('main').getByText('오늘 내가 한 말')).toBeVisible()
+  await expect(
+    page.locator('main').getByText(/오늘 '친구가 안 불러서 속상했어요'라고 말해 주었어요/),
+  ).toBeVisible()
+  await expect(page.locator('main').getByText(/내 마음은 말로 표현할 수 있어요/)).toBeVisible()
+  expect(wrapups).toHaveLength(1)
+  expect(wrapups[0]!.turns).toEqual([
+    { prompt: '이 상황에서 나는 어떤 기분이 들까요?', said: '친구가 안 불러서 속상했어요' },
+  ])
+  // Reloading shows the saved wrap-up without asking again.
+  await page.reload()
+  await expect(
+    page.locator('main').getByText(/오늘 '친구가 안 불러서 속상했어요'라고 말해 주었어요/),
+  ).toBeVisible()
+  expect(wrapups).toHaveLength(1)
 })
 
 test('incompatible step save restarts silently; earlier completion stays', async ({ page }) => {

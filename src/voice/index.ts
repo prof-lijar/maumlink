@@ -3,6 +3,7 @@ export { VOICE_ERRORS, VOICE_OPEN_LABEL, VOICE_STATUS } from './copy'
 export { useVoiceAvailable } from './useVoiceAvailable'
 export { useVoiceTurn, type VoicePhase, type VoiceTurnState } from './useVoiceTurn'
 export {
+  requestWrapup,
   respond,
   resetVoiceHealth,
   runVoiceTurn,
@@ -13,6 +14,7 @@ export {
   type VoiceContext,
   type VoiceHealth,
   type VoiceTurnResult,
+  type WrapupInput,
 } from './voiceApi'
 export {
   microphoneSupported,

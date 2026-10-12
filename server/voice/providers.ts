@@ -138,6 +138,7 @@ export const SYSTEM_PROMPT = `너는 초등학교 3학년 느린학습자 어린
 - 어린이가 말한 마음을 먼저 그대로 받아 주고("그렇게 느낄 수 있어요"), 어떤 감정도 틀렸다고 하지 마.
 - 어린이를 평가하거나 비난하지 말고, 어른처럼 훈계하지 마.
 - 화면의 질문과 이어지게 말하고, 화면에 있는 보기 중 하나를 골라 보라고 부드럽게 권해도 돼.
+- 사람 이름은 절대 쓰지 마: 어린이 이름도, 이야기 속 친구·주인공 이름도 부르지 말고 "친구", "선생님"처럼만 말해.
 - 이름, 집, 학교 같은 개인정보는 묻지 마.
 - 어린이가 다치거나 무섭거나 위험한 일을 말하면, 믿을 수 있는 어른(선생님, 부모님)에게 꼭 이야기하라고 말해.
 - 이모티콘, 영어, 어려운 낱말은 쓰지 마.`
@@ -184,6 +185,64 @@ export async function generateReply(
   }
   const text = data.candidates?.[0]?.content?.parts?.map((p) => p.text ?? '').join('') ?? ''
   return text.replace(/\s+/g, ' ').trim()
+}
+
+export interface WrapupInput {
+  story?: string
+  situation?: string
+  /** The reviewed closing line; it is appended verbatim after the generated sentences. */
+  takeaway: string
+  /** What the child said on each screen, in story order. */
+  turns: Array<{ prompt?: string; said: string }>
+}
+
+export const WRAPUP_PROMPT = `너는 초등학교 3학년 느린학습자 어린이와 사회정서교육 이야기를 함께 마친 다정한 친구야.
+어린이가 이야기 중에 마이크로 말한 내용을 보고, 마무리 인사를 짧게 써 줘.
+규칙:
+- 한국어, 쉬운 말, 정확히 두 문장. 한 문장은 짧게.
+- 첫 문장은 어린이가 말한 것을 그대로 떠올려 칭찬해("오늘 '...'라고 말해 주었어요").
+- 둘째 문장은 그 말과 이야기의 배움을 부드럽게 이어 줘. 새로운 교훈이나 지시는 넣지 마.
+- 어린이를 평가하거나 비난하지 말고, 어떤 마음도 틀렸다고 하지 마.
+- 사람 이름은 절대 쓰지 마: 어린이 이름도, 이야기 속 친구·주인공 이름도 부르지 말고 "친구", "선생님"처럼만 말해.
+- 이름, 집, 학교 같은 개인정보는 묻지도 쓰지도 마.
+- 이모티콘, 영어, 어려운 낱말은 쓰지 마. 마무리 문장(배움 문장)은 따로 붙으니 반복하지 마.`
+
+/** Two personal sentences about what the child said, then the reviewed takeaway verbatim. */
+export async function generateWrapup(
+  env: VoiceEnv,
+  input: WrapupInput,
+  fetcher: typeof fetch = fetch,
+): Promise<string> {
+  if (!env.googleAiKey) throw new ProviderError('ai', 503, 'Google AI key is not configured')
+  const lines = [
+    input.story && `이야기 제목: ${input.story}`,
+    input.situation && `상황: ${input.situation}`,
+    `이야기의 마무리 문장(따로 붙음): ${input.takeaway}`,
+    '어린이가 말한 것:',
+    ...input.turns.map(
+      (turn, i) => `${i + 1}. ${turn.prompt ? `(${turn.prompt}) ` : ''}"${turn.said}"`,
+    ),
+  ].filter(Boolean)
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${env.googleAiModel}:generateContent`
+  const response = await fetcher(url, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-goog-api-key': env.googleAiKey },
+    body: JSON.stringify({
+      system_instruction: { parts: [{ text: WRAPUP_PROMPT }] },
+      contents: [{ role: 'user', parts: [{ text: lines.join('\n') }] }],
+      generationConfig: {
+        temperature: 0.6,
+        maxOutputTokens: 200,
+        thinkingConfig: { thinkingBudget: 0 },
+      },
+    }),
+  })
+  if (!response.ok) throw new ProviderError('ai', response.status, await readError(response))
+  const data = (await response.json()) as {
+    candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>
+  }
+  const text = tidy(data.candidates?.[0]?.content?.parts?.map((p) => p.text ?? '').join('') ?? '')
+  return text ? `${text} ${input.takeaway}` : input.takeaway
 }
 
 /* ── ElevenLabs text-to-speech ────────────────────────────────────────────── */

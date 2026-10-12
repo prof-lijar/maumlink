@@ -2027,3 +2027,23 @@
     animation: none;
   }
 }
+
+.garden-learned__loading {
+  color: var(--garden-ink-mid);
+  font-weight: 700;
+  animation: garden-learned-pulse 1.2s ease-in-out infinite;
+}
+@keyframes garden-learned-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .garden-learned__loading {
+    animation: none;
+  }
+}

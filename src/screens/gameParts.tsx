@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, ReactNode, RefObject } from 'react'
+import { useEffect, type ButtonHTMLAttributes, type ReactNode, type RefObject } from 'react'
 import { useNavigate } from 'react-router'
 import { KidSpeakerIcon } from '@/design/icons'
 import { episodes } from '@/content/episodeIndex'
@@ -58,12 +58,22 @@ export function Cta({ children, ...rest }: ButtonHTMLAttributes<HTMLButtonElemen
 /** The common completion screen (2026-10-10 개선 요청: 문구 + 버튼 세 개). */
 export function EpisodeCompletion({
   takeaway,
+  takeawayAudioUrl,
+  loading = false,
+  personal = false,
   listPath,
   progressSaved,
   onRestart,
   headingRef,
 }: {
+  /** The reviewed closing line, or the personal wrap-up when the child spoke. */
   takeaway: string
+  /** Narration-voice audio of a personal wrap-up (played after the cheer). */
+  takeawayAudioUrl?: string
+  /** True while the personal wrap-up is being written. */
+  loading?: boolean
+  /** True when `takeaway` is the personal wrap-up rather than the reviewed line. */
+  personal?: boolean
   listPath: string
   progressSaved: boolean
   onRestart: () => void
@@ -72,7 +82,28 @@ export function EpisodeCompletion({
   const navigate = useNavigate()
   const completed = useMvpProgress((progress) => progress.completedEpisodeIds)
   const percent = completionPercent(completed.length)
-  useAutoRead(`${COMPLETION_CHEER} ${takeaway}`, `complete:${takeaway}`)
+  const autoRead = useSettings((s) => s.autoRead)
+  const locale = useSettings((s) => s.locale)
+  // Fixed takeaway: cheer + takeaway through the usual recorded/synthesised path. Personal
+  // wrap-up with audio: cheer first, then the generated clip. While loading, say nothing yet.
+  useAutoRead(
+    loading || takeawayAudioUrl ? undefined : `${COMPLETION_CHEER} ${takeaway}`,
+    `complete:${takeaway}`,
+  )
+  useEffect(() => {
+    if (!autoRead || !takeawayAudioUrl) return
+    const cheer = { text: COMPLETION_CHEER, locale, automatic: true }
+    const wrap = { text: takeaway, locale, audioUrl: takeawayAudioUrl, automatic: true }
+    let cancelled = false
+    void speech.speak(cheer).then(() => {
+      if (!cancelled) void speech.speak(wrap)
+    })
+    return () => {
+      cancelled = true
+      speech.cancel(cheer)
+      speech.cancel(wrap)
+    }
+  }, [autoRead, locale, takeaway, takeawayAudioUrl])
   return (
     <>
       <div className="garden-badge garden-badge--small">
@@ -81,9 +112,15 @@ export function EpisodeCompletion({
       <h1 ref={headingRef} tabIndex={-1} className="garden-complete-title">
         {COMPLETION_CHEER}
       </h1>
-      <div className="garden-card garden-learned">
-        <span className="garden-chip">마무리</span>
-        <p>{takeaway}</p>
+      <div className="garden-card garden-learned" aria-busy={loading}>
+        <span className="garden-chip">{personal || loading ? '오늘 내가 한 말' : '마무리'}</span>
+        {loading ? (
+          <p className="garden-learned__loading" role="status">
+            내가 한 말로 마무리 인사를 만들고 있어요…
+          </p>
+        ) : (
+          <p>{takeaway}</p>
+        )}
       </div>
       <div className="garden-progress">
         <div className="garden-progress__row">

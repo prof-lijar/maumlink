@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it, vi } from 'vitest'
 import { readVoiceEnv, type VoiceEnv } from '../../server/voice/env'
-import { SYSTEM_PROMPT } from '../../server/voice/providers'
+import { SYSTEM_PROMPT, WRAPUP_PROMPT } from '../../server/voice/providers'
 import { handleVoiceRequest, voiceAction } from '../../server/voice/router'
 
 const env: VoiceEnv = {
@@ -236,6 +236,49 @@ describe('voice router', () => {
     })
     expect(await nothing.json()).toEqual({ transcript: '', reply: '' })
     expect(silent.calls).toHaveLength(1)
+  })
+
+  it('wrapup writes two personal sentences from what was said and appends the reviewed takeaway', async () => {
+    const { fetcher, calls } = providers({
+      ai: Response.json({
+        candidates: [
+          {
+            content: {
+              parts: [
+                {
+                  text: "오늘 '속상했어요'라고 말해 주었어요.\n마음을 말로 꺼내는 건 멋진 일이에요.",
+                },
+              ],
+            },
+          },
+        ],
+      }),
+    })
+    const response = await handleVoiceRequest(
+      request('wrapup', {
+        story: '친구들과 함께 놀고 싶어요',
+        takeaway: '나와 친구의 생각은 다를 수 있어요.',
+        turns: [{ prompt: '어떤 기분이 들까요?', said: '속상했어요' }, { said: '' }],
+      }),
+      { env, fetcher },
+    )
+    expect(await response.json()).toEqual({
+      text: "오늘 '속상했어요'라고 말해 주었어요. 마음을 말로 꺼내는 건 멋진 일이에요. 나와 친구의 생각은 다를 수 있어요.",
+      audio: Buffer.from([1, 2, 3]).toString('base64'),
+    })
+    const sent = JSON.parse(String(calls[0]!.init.body))
+    expect(sent.system_instruction.parts[0].text).toBe(WRAPUP_PROMPT)
+    expect(WRAPUP_PROMPT).toContain('사람 이름은 절대 쓰지 마')
+    expect(SYSTEM_PROMPT).toContain('사람 이름은 절대 쓰지 마')
+    const user = sent.contents[0].parts[0].text as string
+    expect(user).toContain('1. (어떤 기분이 들까요?) "속상했어요"')
+    expect(user).toContain('마무리 문장(따로 붙음): 나와 친구의 생각은 다를 수 있어요.')
+    expect(
+      (await handleVoiceRequest(request('wrapup', { takeaway: 'x', turns: [] }), { env })).status,
+    ).toBe(400)
+    expect(
+      (await handleVoiceRequest(request('wrapup', { turns: [{ said: 'a' }] }), { env })).status,
+    ).toBe(400)
   })
 
   it('answers 503 with the provider name when a key is missing, 502 when a provider fails', async () => {

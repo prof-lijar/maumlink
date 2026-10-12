@@ -95,6 +95,24 @@ const base64ToBlobUrl = (base64: string, type: string) => {
   return URL.createObjectURL(new Blob([bytes], { type }))
 }
 
+export interface WrapupInput {
+  story?: string
+  situation?: string
+  takeaway: string
+  turns: Array<{ prompt?: string; said: string }>
+}
+
+/** A personal wrap-up built from what the child said, ending with the reviewed takeaway. */
+export async function requestWrapup(
+  input: WrapupInput,
+  signal?: AbortSignal,
+): Promise<{ text: string; audioUrl?: string }> {
+  const data = await post<{ text?: string; audio?: string }>('wrapup', input, signal)
+  const text = data.text?.trim() ?? ''
+  if (!text) throw new VoiceError('server', 'wrapup: empty')
+  return { text, audioUrl: data.audio ? base64ToBlobUrl(data.audio, 'audio/mpeg') : undefined }
+}
+
 /** One round trip: transcribe → reply → (best-effort) speech. */
 export async function runVoiceTurn(
   recording: Recording,

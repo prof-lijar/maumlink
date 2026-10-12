@@ -342,6 +342,8 @@ export function stepDone(state: StepState | undefined, step?: EpisodeStep): bool
 export const StepGameSchema = z.object({
   screen: z.number().int().nonnegative(),
   steps: z.array(StepStateSchema),
+  /** Personal wrap-up generated from what the child said (undefined when nothing was spoken). */
+  wrapup: z.string().optional(),
 })
 export type StepGame = z.infer<typeof StepGameSchema>
 
@@ -351,6 +353,19 @@ export const initialStepGame = (episode: StepEpisode, random = Math.random): Ste
 })
 
 export const completionScreen = (episode: StepEpisode) => episode.steps.length + 1
+
+/** What the child said on each screen, in order, for the personal wrap-up. */
+export function spokenTurns(
+  episode: StepEpisode,
+  game: StepGame,
+): Array<{ prompt?: string; said: string }> {
+  return game.steps.flatMap((state, index) => {
+    const step = episode.steps[index]
+    if ((state.kind === 'reflect' || state.kind === 'choice') && state.spoken && step)
+      return [{ prompt: 'prompt' in step ? step.prompt : undefined, said: state.spoken }]
+    return []
+  })
+}
 
 const keyFor = (id: string) => `maumlink.steps.mvp-v1.${id}`
 const SavedSchema = z.object({

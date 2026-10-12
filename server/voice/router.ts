@@ -8,12 +8,14 @@
  *   POST /api/voice/respond     { text, context }                → { reply }
  *   POST /api/voice/speak       { text }                         → audio/mpeg  (ElevenLabs TTS)
  *   POST /api/voice/turn        { audio, sampleRate, context }   → { transcript, reply, audio?, error? }
+ *   POST /api/voice/wrapup      { story, situation, takeaway, turns } → { text, audio? }
  *
  * `audio` is a base64 16-bit mono PCM WAV (src/voice/wav.ts). Nothing is stored server-side.
  */
 import { readVoiceEnv, sttConfigured, type VoiceEnv } from './env'
 import {
   generateReply,
+  generateWrapup,
   ProviderError,
   synthesizeSpeech,
   transcribeWav,
@@ -27,7 +29,7 @@ export interface VoiceRouterOptions {
 
 const MAX_AUDIO_BASE64 = 2_000_000 // ~1.5 MB of PCM ≈ 45 s at 16 kHz; the client stops at 15 s
 const MAX_TEXT = 400
-const ACTIONS = new Set(['health', 'transcribe', 'respond', 'speak', 'turn'])
+const ACTIONS = new Set(['health', 'transcribe', 'respond', 'speak', 'turn', 'wrapup'])
 
 const json = (body: unknown, status = 200, headers: Record<string, string> = {}) =>
   new Response(JSON.stringify(body), {
@@ -142,6 +144,33 @@ export async function handleVoiceRequest(
         status: 200,
         headers: { ...cors, 'content-type': 'audio/mpeg', 'cache-control': 'no-store' },
       })
+    }
+    if (action === 'wrapup') {
+      const takeaway = asText(body.takeaway)
+      if (!takeaway) throw new HttpError(400, 'takeaway is required')
+      const turns = (Array.isArray(body.turns) ? body.turns : [])
+        .map((turn) => {
+          const t = (turn ?? {}) as Record<string, unknown>
+          return { prompt: asText(t.prompt) || undefined, said: asText(t.said) }
+        })
+        .filter((turn) => turn.said)
+        .slice(0, 8)
+      if (!turns.length) throw new HttpError(400, 'turns with said text are required')
+      const context = asContext(body)
+      const text = await generateWrapup(
+        env,
+        { story: context.story, situation: context.situation, takeaway, turns },
+        fetcher,
+      )
+      let speech: string | undefined
+      if (env.elevenLabsKey) {
+        try {
+          speech = Buffer.from(await synthesizeSpeech(env, text, fetcher)).toString('base64')
+        } catch {
+          speech = undefined
+        }
+      }
+      return json({ text, audio: speech }, 200, cors)
     }
     // turn: the whole exchange in one round trip. TTS is best-effort: a missing ElevenLabs key
     // or a failed synthesis still returns the text so the browser voice can read it.
