@@ -293,11 +293,14 @@ export function reduceChoice(
   step: Extract<EpisodeStep, { kind: 'choice' }>,
 ): ChoiceState {
   if (event.type === 'toggleHint') return { ...state, hintVisible: !state.hintVisible }
+  if (event.type === 'select') {
+    if (!step.options.some((option) => option.id === event.id)) return state
+    // Changing one's mind is always allowed, even after an accepted answer: the new pick
+    // simply needs confirming again (2026-10-12 user report: "can't change option").
+    if (state.solved && state.selectedId === event.id) return state
+    return { ...state, selectedId: event.id, submittedId: null, solved: false }
+  }
   if (state.solved) return state
-  if (event.type === 'select')
-    return step.options.some((option) => option.id === event.id)
-      ? { ...state, selectedId: event.id, submittedId: null }
-      : state
   if (!state.selectedId) return state
   const solved = step.acceptedIds.includes(state.selectedId)
   return {
