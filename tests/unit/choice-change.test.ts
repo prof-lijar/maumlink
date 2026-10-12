@@ -37,4 +37,16 @@ describe('choice step: changing one’s mind', () => {
     state = reduceChoice(state, { type: 'select', id: 'D' }, step)
     expect(state).toMatchObject({ selectedId: 'D', submittedId: null, solved: false })
   })
+
+  it('a spoken answer counts as done for reflect and choice steps', () => {
+    const reflect = episode.steps.find((s) => s.kind === 'reflect')!
+    expect(stepDone({ kind: 'reflect', selectedId: null }, reflect)).toBe(false)
+    expect(stepDone({ kind: 'reflect', selectedId: null, spoken: '속상했어요' }, reflect)).toBe(
+      true,
+    )
+    const fresh = initialStepState(step)
+    if (fresh.kind !== 'choice') throw new Error('wrong state')
+    expect(stepDone(fresh, step)).toBe(false)
+    expect(stepDone({ ...fresh, spoken: '같이 놀자고 말해요' }, step)).toBe(true)
+  })
 })

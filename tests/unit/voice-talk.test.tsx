@@ -47,20 +47,23 @@ describe('말로 이야기하기', () => {
   it('still shows when the server has no keys yet; the turn then explains', async () => {
     useSettings.setState({ voiceInput: true })
     runVoiceTurn.mockRejectedValueOnce(new VoiceError('server', 'ai: quota', '속상했어요'))
+    const onHeard = vi.fn()
     const user = userEvent.setup()
-    render(<VoiceTalk context={context} />)
+    render(<VoiceTalk context={context} onHeard={onHeard} />)
     await user.click(screen.getByRole('button', { name: '말로 이야기해 볼래요' }))
     await user.click(screen.getByRole('button', { name: '말하기 시작' }))
     await user.click(await screen.findByRole('button', { name: '말하기 끝내기' }))
     expect(await screen.findByText(/지금은 대답을 들을 수 없어요/)).toBeInTheDocument()
-    // The child's own words are still shown.
+    // The child's own words are still shown and still count as the answer.
     expect(screen.getByText('속상했어요')).toBeInTheDocument()
+    expect(onHeard).toHaveBeenCalledWith('속상했어요')
   })
 
   it('records, shows what was heard and the reply, and offers to try again', async () => {
     useSettings.setState({ voiceInput: true })
+    const onHeard = vi.fn()
     const user = userEvent.setup()
-    render(<VoiceTalk context={context} face="/img/v3/char-sora-400.webp" />)
+    render(<VoiceTalk context={context} face="/img/v3/char-sora-400.webp" onHeard={onHeard} />)
     await user.click(await screen.findByRole('button', { name: '말로 이야기해 볼래요' }))
     expect(screen.getByRole('status')).toHaveTextContent('마이크를 누르고 내 마음을 말해 보아요.')
     await user.click(screen.getByRole('button', { name: '말하기 시작' }))
@@ -70,6 +73,8 @@ describe('말로 이야기하기', () => {
     expect(recorder.stop).toHaveBeenCalledTimes(1)
     expect(runVoiceTurn).toHaveBeenCalledWith(recording, context, expect.any(AbortSignal))
     expect(await screen.findByText('친구가 안 불러서 속상했어요')).toBeInTheDocument()
+    expect(onHeard).toHaveBeenCalledWith('친구가 안 불러서 속상했어요')
+    expect(onHeard).toHaveBeenCalledTimes(1)
     expect(screen.getByText('그렇게 느낄 수 있어요.')).toBeInTheDocument()
     expect(await screen.findByRole('button', { name: '다시 말하기' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: '다시 듣기' })).toBeInTheDocument()

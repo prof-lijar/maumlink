@@ -3,7 +3,7 @@
  * one button until tapped; never required to finish a step. Hidden unless an adult switched
  * it on and the server has keys (useVoiceAvailable).
  */
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { devkitArt } from '@/design/devkitAssets'
 import { sound } from '@/services/sound'
 import { VOICE_ERRORS, VOICE_OPEN_LABEL, VOICE_STATUS } from './copy'
@@ -11,32 +11,31 @@ import { useVoiceAvailable } from './useVoiceAvailable'
 import { useVoiceTurn } from './useVoiceTurn'
 import type { VoiceContext } from './voiceApi'
 
-export function VoiceTalk({
-  context,
-  face,
-  className,
-}: {
+interface VoiceTalkProps {
   context: VoiceContext
   /** The companion's face shown beside the reply. */
   face?: string
   className?: string
-}) {
-  const available = useVoiceAvailable()
-  if (!available) return null
-  return <VoiceTalkPanel context={context} face={face} className={className} />
+  /** Called once per turn with what the child said, so the screen can count it as an answer. */
+  onHeard?: (transcript: string) => void
 }
 
-export function VoiceTalkPanel({
-  context,
-  face,
-  className,
-}: {
-  context: VoiceContext
-  face?: string
-  className?: string
-}) {
+export function VoiceTalk(props: VoiceTalkProps) {
+  const available = useVoiceAvailable()
+  if (!available) return null
+  return <VoiceTalkPanel {...props} />
+}
+
+export function VoiceTalkPanel({ context, face, className, onHeard }: VoiceTalkProps) {
   const [open, setOpen] = useState(false)
   const { state, start, stop, replay, reset } = useVoiceTurn(context)
+  const heard = useRef(onHeard)
+  useEffect(() => {
+    heard.current = onHeard
+  }, [onHeard])
+  useEffect(() => {
+    if (state.transcript) heard.current?.(state.transcript)
+  }, [state.transcript])
   const recording = state.phase === 'recording'
   const busy =
     state.phase === 'starting' || state.phase === 'thinking' || state.phase === 'speaking'

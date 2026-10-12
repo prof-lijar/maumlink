@@ -237,10 +237,14 @@ export function expressionDone(mission: ExpressionChoiceMissionData, state: Expr
 const ReflectStateSchema = z.object({
   kind: z.literal('reflect'),
   selectedId: z.string().nullable(),
+  /** What the child said through 말로 이야기하기; counts as an answer like a picked card. */
+  spoken: z.string().optional(),
 })
 const ChoiceStateSchema = z.object({
   kind: z.literal('choice'),
   selectedId: z.string().nullable(),
+  /** What the child said through 말로 이야기하기; counts as an answer like a confirmed card. */
+  spoken: z.string().optional(),
   /** The option whose feedback is showing (set when the child confirms). */
   submittedId: z.string().nullable(),
   solved: z.boolean(),
@@ -322,9 +326,9 @@ export function stepDone(state: StepState | undefined, step?: EpisodeStep): bool
     case 'conversation':
       return step?.kind === 'conversation' ? conversationDone(state, step) : false
     case 'reflect':
-      return state.selectedId !== null
+      return state.selectedId !== null || Boolean(state.spoken)
     case 'choice':
-      return state.solved
+      return state.solved || Boolean(state.spoken)
     case 'plain':
       return true
     case 'sequence':

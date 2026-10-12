@@ -50,6 +50,8 @@ type StepEvent =
   | { type: 'skip' }
   | { type: 'restart' }
   | { type: 'reflect'; id: string }
+  /** The child answered by voice (말로 이야기하기); reflect and choice steps accept it. */
+  | { type: 'spoken'; text: string }
   | { type: 'choice'; event: ChoiceEvent }
   | { type: 'sequence'; event: SequenceEvent }
   | { type: 'emotionBody'; event: EmotionBodyEvent }
@@ -88,6 +90,10 @@ function reduceStepGame(game: StepGame, event: StepEvent, episode: StepEpisode):
     case 'choice':
       return step?.kind === 'choice' && state?.kind === 'choice'
         ? replace(reduceChoice(state, event.event, step))
+        : game
+    case 'spoken':
+      return (state?.kind === 'reflect' || state?.kind === 'choice') && event.text.trim()
+        ? replace({ ...state, spoken: event.text.trim() })
         : game
     case 'sequence':
       return step?.kind === 'sequence' && state?.kind === 'sequence'
@@ -355,6 +361,7 @@ function StepBody({
           options: step.options.map((option) => option.text),
         }}
         face={art.friend}
+        onHeard={(text) => dispatch({ type: 'spoken', text })}
       />
     ) : null
 
@@ -451,7 +458,7 @@ function StepBody({
             {step.hint}
           </p>
         )}
-        {!state.solved && (
+        {!state.solved && (state.selectedId || !state.spoken) && (
           <Cta
             disabled={!state.selectedId}
             onClick={() => dispatch({ type: 'choice', event: { type: 'submit' } })}

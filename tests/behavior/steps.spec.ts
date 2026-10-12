@@ -344,9 +344,11 @@ test('말로 이야기하기: on by default, can be switched off, records and sh
     prompt: '이 상황에서 나는 어떤 기분이 들까요?',
   })
   await checkScreen(page)
-  // The voice panel never replaces the pick: the step still completes by choosing a card.
+  // What the child said counts as the answer: 다음 appears without picking a card,
+  // and a card can still be picked on top of it.
+  await expect(page.getByRole('button', { name: '다음', exact: true })).toBeVisible()
   await page.getByRole('radio').first().click()
-  await expect(page.getByRole('button', { name: '다음' })).toBeVisible()
+  await expect(page.getByRole('button', { name: '다음', exact: true })).toBeVisible()
 })
 
 test('incompatible step save restarts silently; earlier completion stays', async ({ page }) => {
