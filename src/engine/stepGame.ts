@@ -484,3 +484,16 @@ export function clearStepGame(id: string) {
     // Storage may be unavailable; a fresh in-memory start is enough.
   }
 }
+
+export type StepGameStatus = 'fresh' | 'in_progress' | 'finished'
+
+/**
+ * Where the saved session of a story stands, so the story list can ask before resuming a
+ * half-done story or replaying a finished one. A save still on the situation screen counts as
+ * fresh: nothing was chosen yet.
+ */
+export function stepGameStatus(episode: StepEpisode): StepGameStatus {
+  const loaded = inspectStepGame(episode)
+  if (loaded.kind !== 'valid' || loaded.state.screen === 0) return 'fresh'
+  return loaded.state.screen >= completionScreen(episode) ? 'finished' : 'in_progress'
+}

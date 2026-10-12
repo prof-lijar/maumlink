@@ -1,7 +1,11 @@
+import { useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router'
 import { KidBackIcon } from '@/design/icons'
 import { episodeTile, mapPlaces } from '@/design/devkitAssets'
-import { episodesFor, getDomain } from '@/content/episodeIndex'
+import { episodesFor, getDomain, type Episode } from '@/content/episodeIndex'
+import { getStepEpisode } from '@/content/episodes'
+import { clearStepGame, stepGameStatus } from '@/engine/stepGame'
+import { StoryDialog, type StoryDialogMode } from '@/screens/StoryDialog'
 import { useMvpProgress } from '@/services/mvpProgress'
 import { useProfile } from '@/services/profile'
 import { useSettings } from '@/services/settings'
@@ -13,8 +17,19 @@ export function DomainEpisodes() {
   const started = useSettings((state) => state.started)
   const avatarId = useProfile((state) => state.avatarId)
   const completed = useMvpProgress((state) => state.completedEpisodeIds)
+  const [asking, setAsking] = useState<{ episode: Episode; mode: StoryDialogMode } | null>(null)
   if (!started || !avatarId || !domain) return <Navigate to="/" replace />
   const list = episodesFor(domain.id)
+  const play = (episode: Episode) => navigate(`/episode/${episode.id}/play`)
+  // A half-done story asks 이어서/처음부터; a finished one asks 처음부터/아니요; a fresh one opens.
+  const open = (episode: Episode) => {
+    const story = getStepEpisode(episode.id)
+    const status = story ? stepGameStatus(story) : 'fresh'
+    if (status === 'in_progress') setAsking({ episode, mode: 'in_progress' })
+    else if (status === 'finished' || completed.includes(episode.id))
+      setAsking({ episode, mode: 'completed' })
+    else play(episode)
+  }
 
   return (
     <div className="garden-page" data-domain={domain.id}>
@@ -50,11 +65,7 @@ export function DomainEpisodes() {
               const done = completed.includes(episode.id)
               return (
                 <li key={episode.id}>
-                  <button
-                    type="button"
-                    className="garden-episode"
-                    onClick={() => navigate(`/episode/${episode.id}/play`)}
-                  >
+                  <button type="button" className="garden-episode" onClick={() => open(episode)}>
                     <span
                       className="garden-episode__tile"
                       style={{ background: tile.background, color: tile.color }}
@@ -82,6 +93,19 @@ export function DomainEpisodes() {
           </ul>
         </main>
       </div>
+      {asking && (
+        <StoryDialog
+          mode={asking.mode}
+          episodeId={asking.episode.id}
+          storyTitle={asking.episode.title}
+          onContinue={() => play(asking.episode)}
+          onRestart={() => {
+            clearStepGame(asking.episode.id)
+            play(asking.episode)
+          }}
+          onClose={() => setAsking(null)}
+        />
+      )}
     </div>
   )
 }

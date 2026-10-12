@@ -252,6 +252,47 @@ for (const choice of ['A', 'C']) {
   })
 }
 
+test('the story list asks before resuming a half-done story or replaying a finished one', async ({
+  page,
+}) => {
+  await page.goto('/episode/D01/play')
+  await next(page)
+  await page.getByRole('radio', { name: '속상해요', exact: true }).click()
+  await page.getByRole('button', { name: '에피소드 목록으로 돌아가기' }).click()
+  const story = page.getByRole('button', { name: /내 차례인데 친구가 새치기를/ })
+  await story.click()
+  const dialog = page.getByRole('dialog', { name: '이어서 할까요?' })
+  await expect(dialog).toBeVisible()
+  await checkScreen(page)
+  await dialog.getByRole('button', { name: '이어서 하기' }).click()
+  await expect(
+    page.getByRole('heading', { name: '이 상황에서 나는 어떤 기분이 들까요?' }),
+  ).toBeVisible()
+  await expect(page.getByRole('radio', { name: '속상해요', exact: true })).toHaveAttribute(
+    'aria-checked',
+    'true',
+  )
+  await page.getByRole('button', { name: '에피소드 목록으로 돌아가기' }).click()
+  await story.click()
+  await page.getByRole('button', { name: '처음부터 다시 하기' }).click()
+  await expect(page.getByRole('heading', { name: '상황을 살펴봐요' })).toBeFocused()
+  await page.evaluate(() =>
+    localStorage.setItem(
+      'maumlink.progress.mvp-v2',
+      JSON.stringify({ state: { completedEpisodeIds: ['D01'] }, version: 0 }),
+    ),
+  )
+  await page.goto('/area/D')
+  await story.click()
+  await expect(page.getByRole('dialog', { name: '다시 해볼까요?' })).toBeVisible()
+  await page.getByRole('button', { name: '아니요' }).click()
+  await expect(page.getByRole('dialog')).toHaveCount(0)
+  await expect(story).toBeFocused()
+  await story.click()
+  await page.getByRole('button', { name: '처음부터 다시 하기' }).click()
+  await expect(page.getByRole('heading', { name: '상황을 살펴봐요' })).toBeFocused()
+})
+
 test('incompatible step save restarts silently; earlier completion stays', async ({ page }) => {
   await page.goto('/episode/D01/play')
   const old = await page.evaluate(() => {
