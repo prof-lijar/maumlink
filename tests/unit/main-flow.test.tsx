@@ -88,7 +88,7 @@ describe('main flow: start → explorer → map → area → story', () => {
       'src',
       '/img/v3/scene-self-presentation-teasing-800.webp',
     )
-    expect(screen.getByText('내가 노력하여 만든 발표를 친구들이 놀리니 속상해')).toBeInTheDocument()
+    expect(screen.getByText('친구들이 내 발표를 듣고 웃으며 놀렸어요.')).toBeInTheDocument()
     expect(screen.queryByAltText('안내 강아지')).not.toBeInTheDocument()
   })
 

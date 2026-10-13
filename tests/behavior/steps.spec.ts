@@ -138,7 +138,7 @@ for (const [width, height] of [
     await next(page)
     await page.getByRole('radio', { name: '답답해요' }).click()
     await next(page)
-    await page.getByRole('radio', { name: /말이 잘 안나와서/ }).click()
+    await page.getByRole('radio', { name: /말이 잘 안 나와서/ }).click()
     await next(page)
     await page.getByRole('radio', { name: /바라는 것 말하기/ }).click()
     await next(page)
