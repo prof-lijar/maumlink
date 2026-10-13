@@ -17,7 +17,10 @@ export function Home() {
   const started = useSettings((state) => state.started)
   const avatarId = useProfile((state) => state.avatarId)
   const [changing, setChanging] = useState(false)
-  if (!started) return <StartGate />
+  // A device that has not chosen a character yet always begins at the start page, even when an
+  // earlier version left `started` behind (iPhone report, 2026-10-13: it opened on the pick).
+  const [entered, setEntered] = useState(started && Boolean(avatarId))
+  if (!started || !entered) return <StartGate onStart={() => setEntered(true)} />
   if (!avatarId) return <AvatarSelect />
   if (changing) return <AvatarSelect onDone={() => setChanging(false)} />
   return <ExploreMap onChangeAvatar={() => setChanging(true)} />

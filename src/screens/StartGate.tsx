@@ -4,7 +4,7 @@ import { sound } from '@/services/sound'
 import { speech } from '@/services/speech'
 
 /** One first-visit tap also unlocks browser audio. */
-export function StartGate() {
+export function StartGate({ onStart }: { onStart?: () => void } = {}) {
   const setStarted = useSettings((state) => state.setStarted)
   return (
     <main className="explore-start">
@@ -22,6 +22,7 @@ export function StartGate() {
           speech.unlock()
           sound.unlock()
           setStarted()
+          onStart?.()
         }}
       >
         시작하기 <span aria-hidden="true">›</span>

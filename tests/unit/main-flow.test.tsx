@@ -52,6 +52,28 @@ describe('main flow: start → explorer → map → area → story', () => {
     ).toBeInTheDocument()
   })
 
+  it('begins at the start page when no character was chosen yet, even if started was saved', async () => {
+    useSettings.setState({ started: true })
+    useProfile.setState({ avatarId: null })
+    const user = userEvent.setup()
+    renderFlow()
+    expect(screen.getByRole('button', { name: '시작하기' })).toBeInTheDocument()
+    expect(
+      screen.queryByRole('heading', { name: '나의 캐릭터를 선택해요!' }),
+    ).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: '시작하기' }))
+    expect(screen.getByRole('heading', { name: '나의 캐릭터를 선택해요!' })).toBeInTheDocument()
+  })
+
+  it('goes straight to the map when a character is already chosen', () => {
+    useSettings.setState({ started: true })
+    useProfile.setState({ avatarId: 'mina' })
+    renderFlow()
+    expect(
+      screen.getByRole('heading', { name: '안녕! 오늘은 어느 곳을 탐험할까요?' }),
+    ).toBeInTheDocument()
+  })
+
   it('shows each area with its own scene landmark and the reviewed story scene', async () => {
     const user = userEvent.setup()
     useSettings.setState({ started: true })
