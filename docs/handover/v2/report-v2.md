@@ -209,7 +209,4 @@ A~D 중 하나를 고르고 **선택 확인하기**를 누릅니다. 설계서�
 ## 10. 전달 자료
 
 - 서비스 주소: https://maumlink.vercel.app
-- 소스 저장소: github.com/prof-lijar/maumlink (master)
-- 설계서 전사: `docs/content-design/ko/`
-- 결정 기록: `maumlink/docs/DECISIONS.md`, 작업 기록: `maumlink/docs/PLAN.md`
-- 이 보고서: `maumlink/docs/handover/v2/report-v2.md` + `images/`
+- 소스 코드: https://github.com/prof-lijar/maumlink
