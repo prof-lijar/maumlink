@@ -25,8 +25,8 @@ beforeEach(() => {
   useProfile.setState({ avatarId: 'haru' })
 })
 
-describe('a spoken turn moves the story on', () => {
-  it('advances to the next step after the reply and shows a fresh mic there', async () => {
+describe('a spoken turn opens 다음 without moving on by itself', () => {
+  it('waits for the child to tap 다음, then shows a fresh mic on the next step', async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true })
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
     render(
@@ -44,11 +44,16 @@ describe('a spoken turn moves the story on', () => {
     await user.click(screen.getByRole('button', { name: '말하기 시작' }))
     await user.click(await screen.findByRole('button', { name: '말하기 끝내기' }))
     expect(await screen.findByText('서운했어요')).toBeInTheDocument()
-    // Narration is off, so the story waits long enough to read the reply, then moves on.
+    // 다음 is offered, but nothing moves until the child taps it.
     expect(screen.getByRole('button', { name: '다음' })).toBeInTheDocument()
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(3600)
+      await vi.advanceTimersByTimeAsync(10_000)
     })
+    expect(
+      screen.getByRole('heading', { name: '이 상황에서 나는 어떤 기분이 들까요?' }),
+    ).toBeInTheDocument()
+    expect(screen.getByText('서운했어요')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: '다음' }))
     expect(screen.getByRole('heading', { name: '왜 그런 기분이 들었을까요?' })).toBeInTheDocument()
     // The new step starts with the mic collapsed and nothing from the last turn.
     expect(screen.getByRole('button', { name: '말로 이야기해 볼래요' })).toBeInTheDocument()

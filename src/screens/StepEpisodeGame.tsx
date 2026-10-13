@@ -45,9 +45,6 @@ import { EmotionBodyMatchMission } from './missions/EmotionBodyMatchMission'
 import { ExpressionChoiceMission } from './missions/ExpressionChoiceMission'
 import { SequenceOrderMission } from './missions/SequenceOrderMission'
 
-/** Pause before moving on after a spoken turn, by how the reply reached the child. */
-const VOICE_ADVANCE_MS = { heard: 900, read: 3500, silent: 1200 }
-
 type StepEvent =
   | { type: 'next' }
   | { type: 'back' }
@@ -398,10 +395,6 @@ function StepBody({
   const state = game.steps[index]
   const chip = <span className="garden-step-label">{step.label}</span>
   const readAloud = useReadAloud()
-  // After a spoken turn the story moves on by itself: a short beat once the reply was heard,
-  // longer when narration is off so the child can read it. Leaving the step cancels it.
-  const advance = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
-  useEffect(() => () => clearTimeout(advance.current), [index])
   const voiceTalk =
     step.kind === 'reflect' || step.kind === 'choice' ? (
       <VoiceTalk
@@ -412,18 +405,9 @@ function StepBody({
           options: step.options.map((option) => option.text),
         }}
         face={art.friend}
+        // What the child said counts as the answer and opens 다음; the child taps it themselves
+        // (auto-advance was tried on 2026-10-13 and rejected: the reply deserves a moment).
         onHeard={(text) => dispatch({ type: 'spoken', text })}
-        onDone={({ played, reply }) => {
-          clearTimeout(advance.current)
-          advance.current = setTimeout(
-            () => dispatch({ type: 'next' }),
-            played
-              ? VOICE_ADVANCE_MS.heard
-              : reply
-                ? VOICE_ADVANCE_MS.read
-                : VOICE_ADVANCE_MS.silent,
-          )
-        }}
       />
     ) : null
 
