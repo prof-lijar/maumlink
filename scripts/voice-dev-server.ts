@@ -20,8 +20,10 @@ export function loadVoiceEnv(root: string, file = VOICE_ENV_FILE): boolean {
   const path = resolve(root, file)
   if (!existsSync(path)) return false
   try {
+    // An empty value means "not set": it must not override a mode file such as .env.native,
+    // where VITE_VOICE_API_BASE points the APK at the deployed API.
     for (const [key, value] of Object.entries(parseEnvFile(readFileSync(path, 'utf8'))))
-      process.env[key] = value
+      if (value !== '') process.env[key] = value
     return true
   } catch {
     return false
