@@ -12,7 +12,7 @@
  *
  * `audio` is a base64 16-bit mono PCM WAV (src/voice/wav.ts). Nothing is stored server-side.
  */
-import { readVoiceEnv, sttConfigured, type VoiceEnv } from './env'
+import { readVoiceEnv, sttConfigured, type VoiceEnv } from './env.js'
 import {
   generateReply,
   generateWrapup,
@@ -20,7 +20,7 @@ import {
   synthesizeSpeech,
   transcribeWav,
   type ReplyContext,
-} from './providers'
+} from './providers.js'
 
 export interface VoiceRouterOptions {
   env?: VoiceEnv

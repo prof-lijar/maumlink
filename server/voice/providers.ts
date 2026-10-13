@@ -2,7 +2,7 @@
  * Thin REST clients for the three providers behind the voice feature. Each takes the already
  * read environment so unit tests can run them against a stubbed `fetch`.
  */
-import type { VoiceEnv } from './env'
+import type { VoiceEnv } from './env.js'
 
 export class ProviderError extends Error {
   provider: 'stt' | 'ai' | 'tts'

@@ -7,7 +7,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { resolve } from 'node:path'
 import type { Plugin } from 'vite'
-import { handleVoiceRequest } from '../server/voice/router'
+import { handleVoiceRequest } from '../server/voice/router.js'
 
 export const VOICE_ENV_FILE = '.env.dev'
 
