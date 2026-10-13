@@ -508,6 +508,214 @@
       }
     },
     {
+      "id": "f2406e8f2e3e",
+      "text": "화가 날 때 머리에 열이 오르고 목소리가 커지는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "sources": [
+        "A01.steps.2.feedback.angry.head"
+      ],
+      "recorded": {
+        "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "094dd99f8459",
+      "text": "화가 날 때 가슴이 쿵쿵 뛰고 입술이 마르는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "sources": [
+        "A01.steps.2.feedback.angry.chest"
+      ],
+      "recorded": {
+        "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "6d80f6216081",
+      "text": "화가 날 때 눈물이 나고 몸에 힘이 빠지는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "sources": [
+        "A01.steps.2.feedback.angry.tears"
+      ],
+      "recorded": {
+        "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "97a4f6b7b4ff",
+      "text": "화가 날 때 배가 아프거나 머리가 아픈 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "sources": [
+        "A01.steps.2.feedback.angry.tummy"
+      ],
+      "recorded": {
+        "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "625c9066c6da",
+      "text": "긴장될 때 머리에 열이 오르고 목소리가 커지는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "sources": [
+        "A01.steps.2.feedback.nervous.head"
+      ],
+      "recorded": {
+        "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "ab3d59fec5e7",
+      "text": "긴장될 때 가슴이 쿵쿵 뛰고 입술이 마르는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "sources": [
+        "A01.steps.2.feedback.nervous.chest"
+      ],
+      "recorded": {
+        "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "c54199e3081d",
+      "text": "긴장될 때 눈물이 나고 몸에 힘이 빠지는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "sources": [
+        "A01.steps.2.feedback.nervous.tears"
+      ],
+      "recorded": {
+        "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "0e559c41a0e8",
+      "text": "긴장될 때 배가 아프거나 머리가 아픈 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "sources": [
+        "A01.steps.2.feedback.nervous.tummy"
+      ],
+      "recorded": {
+        "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "a74ddfb55c55",
+      "text": "속상할 때 머리에 열이 오르고 목소리가 커지는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "sources": [
+        "A01.steps.2.feedback.upset.head"
+      ],
+      "recorded": {
+        "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "c16ac641cd6f",
+      "text": "속상할 때 가슴이 쿵쿵 뛰고 입술이 마르는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "sources": [
+        "A01.steps.2.feedback.upset.chest"
+      ],
+      "recorded": {
+        "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "18e6fabf4d45",
+      "text": "속상할 때 눈물이 나고 몸에 힘이 빠지는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "sources": [
+        "A01.steps.2.feedback.upset.tears"
+      ],
+      "recorded": {
+        "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "86ffc2390c82",
+      "text": "속상할 때 배가 아프거나 머리가 아픈 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "sources": [
+        "A01.steps.2.feedback.upset.tummy"
+      ],
+      "recorded": {
+        "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "96b88d0eee63",
+      "text": "걱정될 때 머리에 열이 오르고 목소리가 커지는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "sources": [
+        "A01.steps.2.feedback.worried.head"
+      ],
+      "recorded": {
+        "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "9e191dacbdf0",
+      "text": "걱정될 때 가슴이 쿵쿵 뛰고 입술이 마르는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "sources": [
+        "A01.steps.2.feedback.worried.chest"
+      ],
+      "recorded": {
+        "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "88367da9b6f3",
+      "text": "걱정될 때 눈물이 나고 몸에 힘이 빠지는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "sources": [
+        "A01.steps.2.feedback.worried.tears"
+      ],
+      "recorded": {
+        "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "b9fa3b0dac52",
+      "text": "걱정될 때 배가 아프거나 머리가 아픈 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "sources": [
+        "A01.steps.2.feedback.worried.tummy"
+      ],
+      "recorded": {
+        "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
       "id": "48d65e90b9d5",
       "text": "이런 마음과 몸의 반응이 나타날 때 나에게 필요한 것은?",
       "sources": [

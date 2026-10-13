@@ -1767,6 +1767,118 @@
       "text": "“하고 싶은 말이 생기면 잠깐 멈춰요. 그리고 내가 할 수 있는 방법을 선택해 보아요!”",
       "source": "E01.steps.3.closing",
       "generatedAt": "2026-10-12"
+    },
+    {
+      "id": "094dd99f8459",
+      "tag": "[warmly]",
+      "text": "화가 날 때 가슴이 쿵쿵 뛰고 입술이 마르는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "source": "A01.steps.2.feedback.angry.chest",
+      "generatedAt": "2026-10-13"
+    },
+    {
+      "id": "f2406e8f2e3e",
+      "tag": "[warmly]",
+      "text": "화가 날 때 머리에 열이 오르고 목소리가 커지는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "source": "A01.steps.2.feedback.angry.head",
+      "generatedAt": "2026-10-13"
+    },
+    {
+      "id": "6d80f6216081",
+      "tag": "[warmly]",
+      "text": "화가 날 때 눈물이 나고 몸에 힘이 빠지는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "source": "A01.steps.2.feedback.angry.tears",
+      "generatedAt": "2026-10-13"
+    },
+    {
+      "id": "625c9066c6da",
+      "tag": "[warmly]",
+      "text": "긴장될 때 머리에 열이 오르고 목소리가 커지는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "source": "A01.steps.2.feedback.nervous.head",
+      "generatedAt": "2026-10-13"
+    },
+    {
+      "id": "97a4f6b7b4ff",
+      "tag": "[warmly]",
+      "text": "화가 날 때 배가 아프거나 머리가 아픈 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "source": "A01.steps.2.feedback.angry.tummy",
+      "generatedAt": "2026-10-13"
+    },
+    {
+      "id": "ab3d59fec5e7",
+      "tag": "[warmly]",
+      "text": "긴장될 때 가슴이 쿵쿵 뛰고 입술이 마르는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "source": "A01.steps.2.feedback.nervous.chest",
+      "generatedAt": "2026-10-13"
+    },
+    {
+      "id": "c54199e3081d",
+      "tag": "[warmly]",
+      "text": "긴장될 때 눈물이 나고 몸에 힘이 빠지는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "source": "A01.steps.2.feedback.nervous.tears",
+      "generatedAt": "2026-10-13"
+    },
+    {
+      "id": "0e559c41a0e8",
+      "tag": "[warmly]",
+      "text": "긴장될 때 배가 아프거나 머리가 아픈 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "source": "A01.steps.2.feedback.nervous.tummy",
+      "generatedAt": "2026-10-13"
+    },
+    {
+      "id": "a74ddfb55c55",
+      "tag": "[warmly]",
+      "text": "속상할 때 머리에 열이 오르고 목소리가 커지는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "source": "A01.steps.2.feedback.upset.head",
+      "generatedAt": "2026-10-13"
+    },
+    {
+      "id": "18e6fabf4d45",
+      "tag": "[warmly]",
+      "text": "속상할 때 눈물이 나고 몸에 힘이 빠지는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "source": "A01.steps.2.feedback.upset.tears",
+      "generatedAt": "2026-10-13"
+    },
+    {
+      "id": "c16ac641cd6f",
+      "tag": "[warmly]",
+      "text": "속상할 때 가슴이 쿵쿵 뛰고 입술이 마르는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "source": "A01.steps.2.feedback.upset.chest",
+      "generatedAt": "2026-10-13"
+    },
+    {
+      "id": "86ffc2390c82",
+      "tag": "[warmly]",
+      "text": "속상할 때 배가 아프거나 머리가 아픈 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "source": "A01.steps.2.feedback.upset.tummy",
+      "generatedAt": "2026-10-13"
+    },
+    {
+      "id": "9e191dacbdf0",
+      "tag": "[warmly]",
+      "text": "걱정될 때 가슴이 쿵쿵 뛰고 입술이 마르는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "source": "A01.steps.2.feedback.worried.chest",
+      "generatedAt": "2026-10-13"
+    },
+    {
+      "id": "96b88d0eee63",
+      "tag": "[warmly]",
+      "text": "걱정될 때 머리에 열이 오르고 목소리가 커지는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "source": "A01.steps.2.feedback.worried.head",
+      "generatedAt": "2026-10-13"
+    },
+    {
+      "id": "88367da9b6f3",
+      "tag": "[warmly]",
+      "text": "걱정될 때 눈물이 나고 몸에 힘이 빠지는 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "source": "A01.steps.2.feedback.worried.tears",
+      "generatedAt": "2026-10-13"
+    },
+    {
+      "id": "b9fa3b0dac52",
+      "tag": "[warmly]",
+      "text": "걱정될 때 배가 아프거나 머리가 아픈 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
+      "source": "A01.steps.2.feedback.worried.tummy",
+      "generatedAt": "2026-10-13"
     }
   ]
 }

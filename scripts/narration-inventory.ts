@@ -4,6 +4,7 @@ import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import { UiFile } from '../src/content/schema.ts'
 import { StepEpisodeSchema } from '../src/content/stepSchema.ts'
 import { NARRATION_VOICES } from '../src/services/narration/voices'
+import { emotionBodyFeedback } from '../src/engine/stepGame'
 import { narrationKey } from '../src/services/recordedNarration'
 import { STORY_DIALOG_COPY } from '../src/screens/storyDialogCopy'
 
@@ -71,6 +72,13 @@ for (const file of readdirSync('content/episodes').filter((name) => name.endsWit
       if (step.kind === 'emotion_body_match') {
         for (const emotion of step.emotions) put(emotion.text, `${at}.emotions.${emotion.id}`)
         for (const body of step.bodies) put(body.text, `${at}.bodies.${body.id}`)
+        // The screen reads a composed sentence per pair after the body text; record it whole.
+        for (const emotion of step.emotions)
+          for (const body of step.bodies)
+            put(
+              emotionBodyFeedback(step, emotion.id, body.id),
+              `${at}.feedback.${emotion.id}.${body.id}`,
+            )
       }
       if (step.kind === 'conversation') {
         put(step.intro, `${at}.intro`)
