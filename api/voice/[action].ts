@@ -1,9 +1,12 @@
-// Vercel Function (Node.js runtime, web handler signature) for every /api/voice/* action.
-// The logic lives in server/voice so the Vite dev server and unit tests run the same code.
+// Vercel Function (Node.js runtime) for every /api/voice/* action. The default export with
+// `fetch` is the documented web-standard form for files under api/; the logic lives in
+// server/voice so the Vite dev server and unit tests run the same code.
 import { handleVoiceRequest } from '../../server/voice/router'
 
-export const maxDuration = 30
+export const config = { maxDuration: 30 }
 
-export const GET = (request: Request) => handleVoiceRequest(request)
-export const POST = (request: Request) => handleVoiceRequest(request)
-export const OPTIONS = (request: Request) => handleVoiceRequest(request)
+export default {
+  fetch(request: Request): Promise<Response> {
+    return handleVoiceRequest(request)
+  },
+}
