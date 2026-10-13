@@ -179,9 +179,10 @@ export function SettingsSheet({ open, onClose }: { open: boolean; onClose: () =>
           onChange={(v) => s.setVoiceInput(v === 'on')}
         />
         <p className="settings-note text-caption text-ink-soft">
-          이야기 화면의 마이크 버튼이에요(기본 켜짐). 아이가 말한 목소리는 인터넷 음성
-          서비스(ElevenLabs)로 보내 글로 바꾸고, AI(Google)가 짧게 대답한 뒤 같은 목소리로 읽어
-          줘요. 기기나 서버에 녹음을 남기지 않아요. 인터넷이 없으면 버튼이 보이지 않아요.
+          이야기 화면의 마이크 버튼이에요(기본 켜짐). 아이가 말한 목소리는 인터넷 AI
+          서비스(Google)로 보내 글로 바꾸고 짧게 대답한 뒤, 녹음과 같은 목소리(ElevenLabs)로 읽어
+          줘요. 기기나 서버에 녹음을 남기지 않아요. 인터넷이 없으면 아이에게 알려 주고 보기 고르기는
+          그대로 돼요.
         </p>
         <div className="settings-row">
           <span className="text-body font-bold text-ink">탐험가 바꾸기</span>
