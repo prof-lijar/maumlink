@@ -151,7 +151,7 @@ describe('step episode screens', () => {
     expect(screen.getByText(/없어진 물건이 있다면 속상하겠죠/)).toBeInTheDocument()
     await user.click(screen.getByRole('radio', { name: /연필을 돌려주고/ }))
     await user.click(screen.getByRole('button', { name: /선택 확인하기/ }))
-    expect(screen.getByText(/용기있는 선택이네요/)).toBeInTheDocument()
+    expect(screen.getByText(/용기 있는 선택이네요/)).toBeInTheDocument()
     // 이전으로 keeps the earlier answer.
     await user.click(screen.getByRole('button', { name: '이전으로' }))
     expect(screen.getByRole('radio', { name: /연필을 찾지 못해 속상했어요/ })).toHaveAttribute(
@@ -210,7 +210,7 @@ describe('자기 인식·마음건강관리: emotion–body match, expression ch
     // The source document's speech bubbles sit on the scene.
     expect(screen.getByText('발표 진짜 못하나~')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /다음/ }))
-    await user.click(screen.getByRole('radio', { name: '부끄러워요' }))
+    await user.click(screen.getByRole('radio', { name: '걱정돼요' }))
     expect(
       screen.getByText('같은 상황에서도 사람마다 다른 감정을 느낄 수 있어요.'),
     ).toBeInTheDocument()
@@ -293,7 +293,7 @@ describe('자기 인식·마음건강관리: emotion–body match, expression ch
     speak.mockRestore()
     expect(screen.queryByRole('button', { name: /마무리하기/ })).not.toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /연습했어요/ }))
-    expect(screen.getByText(/잘했어요! 힘든 일이 생기면/)).toBeInTheDocument()
+    expect(screen.getByText(/멋져요! 힘든 일이 생기면/)).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /마무리하기/ }))
     await waitFor(() => expect(useMvpProgress.getState().completedEpisodeIds).toEqual(['D01']))
     expect(screen.getByText(/믿을 만한 어른에게 이야기해요/)).toBeInTheDocument()
@@ -341,7 +341,7 @@ describe('잘 모르겠어요, 미션 건너뛰기, 이전으로, 새 완료 기
     await user.click(screen.getByRole('button', { name: /마무리하기/ }))
     await waitFor(() => expect(useMvpProgress.getState().completedEpisodeIds).toEqual(['A01']))
     expect(
-      screen.getByRole('heading', { name: '잘했어요! 오늘도 새로운 방법을 배웠어요.' }),
+      screen.getByRole('heading', { name: '멋져요! 오늘도 새로운 방법을 배웠어요.' }),
     ).toBeInTheDocument()
   })
 

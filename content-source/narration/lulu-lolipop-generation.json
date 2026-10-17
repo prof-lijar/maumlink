@@ -1879,6 +1879,167 @@
       "text": "걱정될 때 배가 아프거나 머리가 아픈 사람이 있어요. 내 몸의 반응을 보고 내 마음을 알 수 있어요.",
       "source": "A01.steps.2.feedback.worried.tummy",
       "generatedAt": "2026-10-13"
+    },
+    {
+      "id": "c25118f0bcac",
+      "tag": "[softly]",
+      "text": "발표하다가 실수를 했어요.",
+      "source": "A01.situation.1",
+      "generatedAt": "2026-10-14"
+    },
+    {
+      "id": "051f9cbc5ed4",
+      "tag": "[softly]",
+      "text": "친구들이 내 발표를 듣고 웃으며 놀렸어요.",
+      "source": "A01.situation.2",
+      "generatedAt": "2026-10-14"
+    },
+    {
+      "id": "102368df2cb4",
+      "tag": "[softly]",
+      "text": "나는 열심히 준비한 발표를 했어요.",
+      "source": "A01.situation.0",
+      "generatedAt": "2026-10-14"
+    },
+    {
+      "id": "3f0662bf2bba",
+      "tag": "[gently]",
+      "text": "친구들이 놀렸을 때 내 마음이 어땠을지 떠올려 봐요.",
+      "source": "A01.steps.0.hint",
+      "generatedAt": "2026-10-14"
+    },
+    {
+      "id": "33b7b8e82073",
+      "tag": "",
+      "text": "친구들에게 화를 내며 “왜 나만 빼고 놀아!”라고 말해요.",
+      "source": "B01.steps.2.options.A",
+      "generatedAt": "2026-10-14"
+    },
+    {
+      "id": "28fec7b04ce6",
+      "tag": "[warmly]",
+      "text": "좋은 방법이에요. 우리 나가서 기분전환을 시켜볼까요? 잠시 조용히 앉아 있으면 어떤 마음이 들까요?",
+      "source": "A01.steps.3.options.C.feedback",
+      "generatedAt": "2026-10-14"
+    },
+    {
+      "id": "2c844988da6f",
+      "tag": "",
+      "text": "누가 연필을 가져갔다고 생각했어요.",
+      "source": "C01.steps.1.options.B",
+      "generatedAt": "2026-10-14"
+    },
+    {
+      "id": "5f75746e18d4",
+      "tag": "[softly]",
+      "text": "급식실에서 줄을 서 있어요.",
+      "source": "D01.situation.0",
+      "generatedAt": "2026-10-14"
+    },
+    {
+      "id": "1ccbd3b290ed",
+      "tag": "[warmly]",
+      "text": "좋은 방법이에요. “나도 같이 놀아도 돼?” 함께하고 싶은 마음을 말로 표현하면 친구가 내 마음을 알 수 있어요.",
+      "source": "B01.steps.2.options.C.feedback",
+      "generatedAt": "2026-10-14"
+    },
+    {
+      "id": "7a3eb1dbc520",
+      "tag": "[warmly]",
+      "text": "용기 있는 선택이네요. 미안한 마음이 들 때 바로 사과하는 멋진 모습입니다.",
+      "source": "C01.steps.2.options.C.feedback",
+      "generatedAt": "2026-10-14"
+    },
+    {
+      "id": "9a931cb6eb66",
+      "tag": "[softly]",
+      "text": "한 친구가 내 앞으로 슬그머니 새치기를 했어요.",
+      "source": "D01.situation.1",
+      "generatedAt": "2026-10-14"
+    },
+    {
+      "id": "21ea3b27e1cf",
+      "tag": "[softly]",
+      "text": "이 친구가 새치기를 한 건 처음이 아니에요.",
+      "source": "D01.situation.2",
+      "generatedAt": "2026-10-14"
+    },
+    {
+      "id": "b60bef9a455a",
+      "tag": "[gently]",
+      "text": "새치기하는 친구가 있어요",
+      "source": "D01.steps.0.hint",
+      "generatedAt": "2026-10-14"
+    },
+    {
+      "id": "d209dea58185",
+      "tag": "[warmly]",
+      "text": "친구에게 바라는 것을 말한 내가 자랑스러워요.",
+      "source": "D01.steps.2.options.B.feedback",
+      "generatedAt": "2026-10-14"
+    },
+    {
+      "id": "d18ecd297778",
+      "tag": "",
+      "text": "친구에게 뭐라고 이야기하고 싶은데 말이 잘 안 나와서",
+      "source": "D01.steps.1.options.frustrated",
+      "generatedAt": "2026-10-14"
+    },
+    {
+      "id": "b0a9aec579f9",
+      "tag": "[cheerfully]",
+      "text": "멋져요! 행동을 나눴어요.",
+      "source": "screen.sorted",
+      "generatedAt": "2026-10-17"
+    },
+    {
+      "id": "7a48682b1219",
+      "tag": "[cheerfully]",
+      "text": "멋져요! 좋은 방법을 골랐어요.",
+      "source": "screen.goodChoice",
+      "generatedAt": "2026-10-17"
+    },
+    {
+      "id": "cf0f43790338",
+      "tag": "[cheerfully]",
+      "text": "멋져요! 오늘도 새로운 방법을 배웠어요.",
+      "source": "screen.completion",
+      "generatedAt": "2026-10-17"
+    },
+    {
+      "id": "a1fe4fdea776",
+      "tag": "",
+      "text": "멋져요! 힘든 일이 생기면 믿을 만한 어른에게 도움을 요청할 수 있어요.",
+      "source": "D01.steps.3.practice.completionMessage",
+      "generatedAt": "2026-10-17"
+    },
+    {
+      "id": "c7622b384a75",
+      "tag": "[warmly]",
+      "text": "멋져요! 친구에게 물건을 돌려주고 사과하는 것은 관계를 회복하는 좋은 방법이에요.",
+      "source": "C01.steps.4.correctFeedback",
+      "generatedAt": "2026-10-17"
+    },
+    {
+      "id": "f3cbe02e6c92",
+      "tag": "[softly]",
+      "text": "이번이 첫 번째가 아니에요.",
+      "source": "D01.situation.1",
+      "generatedAt": "2026-10-17"
+    },
+    {
+      "id": "62abc58b89c9",
+      "tag": "[warmly]",
+      "text": "좋은 방법이에요. 우리 나가서 기분 전환을 시켜볼까요? 잠시 조용히 앉아 있으면 어떤 마음이 들까요?",
+      "source": "A01.steps.3.options.C.feedback",
+      "generatedAt": "2026-10-17"
+    },
+    {
+      "id": "2e10e3368994",
+      "tag": "[softly]",
+      "text": "자꾸 새치기를 하니 뭐라고 이야기하고 싶은데 친구에게 어떻게 이야기해야 할지 모르겠어요.",
+      "source": "D01.situation.2",
+      "generatedAt": "2026-10-17"
     }
   ]
 }

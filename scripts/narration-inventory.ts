@@ -7,6 +7,7 @@ import { NARRATION_VOICES } from '../src/services/narration/voices'
 import { emotionBodyFeedback } from '../src/engine/stepGame'
 import { narrationKey } from '../src/services/recordedNarration'
 import { STORY_DIALOG_COPY } from '../src/screens/storyDialogCopy'
+import gameCopy from '../content/game-copy.json'
 
 const readJson = (path: string): unknown => JSON.parse(readFileSync(path, 'utf8'))
 const ui = UiFile.parse(readJson('content/ui.json'))
@@ -28,9 +29,9 @@ for (const key of ['home.greeting', 'voice.sample']) add(ui[key]?.ko, `ui.${key}
 
 /** Fixed lines the game screens read before content text (see StepEpisodeGame). */
 for (const [id, text] of Object.entries({
-  completion: '잘했어요! 오늘도 새로운 방법을 배웠어요.',
-  goodChoice: '잘했어요! 좋은 방법을 골랐어요.',
-  sorted: '잘했어요! 행동을 나눴어요.',
+  completion: gameCopy.completionCheer,
+  goodChoice: '멋져요! 좋은 방법을 골랐어요.',
+  sorted: '멋져요! 행동을 나눴어요.',
   sortIntro: '행동을 나눠 봐요.',
   retry: '다시 한 번 생각해 볼까요?',
   situation: '상황을 살펴봐요',

@@ -105,7 +105,7 @@ describe('story list asks before resuming or replaying', () => {
     // B01: reflect, reflect, choice, conversation (skippable), choice. Screen 5 = last choice.
     const game = initialStepGame(story)
     const steps = game.steps.map((state, index) => {
-      if (state.kind === 'reflect') return { ...state, selectedId: 'annoyed' }
+      if (state.kind === 'reflect') return { ...state, selectedId: 'angry' }
       if (state.kind === 'choice' && index === 2)
         return { ...state, selectedId: 'B', submittedId: 'B', solved: true }
       return state

@@ -86,7 +86,7 @@ for (const [width, height] of [
     await page.getByRole('button', { name: '선택 확인하기' }).click()
     await page.getByRole('button', { name: '마무리하기' }).click()
     await expect(
-      page.getByRole('heading', { name: '잘했어요! 오늘도 새로운 방법을 배웠어요.' }),
+      page.getByRole('heading', { name: '멋져요! 오늘도 새로운 방법을 배웠어요.' }),
     ).toBeVisible()
     await checkScreen(page)
 
@@ -108,10 +108,19 @@ for (const [width, height] of [
     await checkScreen(page)
     await page.getByRole('button', { name: '미안하다고 말해요.' }).click()
     await page.getByRole('button', { name: '확인하기' }).click()
-    await expect(page.locator('main').getByText(/관계를 회복하는 좋은 방법이에요/)).toBeVisible()
+    await expect(
+      page
+        .locator('main')
+        .getByText(
+          '멋져요! 친구에게 물건을 돌려주고 사과하는 것은 관계를 회복하는 좋은 방법이에요.',
+        ),
+    ).toBeVisible()
     await next(page)
     await page.getByRole('button', { name: '마무리하기' }).click()
     await expect(page.locator('main').getByText('완료한 이야기 2 / 5')).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: '멋져요! 오늘도 새로운 방법을 배웠어요.' }),
+    ).toBeVisible()
 
     // A01 친구들이 내 발표 실수를 듣고 놀린다 (자기 인식): emotion → body → emotion–body link
     await page.goto('/area/A')
@@ -131,6 +140,9 @@ for (const [width, height] of [
     await page.getByRole('radio', { name: /혼자서 산책하기/ }).click()
     await page.getByRole('button', { name: '마무리하기' }).click()
     await expect(page.locator('main').getByText('완료한 이야기 3 / 5')).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: '멋져요! 오늘도 새로운 방법을 배웠어요.' }),
+    ).toBeVisible()
 
     // D01 내 차례인데 친구가 새치기를 했어요 (마음건강관리): feeling → coping → expression → help → practice
     await page.goto('/area/D')
@@ -138,7 +150,7 @@ for (const [width, height] of [
     await next(page)
     await page.getByRole('radio', { name: '답답해요' }).click()
     await next(page)
-    await page.getByRole('radio', { name: /말이 잘 안나와서/ }).click()
+    await page.getByRole('radio', { name: /말이 잘 안 나와서/ }).click()
     await next(page)
     await page.getByRole('radio', { name: /바라는 것 말하기/ }).click()
     await next(page)
@@ -153,8 +165,14 @@ for (const [width, height] of [
     await checkScreen(page)
     await page.getByRole('button', { name: '마무리하기' }).click()
     await expect(page.locator('main').getByText('완료한 이야기 4 / 5')).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: '멋져요! 오늘도 새로운 방법을 배웠어요.' }),
+    ).toBeVisible()
     await page.reload()
     await expect(page.locator('main').getByText('완료한 이야기 4 / 5')).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: '멋져요! 오늘도 새로운 방법을 배웠어요.' }),
+    ).toBeVisible()
 
     // E01 선생님 설명 중 하고 싶은 말이 떠올랐어요 (자기관리): every pick accepted, two-panel scene
     await page.goto('/area/E')
@@ -171,6 +189,9 @@ for (const [width, height] of [
     await page.getByRole('radio', { name: /먼저 선생님 말씀을/ }).click()
     await page.getByRole('button', { name: '마무리하기' }).click()
     await expect(page.locator('main').getByText('완료한 이야기 5 / 5')).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: '멋져요! 오늘도 새로운 방법을 배웠어요.' }),
+    ).toBeVisible()
     await page.getByRole('button', { name: '탐험 지도로 돌아가기' }).click()
     for (const area of ['자기 인식', '관계 인식', '관계 관리', '마음건강관리', '자기관리'])
       await expect(
@@ -442,7 +463,7 @@ test('storage full: completion still renders with an honest warning', async ({ p
   await expect(page.locator('main').getByText(/이 기기에 활동을 저장할 수 없어요/)).toBeVisible()
   await page.getByRole('button', { name: '마무리하기' }).click()
   await expect(
-    page.getByRole('heading', { name: '잘했어요! 오늘도 새로운 방법을 배웠어요.' }),
+    page.getByRole('heading', { name: '멋져요! 오늘도 새로운 방법을 배웠어요.' }),
   ).toBeVisible()
   await expect(page.locator('main').getByText(/완료 기록을 저장하지 못했어요/)).toBeVisible()
   await page.getByRole('button', { name: '다른 이야기 만나기' }).click()

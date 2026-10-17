@@ -33,8 +33,8 @@
       }
     },
     {
-      "id": "0288599d95a6",
-      "text": "잘했어요! 오늘도 새로운 방법을 배웠어요.",
+      "id": "cf0f43790338",
+      "text": "멋져요! 오늘도 새로운 방법을 배웠어요.",
       "sources": [
         "screen.completion"
       ],
@@ -46,8 +46,8 @@
       }
     },
     {
-      "id": "1d427f6bd167",
-      "text": "잘했어요! 좋은 방법을 골랐어요.",
+      "id": "7a48682b1219",
+      "text": "멋져요! 좋은 방법을 골랐어요.",
       "sources": [
         "screen.goodChoice"
       ],
@@ -59,8 +59,8 @@
       }
     },
     {
-      "id": "24ed1f78bd6b",
-      "text": "잘했어요! 행동을 나눴어요.",
+      "id": "b0a9aec579f9",
+      "text": "멋져요! 행동을 나눴어요.",
       "sources": [
         "screen.sorted"
       ],
@@ -150,27 +150,39 @@
       }
     },
     {
-      "id": "7567df202e58",
-      "text": "내가 노력하여 만든 발표를 친구들이 놀리니 속상해",
+      "id": "102368df2cb4",
+      "text": "나는 열심히 준비한 발표를 했어요.",
       "sources": [
         "A01.situation.0"
       ],
       "recorded": {
-        "kyung": true,
+        "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
         "lulu-lolipop": true
       }
     },
     {
-      "id": "1a016fd04cfd",
-      "text": "속상한 마음을 혼자 해결하고 싶어",
+      "id": "c25118f0bcac",
+      "text": "발표하다가 실수를 했어요.",
       "sources": [
-        "A01.situation.1",
-        "A01.steps.0.hint"
+        "A01.situation.1"
       ],
       "recorded": {
-        "kyung": true,
+        "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "051f9cbc5ed4",
+      "text": "친구들이 내 발표를 듣고 웃으며 놀렸어요.",
+      "sources": [
+        "A01.situation.2"
+      ],
+      "recorded": {
+        "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
         "lulu-lolipop": true
@@ -253,32 +265,6 @@
       }
     },
     {
-      "id": "5870ea5c8d80",
-      "text": "부끄러워요",
-      "sources": [
-        "A01.steps.0.options.shy"
-      ],
-      "recorded": {
-        "kyung": true,
-        "sophie-lane": false,
-        "clova-ndain": false,
-        "lulu-lolipop": true
-      }
-    },
-    {
-      "id": "b0374fe525da",
-      "text": "무서워요",
-      "sources": [
-        "A01.steps.0.options.scared"
-      ],
-      "recorded": {
-        "kyung": true,
-        "sophie-lane": false,
-        "clova-ndain": false,
-        "lulu-lolipop": true
-      }
-    },
-    {
       "id": "f97645b5ca47",
       "text": "잘 모르겠어요.",
       "sources": [
@@ -326,6 +312,19 @@
       "text": "같은 상황에서도 사람마다 다른 감정을 느낄 수 있어요.",
       "sources": [
         "A01.steps.0.closing"
+      ],
+      "recorded": {
+        "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "3f0662bf2bba",
+      "text": "친구들이 놀렸을 때 내 마음이 어땠을지 떠올려 봐요.",
+      "sources": [
+        "A01.steps.0.hint"
       ],
       "recorded": {
         "kyung": false,
@@ -794,13 +793,13 @@
       }
     },
     {
-      "id": "e44ba6972df2",
-      "text": "좋은 방법이예요. 우리 나가서 기분전환을 시켜볼까요? 잠시 조용히 앉아 있으면 어떤 마음이 들까요?",
+      "id": "62abc58b89c9",
+      "text": "좋은 방법이에요. 우리 나가서 기분 전환을 시켜볼까요? 잠시 조용히 앉아 있으면 어떤 마음이 들까요?",
       "sources": [
         "A01.steps.3.options.C.feedback"
       ],
       "recorded": {
-        "kyung": true,
+        "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
         "lulu-lolipop": true
@@ -893,19 +892,6 @@
       "sources": [
         "B01.steps.0.prompt",
         "D01.steps.0.prompt"
-      ],
-      "recorded": {
-        "kyung": true,
-        "sophie-lane": false,
-        "clova-ndain": false,
-        "lulu-lolipop": true
-      }
-    },
-    {
-      "id": "691ebb7f3743",
-      "text": "짜증나요",
-      "sources": [
-        "B01.steps.0.options.annoyed"
       ],
       "recorded": {
         "kyung": true,
@@ -1045,13 +1031,13 @@
       }
     },
     {
-      "id": "335ab25d25e4",
-      "text": "친구들에게 화를 내며 “왜 나만 빼도 놀아!＂라고 말해요.",
+      "id": "33b7b8e82073",
+      "text": "친구들에게 화를 내며 “왜 나만 빼고 놀아!”라고 말해요.",
       "sources": [
         "B01.steps.2.options.A"
       ],
       "recorded": {
-        "kyung": true,
+        "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
         "lulu-lolipop": true
@@ -1085,7 +1071,7 @@
     },
     {
       "id": "f8cb19bc9c22",
-      "text": "“가까이에서 기다리면 친구들이 내 마음을 알아줄 수도 있지만, 모를 수도 있어요. 함께 놀고 싶다면 내 마음을 말해보는 건 어떨까요?”.",
+      "text": "가까이에서 기다리면 친구들이 내 마음을 알아줄 수도 있지만, 모를 수도 있어요. 함께 놀고 싶다면 내 마음을 말해보는 건 어떨까요?",
       "sources": [
         "B01.steps.2.options.B.feedback"
       ],
@@ -1110,13 +1096,13 @@
       }
     },
     {
-      "id": "49e1e4333e17",
-      "text": "좋은 방법이에요. ＂나도 같이 놀아도 돼?“함께하고 싶은 마음을 말로 표현하면 친구가 내 마음을 알 수 있어요.",
+      "id": "1ccbd3b290ed",
+      "text": "좋은 방법이에요. “나도 같이 놀아도 돼?” 함께하고 싶은 마음을 말로 표현하면 친구가 내 마음을 알 수 있어요.",
       "sources": [
         "B01.steps.2.options.C.feedback"
       ],
       "recorded": {
-        "kyung": true,
+        "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
         "lulu-lolipop": true
@@ -1124,7 +1110,7 @@
     },
     {
       "id": "12a042ec98ba",
-      "text": "친구에게 말하기 어렵다면 선생님에게 ＂저도 같이 놀고 싶어요＂라고 말해요.",
+      "text": "친구에게 말하기 어렵다면 선생님에게 “저도 같이 놀고 싶어요”라고 말해요.",
       "sources": [
         "B01.steps.2.options.D"
       ],
@@ -1593,19 +1579,6 @@
       }
     },
     {
-      "id": "96007e95146f",
-      "text": "당황스러워요",
-      "sources": [
-        "C01.steps.0.options.flustered"
-      ],
-      "recorded": {
-        "kyung": true,
-        "sophie-lane": false,
-        "clova-ndain": false,
-        "lulu-lolipop": true
-      }
-    },
-    {
       "id": "bea4ab6812b0",
       "text": "재미있어요",
       "sources": [
@@ -1658,13 +1631,13 @@
       }
     },
     {
-      "id": "982b1898cc9d",
-      "text": "누가 연칠을 가져갔다고 생각했어요.",
+      "id": "2c844988da6f",
+      "text": "누가 연필을 가져갔다고 생각했어요.",
       "sources": [
         "C01.steps.1.options.B"
       ],
       "recorded": {
-        "kyung": true,
+        "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
         "lulu-lolipop": true
@@ -1763,7 +1736,7 @@
     },
     {
       "id": "3bbedbc61e0a",
-      "text": "없어진 물건이 있다면 속상하겠죠? 친구 마음을 생각해봐요",
+      "text": "없어진 물건이 있다면 속상하겠죠? 친구 마음을 생각해봐요.",
       "sources": [
         "C01.steps.2.options.B.feedback"
       ],
@@ -1788,13 +1761,13 @@
       }
     },
     {
-      "id": "f68f9256224d",
-      "text": "용기있는 선택이네요. 미안한 마음이 들 때 바로 바과하는 멋진 모습입니다.",
+      "id": "7a3eb1dbc520",
+      "text": "용기 있는 선택이네요. 미안한 마음이 들 때 바로 사과하는 멋진 모습입니다.",
       "sources": [
         "C01.steps.2.options.C.feedback"
       ],
       "recorded": {
-        "kyung": true,
+        "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
         "lulu-lolipop": true
@@ -2165,8 +2138,8 @@
       }
     },
     {
-      "id": "a146bc26331b",
-      "text": "잘했어요! 친구에게 물건을 돌려주고 사과하는 것은 관계를 회복하는 좋은 방법이에요.",
+      "id": "c7622b384a75",
+      "text": "멋져요! 친구에게 물건을 돌려주고 사과하는 것은 관계를 회복하는 좋은 방법이에요.",
       "sources": [
         "C01.steps.4.correctFeedback"
       ],
@@ -2282,39 +2255,39 @@
       }
     },
     {
-      "id": "a51b90123ad0",
-      "text": "급식실에서 내 앞으로 슬그머니 새치기를 하는 친구가 있네요.",
+      "id": "5f75746e18d4",
+      "text": "급식실에서 줄을 서 있어요.",
       "sources": [
         "D01.situation.0"
       ],
       "recorded": {
-        "kyung": true,
+        "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
         "lulu-lolipop": true
       }
     },
     {
-      "id": "f7aafde74a1b",
-      "text": "이번에 첫번째가 아니예요.",
+      "id": "9a931cb6eb66",
+      "text": "한 친구가 내 앞으로 슬그머니 새치기를 했어요.",
       "sources": [
         "D01.situation.1"
       ],
       "recorded": {
-        "kyung": true,
+        "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
         "lulu-lolipop": true
       }
     },
     {
-      "id": "41fdbd6f5d02",
-      "text": "자꾸 새채기를 하니 뭐라고 이야기하고 싶은데 친구에게 어떻게 이야기해야할지 모르겠어요.",
+      "id": "21ea3b27e1cf",
+      "text": "이 친구가 새치기를 한 건 처음이 아니에요.",
       "sources": [
         "D01.situation.2"
       ],
       "recorded": {
-        "kyung": true,
+        "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
         "lulu-lolipop": true
@@ -2374,13 +2347,13 @@
       }
     },
     {
-      "id": "b7a93f819d12",
-      "text": "새치기 하는 친구가 있어요",
+      "id": "b60bef9a455a",
+      "text": "새치기하는 친구가 있어요",
       "sources": [
         "D01.steps.0.hint"
       ],
       "recorded": {
-        "kyung": true,
+        "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
         "lulu-lolipop": true
@@ -2413,13 +2386,13 @@
       }
     },
     {
-      "id": "855cbd4dfcc3",
-      "text": "친구에게 뭐라고 이야기하고 싶은데 말이 잘 안나와서",
+      "id": "d18ecd297778",
+      "text": "친구에게 뭐라고 이야기하고 싶은데 말이 잘 안 나와서",
       "sources": [
         "D01.steps.1.options.frustrated"
       ],
       "recorded": {
-        "kyung": true,
+        "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
         "lulu-lolipop": true
@@ -2479,7 +2452,7 @@
     },
     {
       "id": "feaab1c8cfdb",
-      "text": "내 마음 말하기 – “ 네가 새치기해서 나는 속상했어＂라고 말하기",
+      "text": "내 마음 말하기 – “네가 새치기해서 나는 속상했어”라고 말하기",
       "sources": [
         "D01.steps.2.options.A"
       ],
@@ -2505,7 +2478,7 @@
     },
     {
       "id": "73c9d5287dd9",
-      "text": "바라는 것 말하기 – 다음에는 순서를 지켜주면 좋겠어＂라고 말해요",
+      "text": "바라는 것 말하기 – “다음에는 순서를 지켜주면 좋겠어”라고 말해요",
       "sources": [
         "D01.steps.2.options.B"
       ],
@@ -2517,13 +2490,13 @@
       }
     },
     {
-      "id": "4ea031fece9e",
-      "text": "친구에게 바라는 것을 말한 ‘나’ 자랑스러워요.",
+      "id": "d209dea58185",
+      "text": "친구에게 바라는 것을 말한 내가 자랑스러워요.",
       "sources": [
         "D01.steps.2.options.B.feedback"
       ],
       "recorded": {
-        "kyung": true,
+        "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
         "lulu-lolipop": true
@@ -2531,7 +2504,7 @@
     },
     {
       "id": "a2f75b5384c6",
-      "text": "함께 해결하기 –친구들과 함께 ”우리 순서대로 줄을 서자＂라고 이야기해요",
+      "text": "함께 해결하기 – 친구들과 함께 “우리 순서대로 줄을 서자”라고 이야기해요",
       "sources": [
         "D01.steps.2.options.C"
       ],
@@ -2557,7 +2530,7 @@
     },
     {
       "id": "2556ef5258e5",
-      "text": "도움 요청하기 – 선생님에게 “ 친구와 해결하기 어려워요. 도와주세요＂",
+      "text": "도움 요청하기 – 선생님에게 “친구와 해결하기 어려워요. 도와주세요”",
       "sources": [
         "D01.steps.2.options.D"
       ],
@@ -2895,8 +2868,8 @@
       }
     },
     {
-      "id": "dfecbd5e4c3e",
-      "text": "잘했어요! 힘든 일이 생기면 믿을 만한 어른에게 도움을 요청할 수 있어요.",
+      "id": "a1fe4fdea776",
+      "text": "멋져요! 힘든 일이 생기면 믿을 만한 어른에게 도움을 요청할 수 있어요.",
       "sources": [
         "D01.steps.3.practice.completionMessage"
       ],

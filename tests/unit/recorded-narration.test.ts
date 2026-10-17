@@ -46,16 +46,11 @@ describe('recorded narration', () => {
       expect(voice.playbackRate).toBeGreaterThanOrEqual(0.7)
   })
 
-  it('records the shipped voice only for phrases that still exist, and keeps the reviewed 1.0 phrases', () => {
-    // The 15-story flow added ~380 phrases that have no recording yet (README TODO: 새 문장 녹음);
-    // the browser voice reads those. Every recorded clip must still be a phrase the app speaks.
-    const spoken = new Set(inventory.clips.map((phrase) => phrase.text))
-    const recorded = activeNarrationVoice.clips.map((clip) => clip.text)
-    const covered = inventory.clips.filter((phrase) =>
-      resolveRecordedNarration(phrase.text, 'ko', activeNarrationVoice.clips),
+  it('records every current phrase in the shipped voice, including spelling corrections', () => {
+    const missing = inventory.clips.filter(
+      (phrase) => !resolveRecordedNarration(phrase.text, 'ko', activeNarrationVoice.clips),
     )
-    expect(covered.length).toBeGreaterThan(60)
-    expect(recorded.filter((text) => spoken.has(text)).length).toBeGreaterThan(60)
+    expect(missing.map((phrase) => phrase.text)).toEqual([])
     // Reviewed sentences that were recorded for 1.0 are still spoken by the recording.
     expect(
       resolveRecordedNarration('눈물이 나온다, 고개가 숙여진다, 몸에 힘이 빠진다.', 'ko'),
