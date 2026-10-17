@@ -2040,6 +2040,20 @@
       "text": "자꾸 새치기를 하니 뭐라고 이야기하고 싶은데 친구에게 어떻게 이야기해야 할지 모르겠어요.",
       "source": "D01.situation.2",
       "generatedAt": "2026-10-17"
+    },
+    {
+      "id": "348fc13e912c",
+      "tag": "[warmly]",
+      "text": "내가 고른 감정",
+      "source": "B01.steps.1.selectionSummary.title",
+      "generatedAt": "2026-10-17"
+    },
+    {
+      "id": "6ac9017fe4cc",
+      "tag": "",
+      "text": "친구들이 같이 놀자고 이야기해 주지 않아서",
+      "source": "B01.steps.1.options.hurt",
+      "generatedAt": "2026-10-17"
     }
   ]
 }

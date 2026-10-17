@@ -8,6 +8,7 @@ import { emotionBodyFeedback } from '../src/engine/stepGame'
 import { narrationKey } from '../src/services/recordedNarration'
 import { STORY_DIALOG_COPY } from '../src/screens/storyDialogCopy'
 import gameCopy from '../content/game-copy.json'
+import { reflectionClosingText, reflectionSelectionLine } from '../src/content/reflection'
 
 const readJson = (path: string): unknown => JSON.parse(readFileSync(path, 'utf8'))
 const ui = UiFile.parse(readJson('content/ui.json'))
@@ -56,9 +57,23 @@ for (const file of readdirSync('content/episodes').filter((name) => name.endsWit
       if ('options' in step)
         for (const option of step.options) {
           put(option.text, `${at}.options.${option.id}`)
+          if ('emotionLabel' in option)
+            put(option.emotionLabel, `${at}.options.${option.id}.emotionLabel`)
           if ('feedback' in option) put(option.feedback, `${at}.options.${option.id}.feedback`)
         }
-      if ('closing' in step) put(step.closing, `${at}.closing`)
+      if ('closing' in step)
+        put(step.kind === 'reflect' ? reflectionClosingText(step) : step.closing, `${at}.closing`)
+      if (step.kind === 'reflect' && step.selectionSummary) {
+        const summary = step.selectionSummary
+        put(summary.title, `${at}.selectionSummary.title`)
+        const source = episode.steps[summary.fromStep]
+        if (source?.kind === 'reflect')
+          for (const choice of source.options)
+            put(
+              reflectionSelectionLine(summary, choice.text),
+              `${at}.selectionSummary.${choice.id}`,
+            )
+      }
       if ('title' in step) put(step.title, `${at}.title`)
       if ('instruction' in step) put(step.instruction, `${at}.instruction`)
       if ('hint' in step) put(step.hint, `${at}.hint`)

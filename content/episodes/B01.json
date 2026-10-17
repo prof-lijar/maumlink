@@ -56,22 +56,32 @@
         {
           "id": "annoyed",
           "emotionId": "annoyed",
-          "text": "친구들이 나와 놀기 싫어한다고 생각해서"
+          "text": "친구들이 나와 놀기 싫어한다고 생각해서",
+          "emotionLabel": "짜증나요"
         },
         {
           "id": "angry",
           "emotionId": "angry",
-          "text": "나만 빼고 노는 것 같아서"
+          "text": "나만 빼고 노는 것 같아서",
+          "emotionLabel": "화가 나요"
         },
         {
           "id": "embarrassed",
           "emotionId": "embarrassed",
-          "text": "어떻게 같이 놀자고 말해야 할지 몰라서"
+          "text": "어떻게 같이 놀자고 말해야 할지 몰라서",
+          "emotionLabel": "창피해요"
         },
         {
           "id": "worried",
           "emotionId": "worried",
-          "text": "친구들이 거절할까 봐 걱정돼서"
+          "text": "친구들이 거절할까 봐 걱정돼서",
+          "emotionLabel": "걱정돼요"
+        },
+        {
+          "id": "hurt",
+          "emotionId": "hurt",
+          "emotionLabel": "서운해요",
+          "text": "친구들이 같이 놀자고 이야기해 주지 않아서"
         },
         {
           "id": "not-sure",
@@ -80,7 +90,13 @@
           "feedback": "잘 모르겠어도 괜찮아요. 천천히 생각해 봐도 돼요."
         }
       ],
-      "closing": "나와 너의 생각이 다를 수 있어! 친구의 생각은 겉으로 보이는 행동만으로 정확히 알기 어려워요. 친구에게 직접 물어보면 더 잘 알 수 있어요."
+      "closing": "친구의 생각은 겉으로 보이는 행동만으로 정확히 알기 어려워요. 친구에게 직접 물어보면 더 잘 알 수 있어요.",
+      "selectionSummary": {
+        "fromStep": 0,
+        "title": "내가 고른 감정",
+        "template": "‘{choice}’를 골랐어요."
+      },
+      "closingTitle": "나와 너의 생각이 다를 수 있어!"
     },
     {
       "kind": "choice",
@@ -197,7 +213,7 @@
   "safetyNote": "친구가 지금은 어렵다고 하면 다른 놀이를 골라도 좋아요. 계속 따돌림을 당하면 어른에게 알려요.",
   "review": {
     "state": "draft",
-    "educatorSafetyNote": "친구들이 일부러 따돌린 것처럼 단정하거나 연출하지 않는다. 친구의 실제 생각은 물어보기 전까지 확정된 사실로 제시하지 않는다. 감정 고르기에는 정답이 없다. 서운해요의 이유는 원문에 없어 이유 보기에서 제외했다.",
-    "source": "관계 인식 콘텐츠설계서(양수정) PDF 원문 전사 content-source/reviewed/scenarios/social-playground.json — 상황·감정·이유·행동 보기·피드백·마무리 문구 그대로(원문 오탈자 보존). 친구와 대화하기·확인 질문·안전 약속은 Maumlink2 2차 요청에서 가져옴."
+    "educatorSafetyNote": "친구들이 일부러 따돌린 것처럼 단정하거나 연출하지 않는다. 친구의 실제 생각은 물어보기 전까지 확정된 사실로 제시하지 않는다. 감정 고르기에는 정답이 없다. 2026-10-17 고객 요청으로 서운해요의 이유를 추가했다. 먼저 감정을 고르고 다음 단계에서 이유를 자유롭게 살펴보며, 특정 감정과 이유를 정답으로 연결하지 않는다.",
+    "source": "관계 인식 콘텐츠설계서(양수정) PDF 원문 전사 content-source/reviewed/scenarios/social-playground.json — 상황·감정·이유·행동 보기·피드백·마무리 문구 그대로(원문 오탈자 보존). 친구와 대화하기·확인 질문·안전 약속은 Maumlink2 2차 요청에서 가져옴. 2026-10-17 고객·서현정 피드백: 감정 선택 이후 이유 탐색, 선택 감정 부제목/요약, 서운해요 이유 추가."
   }
 }

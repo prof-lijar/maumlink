@@ -1,6 +1,11 @@
 import { useEffect, useReducer, useRef, useState, type RefObject } from 'react'
 import { useNavigate } from 'react-router'
 import type { EpisodeStep, StepEpisode } from '@/content/stepSchema'
+import {
+  reflectionChoiceText,
+  reflectionClosingText,
+  reflectionSummary,
+} from '@/content/reflection'
 import { episodesFor, getEpisode } from '@/content/episodeIndex'
 import type { OptionId } from '@/content/schema'
 import { ChoiceCard } from '@/design/ChoiceCard'
@@ -135,6 +140,7 @@ export function StepEpisodeGame({ episode }: { episode: StepEpisode }) {
   const index = game.screen - 1
   const step = episode.steps[index]
   const listPath = `/area/${episode.domainId}`
+  const summary = reflectionSummary(episode, game, index)
   const entry = getEpisode(episode.id)
   const storyNo = String(
     episodesFor(episode.domainId).findIndex((item) => item.id === episode.id) + 1,
@@ -202,7 +208,7 @@ export function StepEpisodeGame({ episode }: { episode: StepEpisode }) {
     game.screen === 0
       ? { text: episode.situation.sentences.join(' '), key: 'situation' }
       : game.screen < last && step
-        ? stepNarration(step, game.steps[index])
+        ? stepNarration(step, game.steps[index], summary)
         : { text: undefined, key: 'complete' }
   useAutoRead(narration.text, `${episode.id}:${game.screen}:${narration.key}`)
 
@@ -305,6 +311,7 @@ export function StepEpisodeGame({ episode }: { episode: StepEpisode }) {
           {step && game.screen < last && (
             <StepBody
               step={step}
+              summary={summary}
               game={game}
               index={index}
               dispatch={dispatch}
@@ -374,6 +381,7 @@ export function StepEpisodeGame({ episode }: { episode: StepEpisode }) {
 
 function StepBody({
   step,
+  summary,
   game,
   index,
   dispatch,
@@ -383,6 +391,7 @@ function StepBody({
   voiceContext,
 }: {
   step: EpisodeStep
+  summary: ReturnType<typeof reflectionSummary>
   game: StepGame
   index: number
   dispatch: (event: StepEvent) => void
@@ -419,6 +428,16 @@ function StepBody({
         <h1 ref={headingRef} tabIndex={-1} className="garden-title">
           {step.prompt}
         </h1>
+        {summary && (
+          <section
+            aria-label={summary.title}
+            className="garden-card garden-reflect garden-reflect-summary"
+          >
+            <h2 className="garden-reflect__heading">{summary.title}</h2>
+            <p>{summary.selection}</p>
+            {picked && <p>{picked.text}</p>}
+          </section>
+        )}
         <div role="radiogroup" aria-label={step.label} className="garden-choices">
           {step.options.map((option) => (
             <ChoiceCard
@@ -426,11 +445,22 @@ function StepBody({
               variant="garden"
               id={option.id as OptionId}
               text={option.text}
+              label={option.emotionLabel}
               imageSrc={option.emotionId ? faceArt(option.emotionId) : undefined}
               selected={state.selectedId === option.id}
               onSelect={(id) => {
                 // The pick, its explanation and the shared closing line, in reading order.
-                readAloud([option.text, option.feedback, step.closing].filter(Boolean).join(' '))
+                readAloud(
+                  [
+                    summary?.title,
+                    summary?.selection,
+                    reflectionChoiceText(option),
+                    option.feedback,
+                    reflectionClosingText(step),
+                  ]
+                    .filter(Boolean)
+                    .join(' '),
+                )
                 dispatch({ type: 'reflect', id })
               }}
             />
@@ -445,6 +475,7 @@ function StepBody({
         {picked && (
           <div role="status" className="garden-card garden-message garden-reflect">
             {picked.feedback && <p>{picked.feedback}</p>}
+            {step.closingTitle && <h2 className="garden-reflect__heading">{step.closingTitle}</h2>}
             <p className="garden-reflect__closing">{step.closing}</p>
           </div>
         )}
@@ -622,10 +653,14 @@ function StepBody({
 function stepNarration(
   step: EpisodeStep,
   state: StepGame['steps'][number] | undefined,
+  summary?: ReturnType<typeof reflectionSummary>,
 ): { text: string | undefined; key: string } {
   switch (step.kind) {
     case 'reflect':
-      return { text: step.prompt, key: 'reflect' }
+      return {
+        text: [step.prompt, summary?.title, summary?.selection].filter(Boolean).join(' '),
+        key: 'reflect',
+      }
     case 'choice': {
       const submitted =
         state?.kind === 'choice'

@@ -208,6 +208,7 @@
         "A01.steps.0.options.angry",
         "A01.steps.2.emotions.angry",
         "B01.steps.0.options.angry",
+        "B01.steps.1.options.angry.emotionLabel",
         "C01.steps.0.options.angry"
       ],
       "recorded": {
@@ -255,6 +256,7 @@
         "A01.steps.0.options.worried",
         "A01.steps.2.emotions.worried",
         "B01.steps.0.options.worried",
+        "B01.steps.1.options.worried.emotionLabel",
         "C01.steps.0.options.worried"
       ],
       "recorded": {
@@ -904,7 +906,8 @@
       "id": "d2294d1fc5ce",
       "text": "창피해요",
       "sources": [
-        "B01.steps.0.options.embarrassed"
+        "B01.steps.0.options.embarrassed",
+        "B01.steps.1.options.embarrassed.emotionLabel"
       ],
       "recorded": {
         "kyung": true,
@@ -917,7 +920,8 @@
       "id": "63c30b9b83c3",
       "text": "서운해요",
       "sources": [
-        "B01.steps.0.options.hurt"
+        "B01.steps.0.options.hurt",
+        "B01.steps.1.options.hurt.emotionLabel"
       ],
       "recorded": {
         "kyung": true,
@@ -966,6 +970,19 @@
       }
     },
     {
+      "id": "691ebb7f3743",
+      "text": "짜증나요",
+      "sources": [
+        "B01.steps.1.options.annoyed.emotionLabel"
+      ],
+      "recorded": {
+        "kyung": true,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
       "id": "677818bf099f",
       "text": "나만 빼고 노는 것 같아서",
       "sources": [
@@ -1005,6 +1022,19 @@
       }
     },
     {
+      "id": "6ac9017fe4cc",
+      "text": "친구들이 같이 놀자고 이야기해 주지 않아서",
+      "sources": [
+        "B01.steps.1.options.hurt"
+      ],
+      "recorded": {
+        "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
       "id": "46018173cfcd",
       "text": "나와 너의 생각이 다를 수 있어! 친구의 생각은 겉으로 보이는 행동만으로 정확히 알기 어려워요. 친구에게 직접 물어보면 더 잘 알 수 있어요.",
       "sources": [
@@ -1012,6 +1042,84 @@
       ],
       "recorded": {
         "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "348fc13e912c",
+      "text": "내가 고른 감정",
+      "sources": [
+        "B01.steps.1.selectionSummary.title"
+      ],
+      "recorded": {
+        "kyung": false,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "e1c6b1cf3536",
+      "text": "‘화가 나요’를 골랐어요.",
+      "sources": [
+        "B01.steps.1.selectionSummary.angry"
+      ],
+      "recorded": {
+        "kyung": true,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "b3e5318e0982",
+      "text": "‘창피해요’를 골랐어요.",
+      "sources": [
+        "B01.steps.1.selectionSummary.embarrassed"
+      ],
+      "recorded": {
+        "kyung": true,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "d6903d3677c6",
+      "text": "‘서운해요’를 골랐어요.",
+      "sources": [
+        "B01.steps.1.selectionSummary.hurt"
+      ],
+      "recorded": {
+        "kyung": true,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "9e26cc9ba70d",
+      "text": "‘걱정돼요’를 골랐어요.",
+      "sources": [
+        "B01.steps.1.selectionSummary.worried"
+      ],
+      "recorded": {
+        "kyung": true,
+        "sophie-lane": false,
+        "clova-ndain": false,
+        "lulu-lolipop": true
+      }
+    },
+    {
+      "id": "f347efe3b5e4",
+      "text": "‘잘 모르겠어요’를 골랐어요.",
+      "sources": [
+        "B01.steps.1.selectionSummary.not-sure"
+      ],
+      "recorded": {
+        "kyung": true,
         "sophie-lane": false,
         "clova-ndain": false,
         "lulu-lolipop": true
