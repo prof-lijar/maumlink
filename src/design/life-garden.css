@@ -1468,6 +1468,22 @@
 .garden-match__card[data-side='body'] {
   background: #f4f9fd;
 }
+.garden-match__card[data-side='emotion'] {
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  padding-inline: 8px;
+}
+.garden-match__face {
+  flex: 0 0 auto;
+  width: clamp(32px, 12vw, 48px);
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+.garden-match__card[data-side='emotion'] .garden-sort-card__text {
+  min-width: 0;
+}
 .garden-practice {
   display: flex;
   flex-direction: column;
@@ -1500,6 +1516,9 @@
 @media (max-width: 360px) {
   .garden-match {
     grid-template-columns: minmax(0, 1fr) 24px minmax(0, 1fr);
+  }
+  .garden-match__face {
+    width: 32px;
   }
 }
 
