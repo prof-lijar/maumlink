@@ -4,7 +4,7 @@ import { resolveL, resolveT } from '../../src/i18n/useT'
 describe('i18n', () => {
   it('resolves Korean by default and interpolates params', () => {
     expect(resolveT('home.count', 'ko', { n: 3 })).toBe('상황 3개')
-    expect(resolveT('feeling.chose', 'ko', { emotion: '속상해요' })).toBe("'속상해요'를 골랐어요.")
+    expect(resolveT('feeling.chose', 'ko', { emotion: '속상해요' })).toBe('‘속상해요’를 골랐어요.')
   })
   it('resolves English when present and falls back to Korean when missing (D17)', () => {
     expect(resolveT('nav.next', 'en')).toBe('Next')

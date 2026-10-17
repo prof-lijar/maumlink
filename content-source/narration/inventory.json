@@ -1166,7 +1166,7 @@
     },
     {
       "id": "f3f2394b9959",
-      "text": "가까이에 가서 조용히 친구들을 기다려요",
+      "text": "가까이에 가서 조용히 친구들을 기다려요.",
       "sources": [
         "B01.steps.2.options.B"
       ],
@@ -1217,13 +1217,13 @@
       }
     },
     {
-      "id": "12a042ec98ba",
-      "text": "친구에게 말하기 어렵다면 선생님에게 “저도 같이 놀고 싶어요”라고 말해요.",
+      "id": "b7886288bd1f",
+      "text": "친구들에게 말하기 어렵다면 선생님에게 “저도 같이 놀고 싶어요”라고 말해요.",
       "sources": [
         "B01.steps.2.options.D"
       ],
       "recorded": {
-        "kyung": true,
+        "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
         "lulu-lolipop": true
