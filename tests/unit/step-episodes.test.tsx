@@ -265,7 +265,7 @@ describe('자기 인식·마음건강관리: emotion–body match, expression ch
     await user.click(screen.getByRole('button', { name: /다음/ }))
     // Every reviewed coping option is accepted; asking a teacher first is a full answer.
     await user.click(screen.getByRole('radio', { name: /도움 요청하기/ }))
-    expect(screen.getByText(/선생님께 도움을 요청했군요/)).toBeInTheDocument()
+    expect(screen.getByText(/선생님께 도움을 잘 요청했어요/)).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /선택 확인하기/ })).not.toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /다음/ }))
 

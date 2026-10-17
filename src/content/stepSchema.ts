@@ -21,11 +21,22 @@ const ReflectStep = z.object({
         feedback: z.string().min(1).optional(),
         /** Emotion id from the reviewed emotion set; shows the cartoon face card when present. */
         emotionId: z.string().min(1).optional(),
+        /** Visible feeling name above a reason; the reason itself stays in text. */
+        emotionLabel: z.string().min(1).optional(),
       }),
     )
     .min(2),
   /** Optional 도움말 (the source document's key sentence). */
   hint: z.string().min(1).optional(),
+  /** Show an earlier feeling pick while the child explores its possible reasons. */
+  selectionSummary: z
+    .object({
+      fromStep: z.number().int().nonnegative(),
+      title: z.string().min(1),
+      template: z.string().includes('{choice}'),
+    })
+    .optional(),
+  closingTitle: z.string().min(1).optional(),
   closing: z.string().min(1),
 })
 /** Graded pick: wrong options explain the outcome and the child may choose again. */
@@ -137,6 +148,7 @@ export const EpisodeStepSchema = z.discriminatedUnion('kind', [
   ConversationStep,
 ])
 export type EpisodeStep = z.infer<typeof EpisodeStepSchema>
+export type ReflectStepData = z.infer<typeof ReflectStep>
 export type SequenceMissionData = z.infer<typeof SequenceStep>
 export type ConversationStepData = z.infer<typeof ConversationStep>
 export type EmotionBodyMissionData = z.infer<typeof EmotionBodyMatchStep>
@@ -176,6 +188,11 @@ export const StepEpisodeSchema = z
         if (new Set(ids).size !== ids.length) issue('Option IDs must be unique')
         if (step.kind === 'choice' && step.acceptedIds.some((id) => !ids.includes(id)))
           issue('Accepted option is missing')
+      }
+      if (step.kind === 'reflect' && step.selectionSummary) {
+        const source = step.selectionSummary.fromStep
+        if (source >= index || episode.steps[source]?.kind !== 'reflect')
+          issue('Selection summary must reference an earlier reflection step')
       }
       if (step.kind === 'conversation') conversationIssues(step).forEach(issue)
       if (

@@ -17,6 +17,7 @@ interface Props {
   id: OptionId
   domain?: Domain
   text: string
+  label?: string
   illustrationSrc?: string
   /** Garden variant: a cartoon face/object shown in place of the letter badge. */
   imageSrc?: string
@@ -35,6 +36,7 @@ export function ChoiceCard({
   id,
   domain,
   text,
+  label,
   illustrationSrc,
   imageSrc,
   selected,
@@ -119,7 +121,14 @@ export function ChoiceCard({
             {selected ? <CheckIcon size={26} /> : id}
           </span>
         )}
-        <span className={garden ? 'garden-choice__text' : 'flex-1 text-body text-ink'}>{text}</span>
+        <span className={garden ? 'garden-choice__text' : 'flex-1 text-body text-ink'}>
+          {label && (
+            <>
+              <span className="garden-choice__label">{label}</span>{' '}
+            </>
+          )}
+          {text}
+        </span>
       </button>
       {onSpeak && (
         <button

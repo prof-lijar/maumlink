@@ -1,5 +1,6 @@
 import type { RefObject } from 'react'
 import type { EmotionBodyMissionData } from '@/content/stepSchema'
+import { faceArt } from '@/design/devkitAssets'
 import {
   emotionBodyFeedback,
   type EmotionBodyEvent,
@@ -68,11 +69,22 @@ export function EmotionBodyMatchMission({
               key={emotion.id}
               type="button"
               className="garden-sort-card garden-match__card"
+              data-side="emotion"
               style={{ gridColumn: 1, gridRow: index + 1 }}
               aria-pressed={state.selectedEmotionId === emotion.id}
               aria-label={`${emotion.text}${body ? `, ${bodyText(body)}와 연결됨` : ''}`}
               onClick={() => dispatch({ type: 'selectEmotion', id: emotion.id })}
             >
+              <img
+                className="garden-match__face"
+                src={faceArt(emotion.id)}
+                alt=""
+                aria-hidden="true"
+                width={400}
+                height={400}
+                draggable={false}
+                decoding="async"
+              />
               <span className="garden-sort-card__text">{emotion.text}</span>
             </button>
           )

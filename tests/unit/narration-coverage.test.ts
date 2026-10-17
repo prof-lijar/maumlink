@@ -6,6 +6,11 @@ import { resolveRecordedNarration } from '@/services/recordedNarration'
 import { emotionBodyFeedback } from '@/engine/stepGame'
 import { STORY_DIALOG_COPY } from '@/screens/storyDialogCopy'
 import gameCopy from '../../content/game-copy.json'
+import {
+  reflectionChoiceText,
+  reflectionClosingText,
+  reflectionSelectionLine,
+} from '@/content/reflection'
 const missing: string[] = []
 const check = (text: string | undefined, where: string) => {
   if (!text?.trim()) return
@@ -22,7 +27,28 @@ for (const file of readdirSync('content/episodes').filter((n) => n.endsWith('.js
     if (step.kind === 'reflect') {
       check(step.prompt, at)
       for (const o of step.options)
-        check([o.text, o.feedback, step.closing].filter(Boolean).join(' '), `${at}.${o.id}`)
+        check(
+          [reflectionChoiceText(o), o.feedback, reflectionClosingText(step)]
+            .filter(Boolean)
+            .join(' '),
+          `${at}.${o.id}`,
+        )
+      if (step.selectionSummary) {
+        const summary = step.selectionSummary
+        const source = e.steps[summary.fromStep]
+        if (source?.kind === 'reflect')
+          for (const choice of source.options) {
+            const intro = `${summary.title} ${reflectionSelectionLine(summary, choice.text)}`
+            check(`${step.prompt} ${intro}`, `${at}.summary.${choice.id}`)
+            for (const option of step.options)
+              check(
+                [intro, reflectionChoiceText(option), option.feedback, reflectionClosingText(step)]
+                  .filter(Boolean)
+                  .join(' '),
+                `${at}.summary.${choice.id}.${option.id}`,
+              )
+          }
+      }
     }
     if (step.kind === 'choice') {
       check(step.prompt, at)

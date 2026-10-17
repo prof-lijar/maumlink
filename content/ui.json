@@ -184,7 +184,7 @@
     "en": "Step {i} of {n}"
   },
   "feeling.chose": {
-    "ko": "'{emotion}'를 골랐어요.",
+    "ko": "‘{emotion}’를 골랐어요.",
     "en": "You chose '{emotion}'."
   },
   "feeling.pickFirst": {
