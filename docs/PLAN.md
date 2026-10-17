@@ -4,6 +4,8 @@
 
 ## 현재 작업
 
+- **9-14 — 최신 고객 피드백 APK 재빌드 (완료)**: 현재 커밋의 A01/B01/D01 변경과 최신 녹음을 Android 디버그 APK로 묶고 서명·ZIP·내장 웹/음성 자산을 검증한다.
+
 - **9-13 — D01 나머지 행동 보기·피드백 교정 (완료)**: 함께 해결하기·도움 요청하기와 피드백을 고객 문구로 수정하고 줄바꿈·녹음을 맞춘다. 바라는 것 말하기는 서현정 의견에 따라 기존 인용 문장을 유지한다.
 
 - **9-12 — D01 내 마음 말하기 문구 교정 (완료)**: 고객이 지정한 첫 보기를 `내 마음을 말하기-` 다음 줄 `“네가 새치기해서 속상했어” 라고 말해요.`로 수정하고 녹음·실제 화면을 검증한다.
@@ -280,3 +282,13 @@ F1의 임시 이모지·상징 그림은 6-1 작업에서 사용자 제공 devki
 - **검증:** `pnpm build`(콘텐츠 5편·타입 포함), `pnpm typecheck`, `pnpm lint`, `pnpm test` **104/104**, `pnpm test:e2e` **13/13**(53.2초), `git diff --check` 통과. 기존 도움 요청 단위 검사의 기대 문장을 새 문구로 갱신했다. 전 주제 완주·현재 녹음 오프라인 디코딩도 통과했다. 기존 Vite native config/청크 크기 경고는 유지된다.
 - **화면:** 실제 `http://localhost:5173/episode/D01/play`의 390/820px에서 네 보기의 정확한 문장·제목 뒤 실제 줄바꿈·각 선택 후 피드백을 모두 확인했다. 모든 선택에서 다음 진행 가능, D 선택 후 새로고침 유지, 가로 넘침 없음, main axe WCAG 2.1 A/AA 위반 0. `.tmp/d01-followup-390-D.png`, `820-A.png` 등 캡처를 직접 검토했다.
 - **전달/남은 확인:** 열린 고객 피드백 PR #4에 후속 커밋한다. 문구만 바뀌므로 콘텐츠 버전·선택 ID·저장 형식은 유지한다. 물리 기기/사람의 최종 청취·APK 재빌드·운영 배포는 미실시다.
+
+
+### 9-14 최신 고객 피드백 APK — 2026-10-17
+
+- **기준:** `24a2873d8fe6cc980ce0eb8686ebdd12a119f724`의 최신 A01 감정 그림·B01 감정/이유/문구·D01 표현/도움 요청/응원 문구와 재생성 음성을 포함한다. 제품 코드 추가 변경 없이 APK를 재빌드했다. 이전 APK는 `.tmp/apk-before-9-14/app-debug.apk`로 보존했다.
+- **빌드:** `pnpm build:native`(콘텐츠 5편·TypeScript·Vite native·Capacitor sync) 통과. Corretto JDK 21 `./gradlew assembleDebug --offline` **BUILD SUCCESSFUL**(5초). 기존 Vite 청크/native config 및 Gradle flatDir 경고는 유지된다.
+- **산출물:** `android/app/build/outputs/apk/debug/app-debug.apk`, **29,164,568바이트(약 29.2MB)**. `com.maumlink.app`, versionCode 1/versionName 1.0, 최소 API 24/target 36. 디버그 서명본이다.
+- **검증:** `apksigner verify --verbose` v2 서명 통과, `aapt dump badging` 패키지 확인, ZIP CRC 통과. APK 웹 자산 **566개**가 현재 native `dist`와 바이트 단위로 일치하고 현재 녹음 **258/258개**가 원본 MP3와 일치한다. 최신 B01/D01 문구와 A01 얼굴 그림 4개 포함 확인. native APK에는 `sw.js` 없음.
+- **SHA-256:** `cd0cd19b23b636d518469c67c2beea092ff6c9e1953c9572733211aad131550b`.
+- **남은 확인:** 기기 설치/실행은 미실시이며 운영 웹/API 배포는 하지 않았다. 동일 제품 커밋의 직전 단위 104/104·브라우저 13/13 검증을 재사용했다. 이 APK가 앞선 9-7 APK를 대체하는 최신 산출물이다.
