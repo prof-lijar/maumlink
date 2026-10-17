@@ -2068,6 +2068,34 @@
       "text": "내 마음을 말하기-\n“네가 새치기해서 속상했어” 라고 말해요.",
       "source": "D01.steps.2.options.A",
       "generatedAt": "2026-10-17"
+    },
+    {
+      "id": "108f6b9e7985",
+      "tag": "",
+      "text": "함께 해결하기-\n“우리 순서대로 줄을 서자”라고 이야기해요.",
+      "source": "D01.steps.2.options.C",
+      "generatedAt": "2026-10-17"
+    },
+    {
+      "id": "d8b4b87a597f",
+      "tag": "",
+      "text": "도움 요청하기-\n선생님께 “ 친구가 새치기해서 속상해요. 도와주세요.” 라고 말해요.",
+      "source": "D01.steps.2.options.D",
+      "generatedAt": "2026-10-17"
+    },
+    {
+      "id": "fb6a3d5b63f9",
+      "tag": "[warmly]",
+      "text": "선생님께 도움을 잘 요청했어요. 혼자 힘들어 하지 말고, 어려울 때는 도움을 요청해도 괜찮아요.",
+      "source": "D01.steps.2.options.D.feedback",
+      "generatedAt": "2026-10-17"
+    },
+    {
+      "id": "49d79d6f1d74",
+      "tag": "[warmly]",
+      "text": "멋져요! 친구에게 속상한 마음을 솔직하게 표현했어요.",
+      "source": "D01.steps.2.options.A.feedback",
+      "generatedAt": "2026-10-17"
     }
   ]
 }
