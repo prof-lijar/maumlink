@@ -173,7 +173,7 @@
         "sentence": "선생님, 친구가 계속 새치기해서 힘들어요. 도와주세요.",
         "listener": "선생님",
         "enableAudio": true,
-        "completionMessage": "잘했어요! 힘든 일이 생기면 믿을 만한 어른에게 도움을 요청할 수 있어요."
+        "completionMessage": "멋져요! 힘든 일이 생기면 믿을 만한 어른에게 도움을 요청할 수 있어요."
       },
       "skippable": true
     }

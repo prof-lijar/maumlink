@@ -1984,6 +1984,62 @@
       "text": "친구에게 뭐라고 이야기하고 싶은데 말이 잘 안 나와서",
       "source": "D01.steps.1.options.frustrated",
       "generatedAt": "2026-10-14"
+    },
+    {
+      "id": "b0a9aec579f9",
+      "tag": "[cheerfully]",
+      "text": "멋져요! 행동을 나눴어요.",
+      "source": "screen.sorted",
+      "generatedAt": "2026-10-17"
+    },
+    {
+      "id": "7a48682b1219",
+      "tag": "[cheerfully]",
+      "text": "멋져요! 좋은 방법을 골랐어요.",
+      "source": "screen.goodChoice",
+      "generatedAt": "2026-10-17"
+    },
+    {
+      "id": "cf0f43790338",
+      "tag": "[cheerfully]",
+      "text": "멋져요! 오늘도 새로운 방법을 배웠어요.",
+      "source": "screen.completion",
+      "generatedAt": "2026-10-17"
+    },
+    {
+      "id": "a1fe4fdea776",
+      "tag": "",
+      "text": "멋져요! 힘든 일이 생기면 믿을 만한 어른에게 도움을 요청할 수 있어요.",
+      "source": "D01.steps.3.practice.completionMessage",
+      "generatedAt": "2026-10-17"
+    },
+    {
+      "id": "c7622b384a75",
+      "tag": "[warmly]",
+      "text": "멋져요! 친구에게 물건을 돌려주고 사과하는 것은 관계를 회복하는 좋은 방법이에요.",
+      "source": "C01.steps.4.correctFeedback",
+      "generatedAt": "2026-10-17"
+    },
+    {
+      "id": "f3cbe02e6c92",
+      "tag": "[softly]",
+      "text": "이번이 첫 번째가 아니에요.",
+      "source": "D01.situation.1",
+      "generatedAt": "2026-10-17"
+    },
+    {
+      "id": "62abc58b89c9",
+      "tag": "[warmly]",
+      "text": "좋은 방법이에요. 우리 나가서 기분 전환을 시켜볼까요? 잠시 조용히 앉아 있으면 어떤 마음이 들까요?",
+      "source": "A01.steps.3.options.C.feedback",
+      "generatedAt": "2026-10-17"
+    },
+    {
+      "id": "2e10e3368994",
+      "tag": "[softly]",
+      "text": "자꾸 새치기를 하니 뭐라고 이야기하고 싶은데 친구에게 어떻게 이야기해야 할지 모르겠어요.",
+      "source": "D01.situation.2",
+      "generatedAt": "2026-10-17"
     }
   ]
 }

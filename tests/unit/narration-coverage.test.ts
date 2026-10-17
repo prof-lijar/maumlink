@@ -5,12 +5,13 @@ import { StepEpisodeSchema } from '@/content/stepSchema'
 import { resolveRecordedNarration } from '@/services/recordedNarration'
 import { emotionBodyFeedback } from '@/engine/stepGame'
 import { STORY_DIALOG_COPY } from '@/screens/storyDialogCopy'
+import gameCopy from '../../content/game-copy.json'
 const missing: string[] = []
 const check = (text: string | undefined, where: string) => {
   if (!text?.trim()) return
   if (!resolveRecordedNarration(text, 'ko')) missing.push(`${where}: ${text}`)
 }
-check('잘했어요! 오늘도 새로운 방법을 배웠어요.', 'cheer')
+check(gameCopy.completionCheer, 'cheer')
 for (const [m, c] of Object.entries(STORY_DIALOG_COPY)) check(`${c.title} ${c.body}`, `dialog.${m}`)
 for (const file of readdirSync('content/episodes').filter((n) => n.endsWith('.json'))) {
   const e = StepEpisodeSchema.parse(JSON.parse(readFileSync(`content/episodes/${file}`, 'utf8')))

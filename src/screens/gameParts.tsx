@@ -7,9 +7,10 @@ import { completionPercent, useMvpProgress } from '@/services/mvpProgress'
 import { useSettings } from '@/services/settings'
 import { speech } from '@/services/speech'
 import { useAutoRead } from '@/services/useSpeak'
+import gameCopy from '../../content/game-copy.json'
 
 /** The completion line every story shares; read aloud together with the takeaway. */
-export const COMPLETION_CHEER = '잘했어요! 오늘도 새로운 방법을 배웠어요.'
+export const COMPLETION_CHEER = gameCopy.completionCheer
 
 /**
  * One tap mutes or unmutes narration for every screen (persisted in settings). Turning it on

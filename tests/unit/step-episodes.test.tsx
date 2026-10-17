@@ -293,7 +293,7 @@ describe('자기 인식·마음건강관리: emotion–body match, expression ch
     speak.mockRestore()
     expect(screen.queryByRole('button', { name: /마무리하기/ })).not.toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /연습했어요/ }))
-    expect(screen.getByText(/잘했어요! 힘든 일이 생기면/)).toBeInTheDocument()
+    expect(screen.getByText(/멋져요! 힘든 일이 생기면/)).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /마무리하기/ }))
     await waitFor(() => expect(useMvpProgress.getState().completedEpisodeIds).toEqual(['D01']))
     expect(screen.getByText(/믿을 만한 어른에게 이야기해요/)).toBeInTheDocument()
@@ -341,7 +341,7 @@ describe('잘 모르겠어요, 미션 건너뛰기, 이전으로, 새 완료 기
     await user.click(screen.getByRole('button', { name: /마무리하기/ }))
     await waitFor(() => expect(useMvpProgress.getState().completedEpisodeIds).toEqual(['A01']))
     expect(
-      screen.getByRole('heading', { name: '잘했어요! 오늘도 새로운 방법을 배웠어요.' }),
+      screen.getByRole('heading', { name: '멋져요! 오늘도 새로운 방법을 배웠어요.' }),
     ).toBeInTheDocument()
   })
 

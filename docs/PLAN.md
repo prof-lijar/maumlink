@@ -4,6 +4,8 @@
 
 ## 현재 작업
 
+- **9-7 후속 — PR #2 통합·고객 응원 문구·음성 검증 (완료)**: 기존 `content/sentence-cleanup`의 사실 중심 상황 문장·감정 보기·15개 녹음을 보존하고 이번 응원 문구/녹음과 통합한다. 앞선 master 기준 결과와 APK는 아래 이력이며, 최종 PR 기준으로 다시 검증·재빌드한다.
+
 - **9-7 — 오타·상황 문장·감정 보기 다듬기 (완료·녹음 갱신 전)**: 2026-10-13 사용자 요청. 오타 수정(B01·C01·D01·A01, 따옴표 짝 포함), 상황 문장은 일어난 일만 해요체로(A01·D01 다시 쓰기, E01 감정·이유와 겹치는 마지막 문장 삭제, 색인 요약 동기화), 감정 보기는 감정 4개 + 잘 모르겠어요로(A01 부끄러워요·무서워요, B01 짜증나요, C01 당황스러워요 제외). 읽어주기 속도와 바뀐 문장 녹음은 사용자 결정으로 다음 작업에 미룸. 검증 기록은 아래 9-7 행.
 
 - **9-5 — 말로 이야기하기(음성 입력, 선택 기능) (완료·실제 키 검증 전)**: 2026-10-12 사용자 요청. 감정·이유·행동 고르기 화면에 마이크 버튼(기본 켜짐, 어른 설정에서 끔). 브라우저 PCM 녹음 → `/api/voice/turn`(Gemini 3.5 Transcribe → Gemini → ElevenLabs TTS, 같은 voice id; Scribe는 env로 선택) → 대답 표시·읽기. 키는 서버(`server/voice`, Vercel 함수, Vite 미들웨어가 `.env.dev` 읽음)에만. 마이크 그림은 Codex `icon-mic`. 검증 기록은 아래 9-5 행.
@@ -180,3 +182,34 @@ F1의 임시 이모지·상징 그림은 6-1 작업에서 사용자 제공 devki
 | 2026-10-12 | 9-5 말로 이야기하기 | `server/voice`(env·providers·router), `api/voice/[action].ts`, `scripts/voice-dev-server.ts`, `src/voice`(VoiceTalk·useVoiceTurn·useVoiceAvailable·recorder·wav·voiceApi·copy), 설정 `voiceInput`, StepBody 연결, Android `RECORD_AUDIO`, `vercel.json` `/api` 제외, Playwright 가짜 마이크, `pnpm art:generate --only icon-mic`·`pnpm art:build`, README·DECISIONS 9-5. `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm test:e2e`; 개발 서버 `/api/voice/health` curl; Chrome 390px 패널 캡처 | 타입·lint·빌드 통과, 단위 **83/83**(새 18: WAV·라우터 스텁·패널), 브라우저 **9/9**(새 1: 가짜 마이크 녹음→응답). 실제 키(2026-10-12 저녁 `.env.dev`): macOS `say`로 만든 한국어 문장 WAV로 ElevenLabs Scribe는 정확히 전사("친구들이 나를 안 불러서 속상했어요."), `/api/voice/speak`는 Lulu 목소리 MP3(72KB) 반환. 이후 사용자 판단(Scribe 품질 부족)으로 STT를 `gemini-3.5-transcribe`(Interactions API, 키에 모델 노출 확인)로 바꿈. 2026-10-13 00:10 사용자가 크레딧 충전 후 **전 구간 실제 검증 통과**: `/api/voice/turn` 200 — 전사 "친구들이 나를 안 불러서 속상했어요."(정확), 대답 "친구들이 안 불러서 속상했구나. 그렇게 느낄 수 있어요. 화면에 있는 기분 중에 어떤 기분이 제일 비슷할까요?", Lulu 목소리 MP3 139KB. 소요 10.0초(전사 4.3초 · 대답 2.2초→thinking 끔 1.7초 · 음성 1.9초). 별도 `GOOGLE_STT_API_KEY`(Cloud Console 키)는 API 제한(API_KEY_SERVICE_BLOCKED)으로 막혀 `.env.dev`에서 비워 AI 키를 재사용. 개발 서버가 오래된 키를 들고 있던 문제는 `.env.dev`를 덮어쓰기 로드 + 변경 시 재시작으로 해결. 남은 과제: 전사 4초를 줄이려면 `gemini-3.5-transcribe-live`(WebSocket, 임시 토큰) 스트리밍 필요 → `turn`은 전사만 200으로 돌려주고 아이에게 "지금은 대답을 들을 수 없어요"를 보임. 무보존(ZRM)은 엔터프라이즈 전용이라 옵트인으로 변경. 문구·프롬프트 교육자 검토가 남음 |
 | 2026-10-13 | 9-6 고정 문장 녹음 완성 | `scripts/narration-generate-elevenlabs.ts`(ElevenLabs TTS API, 같은 voice id·eleven_v4, 종류별 감정 태그, 동시 3, 재시도), `storyDialogCopy.ts` 분리 후 인벤토리에 포함(236문장), `--limit 2` 시험 → 전체 141 생성 → `pnpm narration:import`(ffmpeg 64kbps 재인코딩) → 236/236. `ffprobe` 길이 점검, `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm test:e2e` | 생성 0 실패(3,840자). 검증 결과는 커밋 메시지 참조 |
 | 2026-10-13 | 9-7 문장 다듬기 | `content/episodes/*.json`·`episode-index.json` 수정, 바뀐 문구를 쓰던 단위·브라우저 검사 갱신(`main-flow`, `step-episodes`, `story-dialog`의 B01 저장 예시 id `annoyed`→`angry`, `steps.spec.ts`). `pnpm validate`, `pnpm typecheck`, `pnpm test`, `pnpm lint`, `pnpm build`, `pnpm test:e2e` | validate·typecheck·lint·build 통과. 단위 96/97 — `narration-coverage` 1건 실패(바뀐 문장에 녹음 없음, 녹음 갱신 전이라 예상된 실패). 브라우저 9/9 통과(5편 완주 390·820·1280px). 남은 위험: 바뀐 문장은 녹음이 없어 기기 기본 음성으로 읽힘, 삭제한 감정을 골라 둔 기존 저장은 무효로 처음부터 시작, C01 원문 오타 수정·새 상황 문장·A01 도움말과 목록 요약은 설계자 확인 필요. 이후 추가: A01 감정 도움말과 목록 요약에서 정답(속상)을 빼고, D01 피드백을 「말한 내가 자랑스러워요」로 고침. **2026-10-14 검토 반영**: 바뀐 15문장 녹음 생성·가져오기(250/250, `narration-coverage` 통과), E01 설계서 핵심 문장 복원, `docs/CONTENT_REVIEW.md`에 원문과 달라진 곳 표(설계자 확인 대기 목록) 추가. 단위 97/97 |
+
+
+### 9-7 최종 검증 — 2026-10-17
+
+- **검토 기준/범위:** 작업 시작 시 Git 작업 트리는 깨끗했고 HEAD는 `93dcf25`였다. 실제 앱은 설계서 5편이며 이전 9-6 및 후속 조합 문장 녹음 커밋에 의해 현재 고정 문구 252개가 녹음되어 있었다. 고객이 지정한 공통 완료 문구와 C01/D01 미션, 공통 UI/녹음 안내를 `멋져요!`로 변경했다. 개인 맞춤 음성 지침에도 평가 대신 응원을 명시했다. 별도 오탈자 목록 없이 명백한 오류 5문장을 교정했고 `CONTENT_REVIEW.md`에 변경 전후를 남겼다. 원본 전사·기존 사용자 학습 기록은 유지했다.
+- **녹음:** `pnpm narration:inventory` → `pnpm narration:generate:elevenlabs --out .narration-downloads/review-2026-10-17` → `pnpm narration:import .narration-downloads/review-2026-10-17 --voice lulu-lolipop` → `pnpm narration:inventory`. 응원 5개 + 교정 5개, **10개 생성·실패 0**, 현재 **252/252** 녹음 연결. 첫 API 시도는 샌드박스 네트워크 제한으로 실패했고 허용된 확장 실행에서 성공했다. 기존 `고개가 숙여진다` 녹음 연결도 확인했다. 과거 녹음은 이력으로 남지만 새 문장은 새 내용 해시 URL을 사용한다.
+- **파일/오프라인:** 새 MP3 10개 `ffmpeg -v error … -f null -` 디코딩 통과, `ffprobe` 길이 2.72~8.32초. 생성 기록의 입력 문장과 현재 인벤토리 일치, 새 10개 URL의 `dist/sw.js` 프리캐시 포함 확인. 전체 현재 문구 **252개**의 오프라인 fetch·브라우저 AudioContext 디코딩, 새 완료 인사의 HTMLAudioElement 실제 재생 종료 통과. 이 검사는 음질·억양을 사람이 청취한 결과를 대신하지 않는다.
+- **기본 검사:** `pnpm validate`(5편), `pnpm typecheck`, `pnpm test`(**97/97**), `pnpm lint`(oxlint·전체 Prettier), `pnpm build`, `git diff --check` 통과. 오탈자 교정으로 이전 `용기있는` 문구를 기대하던 단위 검사 1개를 갱신 후 전체 재실행했다. 빌드 프리캐시는 **425개 / 21,194.87 KiB**. 기존 Vite native config 예고와 500kB 청크 경고는 남는다.
+- **Chrome 검사:** `pnpm test:e2e`에서 `steps.spec.ts` **9/9** 통과(5편 각각 390·820·1280px 완주·새 응원 문구, 접근성·넘침, D01 대안/복원/읽기만 완료, 목록 재개/재학습, 가짜 마이크, 저장 호환/저장 공간 부족). 새 `narration.spec.ts`의 JSON 모듈 로딩과 문장부호 차이를 처리하도록 검사 코드를 수정하고 `pnpm test:e2e tests/behavior/narration.spec.ts` **1/1** 재실행 통과. 즉 최종 검사는 흐름 9개 + 음성 1개 모두 통과했으며, 마지막 한 명령으로 10개 전체를 재실행한 것은 아니다. 포트 EPERM은 허용된 확장 실행으로 해소했다. 마지막 수정 테스트 파일의 oxlint·Prettier도 통과했다.
+- **글꼴:** 기존 번들 Jua·Noto 4개 굵기에 새 완료 문구의 모든 글자가 있음을 fonttools로 확인(누락 0). 글꼴 재생성은 필요하지 않았다.
+- **남은 제한:** 사람의 최종 청취/교육자 승인, 물리 기기·스크린리더 검사는 미실시. 기존 저장된 개인 맞춤 마무리/음성은 보존하므로 과거 표현이 남을 수 있고 새 생성 지침이 모델 출력을 강제로 보장하지는 않는다. 이번에는 실제 개인 맞춤 외부 API를 재호출하지 않고 해당 경로의 스텁 검사를 실행했다. 배포·커밋·푸시·Android APK 재생성/설치는 수행하지 않았다.
+
+
+### 9-7 Android APK 후속 재빌드 — 2026-10-17 (완료)
+
+- 사용자 요청 `rebuild APK`에 따라 최신 문구와 녹음이 포함된 디버그 APK를 다시 빌드한다. `pnpm build:native` 후 JDK 21의 Gradle `assembleDebug --offline`을 실행하고 APK 서명·자산 포함 여부를 검증한다.
+
+- **명령/결과:** `pnpm build:native`(5편 콘텐츠 검사·TypeScript·Vite native 빌드·Capacitor sync) 통과. Corretto JDK 21에서 `./gradlew assembleDebug --offline` **BUILD SUCCESSFUL**. 기본 샌드박스의 Gradle 캐시 잠금 접근 제한은 허용된 확장 실행으로 해소했다.
+- **산출물:** `android/app/build/outputs/apk/debug/app-debug.apk`, 28,270,717바이트(약 28.3MB). 패키지 `com.maumlink.app`, versionCode 1/versionName 1.0, 최소 Android API 24, target 36. 디버그 빌드이며 앱 스토어용 릴리스 서명본이 아니다.
+- **검증:** `apksigner verify --verbose` v2 서명 통과, `aapt dump badging` 패키지 확인, ZIP CRC 통과. APK 내부 웹 자산 545개가 최신 `dist` 파일과 바이트 단위로 일치. 새 MP3 10개 원본 일치와 새 응원 문구·교정 문장 포함을 확인했다. native APK에는 PWA `sw.js`가 포함되지 않는다.
+- **SHA-256:** `cce4a47999cd1b4d93994e8a8c70dec1b174eec1b152b4d39f0e48e73a9dd832`.
+- **남은 제한:** 이번 후속 작업은 APK 재빌드·패키지 검증만 수행했으며 기기 설치/실행·웹/API 배포는 수행하지 않았다. 직전 9-7의 단위/브라우저 검사 결과를 재사용했고 제품 코드는 추가로 바꾸지 않았다. 기존 Vite 청크/설정 예고 및 Gradle flatDir 경고는 남는다.
+
+
+### 9-7 PR #2 통합 최종 검증 — 2026-10-17
+
+- **최종 브랜치:** `content/sentence-cleanup`, 기존 원격 PR #2의 두 커밋을 보존했다. master 기준 작업을 합치면서 사실 중심 A01/D01 상황·감정 보기 축소·B01 수정·E01 핵심 문장과 15개 녹음을 그대로 유지했다. 모든 5편 JSON이 기존 PR 내용에 이번 응원/A01 띄어쓰기 수정만 더해진 것인지 비교 확인했다. 원고의 설계자 확인 대기와 읽기 속도 보류는 유지한다.
+- **최종 녹음:** `pnpm narration:inventory` **250/250**. 새 활성 문장 6개(응원 5 + 기분 전환 1)의 디코딩 통과. 앞선 생성 10개 중 동일 문장 2개는 기존 PR 녹음을 사용하며, PR의 사실 중심 D01 상황과 달라진 2개는 미사용 이력으로 보존한다. 모든 현재 문구·조합 문장이 녹음으로 연결된다.
+- **웹 검증:** `pnpm validate`, `pnpm typecheck`, `pnpm lint`, `pnpm test` **97/97**, `pnpm build` 통과. 최종 `pnpm test:e2e` **10/10** 한 번에 통과(47.7초): 5편×390/820/1280px, 저장/대안/접근성, 마이크 스텁, 250개 녹음 오프라인 디코딩과 새 완료 인사 실제 재생 포함. 기존 빌드 경고는 동일하다.
+- **최종 APK:** `pnpm build:native` + JDK 21 `./gradlew assembleDebug --offline` 성공. `app-debug.apk` 28,767,252바이트. 서명 v2·ZIP CRC 통과, 네이티브 웹 자산 558개 및 현재 녹음 250개가 패키지 안에서 원본과 일치. 새 응원과 PR 사실 중심 상황 문장 포함 확인. SHA-256 `b8415730bb7dfe0e5072e3d1449bab7aa8f8efad99eb17ffb7630f933c52959b`. 이 파일이 위 master 기준 APK를 대체한다.
+- **기록/범위:** 소스·음성·관련 테스트·검증 기록을 PR #2로 커밋/푸시한다. APK와 임시 생성 파일·비밀 설정은 Git 제외 규칙을 유지한다. 기기 설치/실행·실제 외부 개인 맞춤 API 재검증·최종 청취/교육자 승인은 미실시이며 PR을 병합하지 않는다.
