@@ -2559,13 +2559,13 @@
       }
     },
     {
-      "id": "feaab1c8cfdb",
-      "text": "내 마음 말하기 – “네가 새치기해서 나는 속상했어”라고 말하기",
+      "id": "66e161f39b16",
+      "text": "내 마음을 말하기-\n“네가 새치기해서 속상했어” 라고 말해요.",
       "sources": [
         "D01.steps.2.options.A"
       ],
       "recorded": {
-        "kyung": true,
+        "kyung": false,
         "sophie-lane": false,
         "clova-ndain": false,
         "lulu-lolipop": true

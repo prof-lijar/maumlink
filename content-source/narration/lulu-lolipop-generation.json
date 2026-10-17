@@ -2061,6 +2061,13 @@
       "text": "친구들에게 말하기 어렵다면 선생님에게 “저도 같이 놀고 싶어요”라고 말해요.",
       "source": "B01.steps.2.options.D",
       "generatedAt": "2026-10-17"
+    },
+    {
+      "id": "66e161f39b16",
+      "tag": "",
+      "text": "내 마음을 말하기-\n“네가 새치기해서 속상했어” 라고 말해요.",
+      "source": "D01.steps.2.options.A",
+      "generatedAt": "2026-10-17"
     }
   ]
 }

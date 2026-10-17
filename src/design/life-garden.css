@@ -671,6 +671,7 @@
   font-size: calc(15px * var(--gs));
   font-weight: 700;
   line-height: 1.4;
+  white-space: pre-line;
 }
 .garden-speak {
   display: flex;
