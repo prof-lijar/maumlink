@@ -1447,6 +1447,9 @@
 }
 .garden-match__card {
   min-height: 72px;
+  /* These cards use taps, so a swipe must remain a native scroll gesture. */
+  touch-action: manipulation;
+  cursor: pointer;
 }
 .garden-match__card[data-side='body'] {
   background: #f4f9fd;
